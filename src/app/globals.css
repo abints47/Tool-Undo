@@ -1,26 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Brand Theme Colors: Deep Obsidian & Midnight Black Palette */
+  --color-primary: #818cf8; /* Bright Indigo 400 for high-contrast on dark backgrounds */
+  --color-primary-container: #6366f1; /* Indigo 500 */
+  --color-on-primary: #000000;
+  --color-on-primary-container: #ffffff;
+  
+  --color-secondary: #a1a1aa; /* Zinc 400 (secondary text) */
+  --color-secondary-container: #18181b; /* Zinc 900 */
+  --color-on-secondary: #f4f4f5; /* Zinc 100 */
+  
+  --color-background: #000000; /* Pure pitch black */
+  --color-surface: #09090b; /* Obsidian Black (Zinc 950) */
+  --color-surface-container: #18181b; /* Zinc 900 border matching */
+  --color-surface-container-low: #0c0c0e; /* Inner containers (almost black) */
+  --color-surface-container-high: #27272a; /* Dividers / Borders (Zinc 800) */
+  --color-surface-container-highest: #3f3f46;
+  
+  --color-on-surface: #ffffff; /* White text */
+  --color-on-surface-variant: #e4e4e7; /* Zinc 200 */
+  --color-outline: #27272a; /* Zinc 800 borders */
+  --color-outline-variant: #18181b; /* Zinc 900 borders */
+  
+  --color-error: #f87171; /* Red 400 */
+  --color-error-container: #450a0a; /* Dark Red background */
+  --color-on-error: #ffffff;
+  
+  /* Fonts Override: Strictly Inter for Everything */
+  --font-display-lg: "Inter", sans-serif;
+  --font-display-lg-mobile: "Inter", sans-serif;
+  --font-headline-md: "Inter", sans-serif;
+  --font-headline-sm: "Inter", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-body-sm: "Inter", sans-serif;
+  --font-label-caps: "Inter", sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Increased Typographic Sizing (Elegance & Readability) */
+  --font-size-display-lg: ["64px", { "lineHeight": "76px", "letterSpacing": "-0.03em", "fontWeight": "800" }];
+  --font-size-display-lg-mobile: ["44px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "800" }];
+  --font-size-headline-md: ["36px", { "lineHeight": "44px", "letterSpacing": "-0.015em", "fontWeight": "700" }];
+  --font-size-headline-sm: ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }];
+  --font-size-body-lg: ["20px", { "lineHeight": "30px", "fontWeight": "400" }];
+  --font-size-body-md: ["17px", { "lineHeight": "26px", "fontWeight": "400" }];
+  --font-size-body-sm: ["15px", { "lineHeight": "22px", "fontWeight": "400" }];
+  --font-size-label-caps: ["13px", { "lineHeight": "18px", "letterSpacing": "0.06em", "fontWeight": "600" }];
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Standard Spacing Spreads */
+  --spacing-sm: 12px;
+  --spacing-xs: 6px;
+  --spacing-lg: 48px;
+  --spacing-gutter: 24px;
+  --spacing-md: 24px;
+  --spacing-xl: 80px;
+  --spacing-margin-mobile: 20px;
+  --spacing-base: 8px;
+  --spacing-margin-desktop: 64px;
+
+  --animate-fade-in: fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-scale-up: scale-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-up {
+    from { transform: scale(0.97); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
   }
 }
 
+/* Custom Minimalist utilities */
+.swiss-border {
+  border: 1px solid var(--color-outline);
+}
+
+.swiss-focus:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.25);
+}
+
+.swiss-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.swiss-hover:hover {
+  background-color: var(--color-surface-container);
+  border-color: var(--color-outline);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65);
+}
+
+/* Apply smooth scrolling and set baseline styles */
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-background);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: var(--font-body-md);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-panel {
+  background: rgba(10, 10, 12, 0.8);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-gradient-mesh {
+  background-size: 200% 200%;
+  animation: mesh-flow 15s ease infinite;
+}
+
+@keyframes mesh-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Dark mode inputs override for professional styling */
+input[type="text"], input[type="email"], textarea, select {
+  color: #ffffff;
+  border-color: var(--color-outline);
+  background-color: var(--color-surface-container-low);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus {
+  border-color: var(--color-primary-container);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
 }

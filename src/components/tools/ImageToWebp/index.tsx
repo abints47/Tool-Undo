@@ -1,0 +1,258 @@
+"use client";
+
+import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
+
+export default function ImageToWebp() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [quality, setQuality] = useState<number>(80);
+  const [isConverting, setIsConverting] = useState<boolean>(false);
+  const [convertedUrl, setConvertedUrl] = useState<string | null>(null);
+  const [convertedSize, setConvertedSize] = useState<number | null>(null);
+  const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const formatSize = (bytes: number): string => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      processFile(e.target.files[0]);
+    }
+  };
+
+  const processFile = (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      alert("ഇതൊരു പടം അല്ലല്ലോ മച്ചാനേ! ശരിക്കുള്ള പടം വെയ്ക്ക് (PNG/JPG).");
+      return;
+    }
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setConvertedUrl(null);
+    setConvertedSize(null);
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleConvert = () => {
+    if (!selectedFile || !previewUrl) return;
+
+    setIsConverting(true);
+    const img = new Image();
+    img.src = previewUrl;
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        alert("അയ്യോ, ക്യാൻവാസ് കിട്ടുന്നില്ല!");
+        setIsConverting(false);
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0);
+
+      const webpQuality = quality / 100;
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            setConvertedUrl(url);
+            setConvertedSize(blob.size);
+          } else {
+            alert("എന്തോ പണി പാളി! കൺവേർട്ട് ചെയ്യാൻ പറ്റുന്നില്ല.");
+          }
+          setIsConverting(false);
+        },
+        "image/webp",
+        webpQuality
+      );
+    };
+
+    img.onerror = () => {
+      alert("ഇമേജ് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല.");
+      setIsConverting(false);
+    };
+  };
+
+  const handleDownload = () => {
+    if (!convertedUrl || !selectedFile) return;
+
+    const link = document.createElement("a");
+    const originalName = selectedFile.name.substring(0, selectedFile.name.lastIndexOf("."));
+    link.href = convertedUrl;
+    link.download = `${originalName || "image"}_optimized.webp`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleReset = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setConvertedUrl(null);
+    setConvertedSize(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  return (
+    <div className="bg-surface swiss-border rounded-lg p-6 md:p-8 flex flex-col gap-6 w-full max-w-3xl mx-auto shadow-sm">
+      <div className="flex flex-col gap-2">
+        <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
+          <span className="material-symbols-outlined text-primary-container">image</span>
+          ഇമേജ് സൈസ് കുറയ്ക്കൽ യന്ത്രം (Image → WebP)
+        </h2>
+        <p className="font-body-sm text-body-sm text-secondary">
+          PNG, JPEG ഫയലുകൾ ഒറിജിനൽ ക്വാളിറ്റിയോടെ വലിപ്പം കുറച്ചെടുക്കാം. എല്ലാം നിന്റെ ബ്രൗസറിൽ തന്നെ!
+        </p>
+      </div>
+
+      {!selectedFile ? (
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`border-2 border-dashed rounded-lg p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 ${
+            isDragOver
+              ? "border-primary-container bg-surface-container-low"
+              : "border-outline-variant hover:border-primary-container bg-surface-container-lowest"
+          }`}
+        >
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            className="hidden"
+          />
+          <span className="material-symbols-outlined text-5xl text-secondary mb-4 opacity-50">
+            cloud_upload
+          </span>
+          <p className="font-body-md text-on-surface font-semibold">
+            ഇമേജ് ഇവിടെ വലിച്ച് ഇട്ടോളൂ, അല്ലെങ്കിൽ <span className="text-primary-container underline">ബ്രൗസ് ചെയ്യ്!</span>
+          </p>
+          <p className="font-body-sm text-body-sm text-secondary mt-2">
+            PNG, JPEG, static GIFs (പരമാവധി 10MB വരെ താങ്ങും)
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            {/* Image Preview */}
+            <div className="bg-surface-container-low rounded-lg p-4 flex flex-col items-center justify-center border border-outline-variant h-64 relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewUrl || ""}
+                alt="Original preview"
+                className="max-h-full max-w-full object-contain rounded"
+              />
+              <span className="absolute top-2 left-2 bg-surface/90 px-2 py-1 text-xs rounded border border-outline-variant font-semibold">
+                ഇപ്പോഴത്തെ സൈസ്: {formatSize(selectedFile.size)}
+              </span>
+            </div>
+
+            {/* Controls */}
+            <div className="flex flex-col gap-4">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label htmlFor="quality-slider" className="font-body-sm text-on-surface font-semibold">
+                    ക്വാളിറ്റി എത്ര ശതമാനം വേണം മച്ചാ?
+                  </label>
+                  <span className="bg-primary-container/10 text-primary-container px-2 py-0.5 rounded font-mono font-bold text-sm">
+                    {quality}%
+                  </span>
+                </div>
+                <input
+                  id="quality-slider"
+                  type="range"
+                  min="5"
+                  max="100"
+                  value={quality}
+                  onChange={(e) => setQuality(parseInt(e.target.value))}
+                  className="w-full h-2 bg-outline-variant rounded-lg appearance-none cursor-pointer accent-primary-container focus:outline-none"
+                />
+                <div className="flex justify-between text-xs text-secondary font-mono">
+                  <span>5% (വളരെ കുറവ്)</span>
+                  <span>80% (ഇതാണ് ഉചിതം!)</span>
+                  <span>100% (അടിപൊളി!)</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={handleConvert}
+                  disabled={isConverting}
+                  className="flex-grow bg-primary-container text-white py-3 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-primary transition-all duration-200 disabled:opacity-50 active:scale-95 flex items-center justify-center gap-xs"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    {isConverting ? "autorenew" : "sync"}
+                  </span>
+                  {isConverting ? "മാറ്റി കൊണ്ടിരിക്കുകയാണ്..." : "ദാ.. സൈസ് കുറച്ചേക്ക്!"}
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="bg-transparent border border-outline text-secondary py-3 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-low transition-all duration-200"
+                >
+                  വേണ്ട കളഞ്ഞേക്ക്!
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Results Comparison Section */}
+          {convertedUrl && convertedSize !== null && (
+            <div className="border border-outline-variant rounded-lg p-5 bg-surface-container-low flex flex-col sm:flex-row justify-between items-center gap-4 animate-scale-up">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-green-500 font-bold text-lg">check_circle</span>
+                  <h4 className="font-body-md text-on-surface font-bold">അളിയാ... സംഗതി വിജയിച്ചു!</h4>
+                </div>
+                <p className="font-body-sm text-body-sm text-secondary">
+                  പുതിയ ഫയൽ സൈസ്: <span className="font-bold text-on-surface">{formatSize(convertedSize)}</span> 
+                  {" | "}
+                  ലാഭിച്ചത്:{" "}
+                  <span className="font-bold text-green-500">
+                    {Math.max(0, Math.round(((selectedFile.size - convertedSize) / selectedFile.size) * 100))}% അത്രയും കുറഞ്ഞു!
+                  </span>
+                </p>
+              </div>
+              <button
+                onClick={handleDownload}
+                className="bg-green-600 text-white py-2.5 px-6 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-green-700 transition-all duration-200 flex items-center gap-xs active:scale-95 shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">download</span>
+                ഫയൽ അങ്ങ് ഡൗൺലോഡിക്കോ!
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
