@@ -1,135 +1,89 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface HeaderProps {
   onNavClick?: (section: string) => void;
   activeSection?: string;
 }
 
-export default function Header({ onNavClick, activeSection = "tools" }: HeaderProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const navItems = [
+  { label: "Tools", id: "tools" },
+  { label: "Features", id: "features" },
+  { label: "About", id: "about" },
+];
 
-  const handleNavClick = (section: string) => {
-    if (onNavClick) {
-      onNavClick(section);
-    }
-    setIsMobileMenuOpen(false);
+export default function Header({ onNavClick, activeSection }: HeaderProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleNavClick = (id: string) => {
+    onNavClick?.(id);
+    setMobileOpen(false);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-outline-variant bg-surface/80 backdrop-blur-md transition-all duration-200">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-margin-mobile md:px-margin-desktop">
+    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)]">
         {/* Logo */}
-        <div className="flex items-center gap-md">
-          <a
-            href="#"
-            onClick={() => handleNavClick("home")}
-            className="font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface hover:text-primary transition-colors"
-          >
-            ToolUndo
-          </a>
+        <span className="text-lg font-bold tracking-tight text-white">
+          ToolUndo
+        </span>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-gutter ml-lg">
+        {/* Desktop Nav */}
+        <nav className="hidden items-center gap-8 md:flex">
+          {navItems.map((item) => (
             <button
-              onClick={() => handleNavClick("tools")}
-              className={`font-body-md text-body-md pb-1 border-b-2 transition-all duration-200 ${
-                activeSection === "tools"
-                  ? "border-primary text-primary font-semibold"
-                  : "border-transparent text-secondary hover:text-primary hover:border-outline-variant"
+              key={item.id}
+              onClick={() => handleNavClick(item.id)}
+              className={`text-sm transition-colors duration-200 ${
+                activeSection === item.id
+                  ? "font-medium text-white"
+                  : "text-neutral-400 hover:text-white"
               }`}
             >
-              Tools
+              {item.label}
             </button>
-            <button
-              onClick={() => handleNavClick("features")}
-              className={`font-body-md text-body-md pb-1 border-b-2 transition-all duration-200 ${
-                activeSection === "features"
-                  ? "border-primary text-primary font-semibold"
-                  : "border-transparent text-secondary hover:text-primary hover:border-outline-variant"
-              }`}
-            >
-              Features
-            </button>
-            <button
-              onClick={() => handleNavClick("about")}
-              className={`font-body-md text-body-md pb-1 border-b-2 transition-all duration-200 ${
-                activeSection === "about"
-                  ? "border-primary text-primary font-semibold"
-                  : "border-transparent text-secondary hover:text-primary hover:border-outline-variant"
-              }`}
-            >
-              About
-            </button>
-          </nav>
-        </div>
+          ))}
+        </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden md:flex items-center gap-md">
-          <button className="font-label-caps text-label-caps text-secondary uppercase tracking-widest hover:text-primary transition-colors cursor-pointer">
-            Sign In
-          </button>
-          <button
-            onClick={() => handleNavClick("tools")}
-            className="bg-primary-container text-white px-md py-sm rounded font-label-caps text-label-caps uppercase tracking-widest cursor-pointer hover:bg-primary transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md"
-          >
-            Get Started
-          </button>
-        </div>
+        {/* Desktop CTA */}
+        <button className="hidden rounded-lg bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-violet-500 md:inline-flex">
+          Get Started
+        </button>
 
-        {/* Mobile menu button */}
+        {/* Mobile Hamburger */}
         <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden text-on-surface p-1 focus:outline-none"
-          aria-label="Toggle Menu"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="inline-flex items-center justify-center text-neutral-400 transition-colors hover:text-white md:hidden"
+          aria-label="Toggle menu"
         >
-          <span className="material-symbols-outlined text-2xl">
-            {isMobileMenuOpen ? "close" : "menu"}
+          <span className="material-symbols-outlined text-[24px]">
+            {mobileOpen ? "close" : "menu"}
           </span>
         </button>
       </div>
 
-      {/* Mobile Navigation Drawer */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-outline-variant bg-surface animate-scale-up">
-          <nav className="flex flex-col px-margin-mobile py-4 gap-4">
-            <button
-              onClick={() => handleNavClick("tools")}
-              className={`font-body-md text-body-md text-left py-2 border-b border-outline-variant/30 ${
-                activeSection === "tools" ? "text-primary font-semibold" : "text-secondary"
-              }`}
-            >
-              Tools
-            </button>
-            <button
-              onClick={() => handleNavClick("features")}
-              className={`font-body-md text-body-md text-left py-2 border-b border-outline-variant/30 ${
-                activeSection === "features" ? "text-primary font-semibold" : "text-secondary"
-              }`}
-            >
-              Features
-            </button>
-            <button
-              onClick={() => handleNavClick("about")}
-              className={`font-body-md text-body-md text-left py-2 border-b border-outline-variant/30 ${
-                activeSection === "about" ? "text-primary font-semibold" : "text-secondary"
-              }`}
-            >
-              About
-            </button>
-            <div className="flex flex-col gap-3 pt-2">
-              <button className="w-full text-center font-label-caps text-label-caps text-secondary uppercase tracking-widest py-2 border border-outline rounded">
-                Sign In
-              </button>
+      {/* Mobile Dropdown */}
+      {mobileOpen && (
+        <div className="animate-fade-in border-t border-white/[0.06] bg-black/95 md:hidden">
+          <div className="mx-auto flex max-w-6xl flex-col gap-1 p-4">
+            {navItems.map((item) => (
               <button
-                onClick={() => handleNavClick("tools")}
-                className="w-full text-center bg-primary-container text-white px-md py-sm rounded font-label-caps text-label-caps uppercase tracking-widest"
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                className={`rounded-lg px-4 py-2.5 text-left text-sm transition-colors duration-200 ${
+                  activeSection === item.id
+                    ? "font-medium text-white"
+                    : "text-neutral-400 hover:text-white"
+                }`}
               >
-                Get Started
+                {item.label}
               </button>
-            </div>
-          </nav>
+            ))}
+            <button className="mt-2 w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-violet-500">
+              Get Started
+            </button>
+          </div>
         </div>
       )}
     </header>

@@ -1,283 +1,157 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React from "react";
+import { Image, QrCode, Wrench, Sparkles, ShieldCheck, Zap, Palette } from "lucide-react";
 import Header from "../components/layout/Header";
 import Hero from "../components/layout/Hero";
 import Footer from "../components/layout/Footer";
-import ImageToWebp from "../components/tools/ImageToWebp";
-import QrGenerator from "../components/tools/QrGenerator";
-import GradientMesh from "../components/tools/GradientMesh";
-import SuggestTool from "../components/tools/SuggestTool";
+import ToolCard from "../components/ToolCard";
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState<string>("tools");
-  const [activeTool, setActiveTool] = useState<string | null>(null);
-  const [isSuggestOpen, setIsSuggestOpen] = useState<boolean>(false);
-
-  const toolsSectionRef = useRef<HTMLDivElement>(null);
-  const featuresSectionRef = useRef<HTMLDivElement>(null);
-  const aboutSectionRef = useRef<HTMLDivElement>(null);
-
-  const scrollToRef = (ref: React.RefObject<HTMLDivElement | null>) => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleNavClick = (section: string) => {
-    setActiveSection(section);
-    if (section === "home") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setActiveTool(null);
-    } else if (section === "tools") {
-      scrollToRef(toolsSectionRef);
-    } else if (section === "features") {
-      scrollToRef(featuresSectionRef);
-    } else if (section === "about") {
-      scrollToRef(aboutSectionRef);
-    }
-  };
-
-  const handleSelectTool = (tool: string) => {
-    setActiveTool(tool);
-    scrollToRef(toolsSectionRef);
-  };
+  const features = [
+    {
+      icon: ShieldCheck,
+      title: "100% Client-Side",
+      body: "Your files never leave your machine. Not even a screenshot. We literally cannot see what you uploaded — probably for the best. 🔒",
+      g: "from-emerald-500 to-teal-500",
+    },
+    {
+      icon: Zap,
+      title: "Faster Than You",
+      body: "No servers, no queues, no “please wait while we process.” It's done before you finish your coffee. Probably. ☕⚡",
+      g: "from-amber-500 to-orange-500",
+    },
+    {
+      icon: Palette,
+      title: "Actually Looks Good",
+      body: "We spent an embarrassing amount of time on spacing. You're welcome. Built with Next.js, Tailwind, and zero regrets. 🎨",
+      g: "from-fuchsia-500 to-pink-500",
+    },
+  ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-on-surface">
-      {/* Header Navigation */}
-      <Header onNavClick={handleNavClick} activeSection={activeSection} />
+    <div className="flex min-h-screen flex-col bg-canvas">
+      <Header />
 
-      {/* Hero Section */}
-      <Hero onExploreClick={() => scrollToRef(toolsSectionRef)} />
+      <Hero onExploreClick={() => scrollTo("toolbox")} />
 
-      <main className="grow">
-        {/* Toolbox Section */}
-        <div ref={toolsSectionRef} className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl scroll-mt-20">
-          {activeTool ? (
-            // Tool View Container
-            <div className="flex flex-col gap-md">
-              <button
-                onClick={() => setActiveTool(null)}
-                className="flex items-center gap-xs text-secondary hover:text-primary font-semibold font-label-caps uppercase tracking-widest text-xs mb-md active:scale-95 transition-transform w-fit cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                തിരികെ പോവാം (Back to Toolbox)
-              </button>
-
-              <div className="animate-scale-up">
-                {activeTool === "image-to-webp" && <ImageToWebp />}
-                {activeTool === "qr-generator" && <QrGenerator />}
-                {activeTool === "gradient-mesh" && <GradientMesh />}
-              </div>
-            </div>
-          ) : (
-            // Toolbox Main Grid List
-            <div>
-              <h2 className="font-headline-md text-headline-md text-on-surface mb-lg">ടൂൾ ബോക്സ് (Toolbox)</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
-                {/* Tool Card 1: Image To WebP */}
-                <div
-                  onClick={() => handleSelectTool("image-to-webp")}
-                  className="bg-surface swiss-border rounded p-md flex flex-col gap-md swiss-hover transition-colors group cursor-pointer h-full border hover:shadow-sm"
-                >
-                  <div className="w-12 h-12 rounded bg-surface-container flex items-center justify-center text-secondary group-hover:text-primary-container transition-colors shadow-inner">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>
-                      image
-                    </span>
-                  </div>
-                  <div className="space-y-xs grow">
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary-container transition-colors">
-                      Image → WebP (സൈസ് കുറയ്ക്കൽ)
-                    </h3>
-                    <p className="font-body-sm text-body-sm text-secondary">
-                      ചിത്രങ്ങളുടെ വലിപ്പം വലിച്ച് ഒട്ടിച്ച് ചെറുതാക്കി തരും. സംഗതി വെരി ഫാസ്റ്റാണ് മച്ചാനേ!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Tool Card 2: QR Generator */}
-                <div
-                  onClick={() => handleSelectTool("qr-generator")}
-                  className="bg-surface swiss-border rounded p-md flex flex-col gap-md swiss-hover transition-colors group cursor-pointer h-full border hover:shadow-sm"
-                >
-                  <div className="w-12 h-12 rounded bg-surface-container flex items-center justify-center text-secondary group-hover:text-primary-container transition-colors shadow-inner">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>
-                      qr_code_2
-                    </span>
-                  </div>
-                  <div className="space-y-xs grow">
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary-container transition-colors">
-                      QR Generator (ക്യു.ആർ ഉണ്ടാക്കി)
-                    </h3>
-                    <p className="font-body-sm text-body-sm text-secondary">
-                      ലിങ്കും പേരും കൊടുക്കൂ, വെറൈറ്റി കളറിൽ ക്യു.ആർ കോഡ് സ്കാൻ ചെയ്യാൻ പരുവത്തിൽ വാങ്ങിക്കോളൂ!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Tool Card 3: Gradient Mesh */}
-                <div
-                  onClick={() => handleSelectTool("gradient-mesh")}
-                  className="bg-surface swiss-border rounded p-md flex flex-col gap-md swiss-hover transition-colors group cursor-pointer h-full border hover:shadow-sm"
-                >
-                  <div className="w-12 h-12 rounded bg-surface-container flex items-center justify-center text-secondary group-hover:text-primary-container transition-colors shadow-inner">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>
-                      gradient
-                    </span>
-                  </div>
-                  <div className="space-y-xs grow">
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary-container transition-colors">
-                      CSS Gradient (കളർ പൂരം)
-                    </h3>
-                    <p className="font-body-sm text-body-sm text-secondary">
-                      കളറുകൾ തമ്മിൽ മിക്സ് ചെയ്ത് അടിപൊളി മെഷ് ഗ്രേഡിയന്റ് ഉണ്ടാക്കി കോഡ് സുഖമായി കോപ്പി ചെയ്യാം.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Suggest a Tool Card */}
-                <div
-                  onClick={() => setIsSuggestOpen(true)}
-                  className="bg-surface-container-low/60 border border-dashed border-outline rounded p-md flex flex-col gap-md hover:border-primary-container transition-all group cursor-pointer h-full items-center justify-center text-center hover:bg-surface-container-low"
-                >
-                  <div className="w-12 h-12 rounded-full border border-secondary flex items-center justify-center text-secondary group-hover:bg-primary-container group-hover:text-white group-hover:border-primary-container transition-all shadow-sm">
-                    <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>
-                      add
-                    </span>
-                  </div>
-                  <div className="space-y-xs">
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
-                      Suggest a Tool (അടുത്ത പണി)
-                    </h3>
-                    <p className="font-body-sm text-body-sm text-secondary">
-                      നിനക്ക് പറ്റിയ പ്രത്യേക ടൂൾ വല്ലതും വേണോ? ഇവിടെ ഒന്നു പറഞ്ഞേക്കണേ മച്ചാനേ!
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-          <div className="h-px bg-outline-variant w-full"></div>
-        </div>
-
-        {/* Features Section */}
-        <div ref={featuresSectionRef} className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl scroll-mt-20">
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-lg">ഇതിലെ പ്രത്യേകതകൾ (Why Us?)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            <div className="flex flex-col gap-sm p-6 bg-surface-container-low rounded-lg border border-outline-variant/60">
-              <span className="material-symbols-outlined text-3xl text-primary-container">shield</span>
-              <h3 className="font-headline-sm text-[20px] font-bold text-on-surface">100% Client-Side (ബ്രൗസറിൽ മാത്രം!)</h3>
-              <p className="font-body-sm text-secondary leading-relaxed">
-                നിന്റെ ഡാറ്റ ഞങ്ങൾ കാണുകയുമില്ല, വേറെങ്ങും വിടുകയുമില്ല. ചിത്രങ്ങളും വിവരങ്ങളും നിന്റെ കമ്പ്യൂട്ടറിൽ മാത്രം പ്രോസസ്സ് ചെയ്യപ്പെടുന്നു. ഫുൾ സെക്യൂർ ആണ് ജി!
+      <main className="flex-1">
+        {/* ---- Toolbox ---- */}
+        <section id="toolbox" className="scroll-mt-20 bg-surface py-20 lg:py-28">
+          <div className="container-x">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="eyebrow">
+                <Wrench size={15} /> The Toolbox
+              </span>
+              <h2 className="section-title mt-4">Pick Your Weapon</h2>
+              <p className="section-sub mx-auto mt-3">
+                Two tools so far, and yes — both are free. We checked. (സൗജന്യം ആണ്, സംശയം വേണ്ട!)
               </p>
             </div>
-            <div className="flex flex-col gap-sm p-6 bg-surface-container-low rounded-lg border border-outline-variant/60">
-              <span className="material-symbols-outlined text-3xl text-primary-container">bolt</span>
-              <h3 className="font-headline-sm text-[20px] font-bold text-on-surface">Lightning Speed (ഇടിമിന്നൽ സ്പീഡ്)</h3>
-              <p className="font-body-sm text-secondary leading-relaxed">
-                നെറ്റ്‌വർക്ക് ഡിലേയോ ലോഡിങ് ബുദ്ധിമുട്ടോ ഒന്നും ഇല്ല. ക്ലിക്ക് ചെയ്യുന്ന വേഗത്തിൽ കൺവേർഷനും ഡൗൺലോഡും കഴിഞ്ഞിരിക്കും. ചുമ്മാ പവർ!
-              </p>
+
+            <div className="mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2">
+              <ToolCard
+                title="Image → WebP"
+                description="Convert your images into optimized WebP format."
+                href="/image-to-webp"
+                icon={Image}
+                gradient="from-blue-500 to-cyan-500"
+              />
+              <ToolCard
+                title="QR Code Generator"
+                description="Generate high quality QR codes instantly."
+                href="/qr-generator"
+                icon={QrCode}
+                gradient="from-fuchsia-500 to-pink-500"
+              />
             </div>
-            <div className="flex flex-col gap-sm p-6 bg-surface-container-low rounded-lg border border-outline-variant/60">
-              <span className="material-symbols-outlined text-3xl text-primary-container">palette</span>
-              <h3 className="font-headline-sm text-[20px] font-bold text-on-surface">Modern Typography (ലുക്ക് കൊള്ളാം!)</h3>
-              <p className="font-body-sm text-secondary leading-relaxed">
-                കാണാൻ കടുപ്പമുള്ള അനാവശ്യ ഡിസൈനുകൾ ഒഴിവാക്കി, വൃത്തിയുള്ള പക്കാ ഇന്റർ (Inter) ഫോണ്ടിലാണ് ഇന്റർഫേസ് ഉണ്ടാക്കിയിരിക്കുന്നത്. പ്രൊഫഷണൽ വൈബ്!
-              </p>
+
+            <div className="mt-12 flex justify-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-5 py-2.5 text-sm font-semibold text-amber-700">
+                <Sparkles size={16} /> More tools dropping soon — patience, young padawan.
+              </span>
             </div>
           </div>
+        </section>
 
-          {/* Detailed Image Feature Rows */}
-          <div className="mt-20 flex flex-col gap-20">
-            {/* Row 1 */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              <div className="lg:col-span-7 space-y-4">
-                <div className="inline-flex px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-mono">
-                  <span>⚙️ സൈസ് കുറയ്ക്കൽ (Compression Power)</span>
-                </div>
-                <h3 className="font-headline-sm text-headline-sm text-on-surface">ചിത്രങ്ങളുടെ ഗുണമേന്മ നഷ്ടപ്പെടാതെ സൈസ് കുറയ്ക്കാം</h3>
-                <p className="font-body-md text-secondary leading-relaxed">
-                  ഇന്റർനെറ്റിൽ ഫോട്ടോകൾ അപ്‌ലോഡ് ചെയ്യുമ്പോൾ സമയം പാഴാക്കേണ്ടതില്ല. ഞങ്ങളുടെ കൺവേർട്ടർ വഴി നിമിഷനേരം കൊണ്ട് ഇമേജ് ഫയൽ സൈസ് വെബ്പി (WebP) ഫോർമാറ്റിലേക്ക് മാറ്റാം. ഒറിജിനൽ പടവും വെബ്പി പടവും തമ്മിലുള്ള വലിപ്പ വ്യത്യാസം ലൈവായി തന്നെ കണ്ടറിയാം.
-                </p>
-              </div>
-              <div className="lg:col-span-5 rounded-lg border border-outline overflow-hidden shadow-lg max-w-sm w-full mx-auto bg-surface-container">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/feature_image_compression.png" alt="Compression Illustration Art" className="w-full h-auto object-cover" />
-              </div>
+        {/* ---- Features ---- */}
+        <section id="features" className="scroll-mt-20 bg-canvas py-20 lg:py-28">
+          <div className="container-x">
+            <div className="mx-auto max-w-2xl text-center">
+              <h2 className="section-title">Why You&apos;ll Actually Use This</h2>
+              <p className="section-sub mx-auto mt-3">
+                No sign-ups, no “free trial” traps, no spam. Just tools that work.
+              </p>
             </div>
 
-            {/* Row 2 */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              <div className="lg:col-span-5 rounded-lg border border-outline overflow-hidden shadow-lg max-w-sm w-full mx-auto bg-surface-container order-last lg:order-first">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/feature_qr_scan.png" alt="QR Illustration Art" className="w-full h-auto object-cover" />
-              </div>
-              <div className="lg:col-span-7 space-y-4">
-                <div className="inline-flex px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-mono">
-                  <span>🔗 ക്യു.ആർ സുരക്ഷ (QR Security)</span>
+            <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {features.map(({ icon: I, title, body, g }) => (
+                <div key={title} className="card group p-8">
+                  <div className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${g} text-white shadow-md transition-transform duration-300 group-hover:scale-110`}>
+                    <I size={26} />
+                  </div>
+                  <h3 className="text-xl font-bold text-ink">{title}</h3>
+                  <p className="mt-3 leading-relaxed text-ink-soft">{body}</p>
                 </div>
-                <h3 className="font-headline-sm text-headline-sm text-on-surface">എന്തും സ്കാൻ ചെയ്യാൻ പാകത്തിൽ സുരക്ഷിതമായി മാറ്റൂ</h3>
-                <p className="font-body-md text-secondary leading-relaxed">
-                  കസ്റ്റം കളറുകളിലും ഡിസൈനുകളിലും ക്യു.ആർ കോഡുകൾ തയ്യാറാക്കി പിഡിഎഫുകളിലോ വെബ്സൈറ്റുകളിലോ ഉപയോഗിക്കാം. നിങ്ങളുടെ വിവരങ്ങൾ ഒരിടത്തും ചോരില്ല എന്ന് ഞങ്ങൾ ഉറപ്പുനൽകുന്നു!
-                </p>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Divider */}
-        <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-          <div className="h-px bg-outline-variant w-full"></div>
-        </div>
+        {/* ---- About ---- */}
+        <section id="about" className="scroll-mt-20 bg-surface py-20 lg:py-28">
+          <div className="container-x">
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1e1b4b] via-[#4c1d95] to-[#2e1065] p-8 text-white lg:p-14">
+              <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-violet-500/30 blur-3xl" />
+              <div className="pointer-events-none absolute -bottom-16 -left-10 h-56 w-56 rounded-full bg-indigo-500/25 blur-3xl" />
 
-        {/* About Section */}
-        <div ref={aboutSectionRef} className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl scroll-mt-20">
-          <div className="bg-surface-container/30 border border-outline-variant rounded-lg p-8 md:p-12 flex flex-col md:flex-row items-center gap-lg">
-            <div className="flex-1 space-y-md">
-              <h2 className="font-headline-md text-headline-md text-on-surface">About ToolUndo (ഒരു ചെറിയ വർത്തമാനം)</h2>
-              <p className="font-body-md text-secondary leading-relaxed">
-                ഡെവലപ്പർമാരുടെയും സാധാരണക്കാരുടെയും ദൈനംദിന ജോലികൾ എളുപ്പമാക്കുക എന്ന ലക്ഷ്യത്തോടെ പണിതെടുത്ത ചെറിയൊരു ഉദ്യമം. അനാവശ്യ ഭാരമുള്ള ആപ്പുകൾ മാറ്റി, എന്ത് കാര്യവും സിമ്പിളായി അൺഡോ (Undo) ചെയ്ത് പണിയെടുക്കാം!
-              </p>
-              <p className="font-body-md text-secondary leading-relaxed">
-                Next.js-ലും Tailwind CSS-ലും നിർമ്മിച്ച ഇതിന്റെ എല്ലാ ടൂളുകളും ഇന്റർനെറ്റ് ഇല്ലാതെ വരെ പ്രവർത്തിക്കും (ബ്രൗസറിൽ ഓപ്പൺ ആണെങ്കിൽ). കട്ട സപ്പോർട്ട് പ്രതീക്ഷിക്കുന്നു!
-              </p>
-            </div>
-            <div className="flex-1 w-full flex items-center justify-center">
-              <div className="swiss-border bg-surface-container-low rounded-lg p-6 flex flex-col gap-4 shadow-sm w-full max-w-sm rotate-1 hover:rotate-0 transition-transform duration-300">
-                <div className="flex justify-between items-center text-xs text-secondary font-mono border-b border-outline-variant/50 pb-2">
-                  <span>SYSTEM METRICS</span>
-                  <span className="text-green-500 font-bold">● ഓൺലൈൻ</span>
+              <div className="relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+                <div className="space-y-6">
+                  <h2 className="text-3xl font-extrabold tracking-tight lg:text-4xl">About ToolUndo</h2>
+                  <p className="text-lg leading-relaxed text-white/85">
+                    Born from a developer&apos;s refusal to install yet another desktop app for a 10-second
+                    task. ToolUndo is the “undo” button for your daily busywork.
+                  </p>
+                  <p className="text-white/70">
+                    Built by a mallu dev who got tired of bookmarking 12 different sketchy converter sites.
+                    You&apos;re officially home now. 🏠
+                  </p>
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    {["Next.js", "Tailwind CSS", "TypeScript", "Zero BS"].map((t) => (
+                      <span key={t} className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-mono">
-                    <span>Server Overhead</span>
-                    <span className="font-bold text-on-surface">0.00ms (സർവർ അണ്ണൻ ചില്ലിംഗ്!)</span>
-                  </div>
-                  <div className="flex justify-between text-xs font-mono">
-                    <span>Privacy Rating</span>
-                    <span className="font-bold text-green-600">Grade A+ (സംശയം വേണ്ട!)</span>
-                  </div>
-                  <div className="flex justify-between text-xs font-mono">
-                    <span>Export Quality</span>
-                    <span className="font-bold text-on-surface">Lossless (പക്കാ ഒറിജിനൽ!)</span>
-                  </div>
+
+                <div className="rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm">
+                  <dl className="space-y-4 text-sm">
+                    {[
+                      ["Server Overhead", "0.00ms 😴"],
+                      ["Privacy Rating", "Grade A+ 🔒"],
+                      ["Export Quality", "Lossless ✨"],
+                      ["Status", "Online 🟢"],
+                      ["Vibes", "Immaculate 🔥"],
+                    ].map(([k, v]) => (
+                      <div key={k} className="flex items-center justify-between border-b border-white/10 pb-3 last:border-0 last:pb-0">
+                        <dt className="text-white/70">{k}</dt>
+                        <dd className="font-bold">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </main>
 
-      {/* Footer */}
       <Footer />
-
-      {/* Suggest a Tool Dialog Modal */}
-      <SuggestTool isOpen={isSuggestOpen} onClose={() => setIsSuggestOpen(false)} />
     </div>
   );
 }

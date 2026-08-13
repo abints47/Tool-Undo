@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface HeroProps {
   onExploreClick?: () => void;
@@ -6,40 +7,64 @@ interface HeroProps {
 
 export default function Hero({ onExploreClick }: HeroProps) {
   return (
-    <section className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl md:py-30 grid grid-cols-1 md:grid-cols-12 gap-gutter items-center animate-fade-in">
-      <div className="md:col-span-8 flex flex-col gap-lg">
-        <div className="space-y-md">
-          <div className="inline-flex items-center gap-xs px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-mono">
-            <span>🔥 സംഗതി കൊള്ളാം, പണി പാളരുത്! (Hope it doesn't break!)</span>
-          </div>
-          <h1 className="font-display-lg-mobile text-display-lg-mobile md:font-display-lg  md:text-display-lg text-3xl text-on-surface tracking-normal leading-none">
-            Welcome to <span className="text-primary-container font-extrabold">ToolUndo</span>
+    <section className="relative overflow-hidden bg-black">
+      {/* Subtle radial glow behind hero */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(139,92,246,0.12),transparent)]" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-40">
+        <div className="flex flex-col items-center text-center">
+          {/* Pill badge */}
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-neutral-400">
+            🚀 സംഗതി കൊള്ളാം, പണി പാളരുത്!
+          </span>
+
+          {/* Main heading */}
+          <h1 className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white md:text-7xl">
+            Build faster with
+            <br />
+            <span className="bg-gradient-to-r from-violet-400 to-purple-600 bg-clip-text text-transparent">
+              ToolUndo
+            </span>
           </h1>
-          <p className="font-body-lg text-body-lg text-secondary max-w-2xl leading-relaxed">
-            വല്യ കാര്യത്തിൽ പണിതുണ്ടാക്കിയതാ! (Made with great effort!) A premium collection of browser-based utilities. 
-            Instantly compress images, make custom QR codes, or design beautiful mesh gradients. 
-            No server overhead, no data sharing. ചുമ്മാ സീൻ ഇല്ലാതെ ഉപയോഗിക്കാം മച്ചാനേ! 
+
+          {/* Subtext */}
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-neutral-400 md:text-xl">
+            ബ്രൗസറിൽ തന്നെ ഓടുന്ന developer tools — no servers, no uploads, no drama.
+            Image compression, QR codes, gradient meshes, എല്ലാം ഇവിടെ ഒരൊറ്റ ചെക്കിൽ.
+            സെർവർ ഇല്ല, tension ഇല്ല. 🔥
           </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-md">
-          <button 
-            onClick={onExploreClick}
-            className="bg-primary-container text-white px-lg py-sm rounded font-label-caps text-label-caps uppercase tracking-widest cursor-pointer hover:bg-primary transition-all duration-200 active:scale-95 shadow-md hover:shadow-lg whitespace-nowrap text-center font-bold"
-          >
-            ടൂളുകൾ നോക്കാം (Explore Tools)
-          </button>
-        </div>
-      </div>
-      <div className="md:col-span-4 hidden md:block">
-        {/* Render our premium generated image */}
-        <div className="w-full aspect-square rounded-lg border border-outline relative overflow-hidden group shadow-lg">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/hero_neon_glow.png"
-            alt="ToolUndo Neon Art Graphic"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-background/30 to-transparent pointer-events-none"></div>
+
+          {/* CTA row */}
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+            <button
+              onClick={onExploreClick}
+              className="rounded-xl bg-violet-600 px-8 py-3 text-base font-semibold text-white transition-all hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98]"
+            >
+              ടൂളുകൾ നോക്കാം →
+            </button>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-xl border border-white/10 bg-white/[0.05] px-8 py-3 text-base font-semibold text-neutral-300 transition-all hover:border-white/20 hover:bg-white/[0.08]"
+            >
+              GitHub
+            </a>
+          </div>
+
+          {/* Hero image */}
+          <div className="relative mt-16 w-full overflow-hidden rounded-2xl border border-white/[0.06] shadow-2xl shadow-violet-500/5">
+            <Image
+              src="/hero_neon_glow.png"
+              alt="ToolUndo dashboard preview"
+              width={1200}
+              height={675}
+              className="aspect-video w-full object-cover"
+              priority
+            />
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          </div>
         </div>
       </div>
     </section>
