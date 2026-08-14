@@ -69,7 +69,7 @@ export default function QrGenerator() {
       }, "image/png");
     } catch (err) {
       console.error("Could not copy QR image: ", err);
-      alert("കോപ്പി ചെയ്യാൻ പറ്റിയില്ല അളിയാ! ഡൗൺലോഡ് ചെയ്ത് നോക്കിക്കേ.");
+      alert("Failed to copy image! Try downloading it instead.");
     }
   };
 
@@ -78,10 +78,10 @@ export default function QrGenerator() {
       <div className="flex flex-col gap-2">
         <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
           <span className="material-symbols-outlined text-primary-container">qr_code_2</span>
-          ക്യു.ആർ കോഡ് ഉണ്ടാക്കി (QR Code Generator)
+          QR Code Generator
         </h2>
         <p className="font-body-sm text-body-sm text-secondary">
-          ലിങ്കോ വാക്കുകളോ എന്തും കൊടുക്കൂ, വെറൈറ്റി കളറിൽ സ്കാൻ ചെയ്യാനുള്ള കോഡുകൾ പെട്ടെന്ന് വാരിക്കോളൂ!
+          Enter any link or text to instantly create custom QR codes with adjustable colors and styles!
         </p>
       </div>
 
@@ -91,14 +91,14 @@ export default function QrGenerator() {
           {/* Input field */}
           <div className="flex flex-col gap-2">
             <label htmlFor="qr-text" className="font-body-sm text-on-surface font-semibold">
-              എന്താണ് കോഡാക്കേണ്ടത്? (ലിങ്കോ പേരോ ടൈപ്പ് ചെയ്യ് മച്ചാ)
+              What do you want to encode?
             </label>
             <textarea
               id="qr-text"
               rows={3}
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="അളിയാ... ലിങ്ക് ഇവിടെ എഴുത്..."
+              placeholder="Type your link or text here..."
               className="w-full swiss-border rounded p-3 text-body-sm font-sans swiss-focus bg-surface-container-lowest resize-none"
             />
           </div>
@@ -107,7 +107,7 @@ export default function QrGenerator() {
             {/* Foreground Color */}
             <div className="flex flex-col gap-2">
               <label htmlFor="fg-color" className="font-body-sm text-on-surface font-semibold text-xs">
-                കോഡിന്റെ മെയിൻ കളർ
+                QR Code Color
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -124,7 +124,7 @@ export default function QrGenerator() {
             {/* Background Color */}
             <div className="flex flex-col gap-2">
               <label htmlFor="bg-color" className="font-body-sm text-on-surface font-semibold text-xs">
-                ബാക്ക്ഗ്രൗണ്ട് കളർ
+                Background Color
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -144,7 +144,7 @@ export default function QrGenerator() {
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center text-xs">
                 <label htmlFor="size-slider" className="font-body-sm text-on-surface font-semibold">
-                  സൈസ് വലിപ്പം എത്ര വേണം?
+                  Size Dimension
                 </label>
                 <span className="font-mono font-bold text-secondary">{size}px</span>
               </div>
@@ -164,7 +164,7 @@ export default function QrGenerator() {
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-center text-xs">
                 <label htmlFor="margin-slider" className="font-body-sm text-on-surface font-semibold">
-                  ചുറ്റുമുള്ള ഗ്യാപ്പ്
+                  Outer Margin
                 </label>
                 <span className="font-mono font-bold text-secondary">{margin}</span>
               </div>
@@ -183,11 +183,11 @@ export default function QrGenerator() {
           {/* Error Correction Level */}
           <div className="flex flex-col gap-2">
             <label className="font-body-sm text-on-surface font-semibold text-xs">
-              ഡാറ്റ സുരക്ഷിത സാന്ദ്രത (Error Correction Level)
+              Error Correction Level
             </label>
             <div className="grid grid-cols-4 gap-2">
               {(["L", "M", "Q", "H"] as const).map((level) => {
-                const labelMap = { L: "കുറവ് (Low)", M: "മിഡിയം", Q: "കുറച്ചു കൂടുതൽ", H: "ഫുൾ മാസ് (High)" };
+                const labelMap = { L: "Low (~7%)", M: "Medium (~15%)", Q: "Quart (~25%)", H: "High (~30%)" };
                 return (
                   <button
                     key={level}
@@ -205,19 +205,19 @@ export default function QrGenerator() {
               })}
             </div>
             <p className="text-[11px] text-secondary leading-tight mt-0.5">
-              ഇത് ഫുൾ മാസ് ആക്കിയാൽ പടത്തിൽ അഴുക്കോ കറയോ പുരണ്ടാലും ക്യാമറയ്ക്ക് സ്കാൻ ചെയ്തെടുക്കാൻ പറ്റും!
+              Higher levels allow the QR code to remain scannable even if parts of it are damaged or obscured.
             </p>
           </div>
         </div>
 
         {/* Live Canvas View Area */}
-        <div className="md:col-span-5 flex flex-col items-center justify-center gap-4 bg-surface-container-low border border-outline-variant rounded-lg p-6 min-h-[300px]">
+        <div className="md:col-span-5 flex flex-col items-center justify-center gap-4 bg-surface-container-low border border-outline-variant rounded-lg p-6 min-h-75">
           <div className="bg-white rounded border border-outline-variant p-2 flex items-center justify-center shadow-inner relative max-w-full overflow-hidden">
-            <canvas ref={canvasRef} className="max-w-full h-auto max-h-[220px] object-contain" />
+            <canvas ref={canvasRef} className="max-w-full h-auto max-h-55 object-contain" />
             {!text.trim() && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white text-secondary/40 font-mono text-sm p-4">
                 <span className="material-symbols-outlined text-4xl">qr_code_scanner</span>
-                <span>പേര് എഴുതിയാൽ ക്യു.ആർ കാണാം!</span>
+                <span>Enter text to preview QR code!</span>
               </div>
             )}
           </div>
@@ -229,7 +229,7 @@ export default function QrGenerator() {
                 className="w-full bg-primary-container text-white py-2.5 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-primary transition-all duration-200 active:scale-95 flex items-center justify-center gap-xs shadow-sm"
               >
                 <span className="material-symbols-outlined text-[18px]">download</span>
-                PNG അങ്ങ് ഡൗൺലോഡിച്ചോ!
+                Download PNG
               </button>
               <button
                 onClick={handleCopyImage}
@@ -238,7 +238,7 @@ export default function QrGenerator() {
                 <span className="material-symbols-outlined text-[18px]">
                   {isCopied ? "check" : "content_copy"}
                 </span>
-                {isCopied ? "അങ്ങ് കോപ്പി ചെയ്തു!" : "ഇമേജ് കോപ്പി ചെയ്യ്!"}
+                {isCopied ? "Copied to Clipboard!" : "Copy Image"}
               </button>
             </div>
           )}

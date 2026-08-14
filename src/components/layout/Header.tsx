@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from 'next/image';
 
 interface HeaderProps {
   onNavClick?: (section: string) => void;
@@ -23,7 +24,14 @@ export default function Header({ onNavClick, activeSection = "tools" }: HeaderPr
     <header className="sticky top-0 z-50 bg-cream/80 backdrop-blur-xl border-b border-border">
       <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-margin-mobile md:px-margin-desktop">
         {/* Logo */}
-        <button onClick={() => nav("home")} className="text-lg font-bold tracking-tight text-ink select-none">
+        <button onClick={() => nav("home")} className="flex items-center gap-2 text-lg font-bold tracking-tight text-ink select-none">
+          <Image 
+            src="/icon.png" 
+            alt="ToolUndo Logo" 
+            width={24} 
+            height={24} 
+            className="object-contain" 
+          />
           ToolUndo
         </button>
 

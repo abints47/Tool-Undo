@@ -11,6 +11,8 @@ export default function QrGeneratorPage() {
   const [fgColor, setFgColor] = useState("#0f172a");
   const [bgColor, setBgColor] = useState("#ffffff");
   const [size, setSize] = useState(256);
+  const [margin, setMargin] = useState(4);
+  const [errorLevel, setErrorLevel] = useState<"L" | "M" | "Q" | "H">("H");
   const [isCopied, setIsCopied] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,10 +22,17 @@ export default function QrGeneratorPage() {
     QRCode.toCanvas(
       canvasRef.current,
       text,
-      { width: size, margin: 2, color: { dark: fgColor, light: bgColor } },
-      (error) => error && console.error("QR error:", error)
+      {
+        width: size,
+        margin: margin,
+        color: { dark: fgColor, light: bgColor },
+        errorCorrectionLevel: errorLevel,
+      },
+      (error) => {
+        if (error) console.error("QR error:", error);
+      }
     );
-  }, [text, fgColor, bgColor, size]);
+  }, [text, fgColor, bgColor, size, margin, errorLevel]);
 
   const handleDownload = () => {
     if (!canvasRef.current || !text.trim()) return;
@@ -52,13 +61,13 @@ export default function QrGeneratorPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
-      <Header showBackLink={true} backHref="/" />
+      <Header />
 
       <main className="flex-1 py-12 lg:py-16">
-        <div className="container-x max-w-4xl">
+        <div className="container-x max-w-4xl mx-auto px-4">
           {/* Title */}
           <div className="mb-8 flex items-center gap-4">
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-pink-500 text-white shadow-md">
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-fuchsia-500 to-pink-500 text-white shadow-md">
               <QrCode size={28} />
             </div>
             <div>
@@ -67,7 +76,7 @@ export default function QrGeneratorPage() {
             </div>
           </div>
 
-          <div className="card p-6 md:p-8">
+          <div className="card p-6 md:p-8 bg-white rounded-2xl shadow-sm border border-line">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {/* Settings */}
               <div className="space-y-6">
@@ -86,57 +95,116 @@ export default function QrGeneratorPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  {[
-                    ["Code Color 🎨", fgColor, setFgColor],
-                    ["Background", bgColor, setBgColor],
-                  ].map(([label, val, setter]) => (
-                    <div key={label as string}>
-                      <label className="mb-2 block text-sm font-semibold text-ink">{label as string}</label>
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="color"
-                          value={val as string}
-                          onChange={(e) => (setter as React.Dispatch<React.SetStateAction<string>>)(e.target.value)}
-                          className="h-12 w-12 cursor-pointer rounded-xl border border-line bg-canvas"
-                        />
-                        <span className="font-mono text-xs uppercase text-ink-faint">{(val as string)}</span>
-                      </div>
+                  <div>
+                    <label htmlFor="fg-color" className="mb-2 block text-sm font-semibold text-ink">Code Color 🎨</label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        id="fg-color"
+                        type="color"
+                        value={fgColor}
+                        onChange={(e) => setFgColor(e.target.value)}
+                        className="h-12 w-12 cursor-pointer rounded-xl border border-line bg-canvas p-0"
+                      />
+                      <span className="font-mono text-xs uppercase text-ink-faint">{fgColor}</span>
                     </div>
-                  ))}
+                  </div>
+                  <div>
+                    <label htmlFor="bg-color" className="mb-2 block text-sm font-semibold text-ink">Background</label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        id="bg-color"
+                        type="color"
+                        value={bgColor}
+                        onChange={(e) => setBgColor(e.target.value)}
+                        className="h-12 w-12 cursor-pointer rounded-xl border border-line bg-canvas p-0"
+                      />
+                      <span className="font-mono text-xs uppercase text-ink-faint">{bgColor}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <div className="mb-2 flex items-center justify-between">
-                    <label className="text-sm font-semibold text-ink">Size 📐</label>
-                    <span className="font-mono text-sm font-bold text-brand-600">{size}px</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <label htmlFor="size-range" className="text-sm font-semibold text-ink">Size 📐</label>
+                      <span className="font-mono text-sm font-bold text-brand-600">{size}px</span>
+                    </div>
+                    <input
+                      id="size-range"
+                      type="range"
+                      min={128}
+                      max={512}
+                      step={16}
+                      value={size}
+                      onChange={(e) => setSize(parseInt(e.target.value))}
+                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-line accent-brand-600"
+                    />
+                    <div className="mt-1 flex justify-between text-xs text-ink-faint">
+                      <span>128px</span>
+                      <span>512px</span>
+                    </div>
                   </div>
-                  <input
-                    type="range"
-                    min={128}
-                    max={512}
-                    step={16}
-                    value={size}
-                    onChange={(e) => setSize(parseInt(e.target.value))}
-                    className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-line accent-brand-600"
-                  />
-                  <div className="mt-1 flex justify-between text-xs text-ink-faint">
-                    <span>128px (cute)</span>
-                    <span>512px (confident)</span>
+
+                  <div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <label htmlFor="margin-range" className="text-sm font-semibold text-ink">Margin 🖼️</label>
+                      <span className="font-mono text-sm font-bold text-brand-600">{margin}</span>
+                    </div>
+                    <input
+                      id="margin-range"
+                      type="range"
+                      min={0}
+                      max={10}
+                      value={margin}
+                      onChange={(e) => setMargin(parseInt(e.target.value))}
+                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-line accent-brand-600"
+                    />
+                    <div className="mt-1 flex justify-between text-xs text-ink-faint">
+                      <span>0</span>
+                      <span>10</span>
+                    </div>
                   </div>
+                </div>
+
+                {/* Error Correction Level */}
+                <div className="space-y-2">
+                  <span className="block text-sm font-semibold text-ink">Error Correction Level 🛡️</span>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(["L", "M", "Q", "H"] as const).map((level) => {
+                      const labelMap = { L: "Low (~7%)", M: "Med (~15%)", Q: "Quart (~25%)", H: "High (~30%)" };
+                      return (
+                        <button
+                          key={level}
+                          type="button"
+                          onClick={() => setErrorLevel(level)}
+                          className={`py-2 px-1 text-center rounded-xl text-xs font-semibold border transition-all ${
+                            errorLevel === level
+                              ? "bg-brand-600 text-white border-brand-600 shadow-sm"
+                              : "border-line text-ink-soft bg-canvas hover:bg-line/50"
+                          }`}
+                        >
+                          {labelMap[level]}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <p className="text-[11px] text-ink-faint leading-tight">
+                    Higher levels keep the code readable even if it gets slightly damaged or covered.
+                  </p>
                 </div>
               </div>
 
               {/* Preview */}
               <div className="flex flex-col items-center justify-center">
-                <div className="mb-6 rounded-2xl border border-line bg-canvas p-6 shadow-inner">
-                  <canvas ref={canvasRef} className="h-auto w-full max-w-[240px] rounded-lg" />
+                <div className="mb-6 rounded-2xl border border-line bg-canvas p-6 shadow-inner flex items-center justify-center">
+                  <canvas ref={canvasRef} className="h-auto w-full max-w-60 rounded-lg" />
                 </div>
                 {text.trim() && (
                   <div className="flex w-full flex-col gap-3">
-                    <button onClick={handleDownload} className="btn-primary w-full">
+                    <button onClick={handleDownload} className="btn-primary w-full flex items-center justify-center gap-2">
                       <Download size={18} /> Download PNG 💾
                     </button>
-                    <button onClick={handleCopyImage} className="btn-ghost w-full">
+                    <button onClick={handleCopyImage} className="btn-ghost w-full flex items-center justify-center gap-2">
                       {isCopied ? (
                         <><Check size={18} /> Copied! ✅</>
                       ) : (
