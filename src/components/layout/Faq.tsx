@@ -4,32 +4,29 @@ import React, { useState } from "react";
 
 interface FaqItemProps {
   question: string;
-  malayalamQuestion: string;
   answer: string;
-  malayalamAnswer: string;
 }
 
-function FaqItem({ question, malayalamQuestion, answer, malayalamAnswer }: FaqItemProps) {
+function FaqItem({ question, answer }: FaqItemProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-outline-variant/60 py-4 transition-all">
+    <div className={`transition-all duration-200 rounded-2xl border ${isOpen ? "border-primary/40 bg-amber-900/10 shadow-sm" : "border-outline-variant/40 bg-surface-container-low/30 hover:border-outline-variant hover:bg-amber-900/10"} overflow-hidden mb-3`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center text-left py-2 font-body-md text-on-surface font-semibold hover:text-primary transition-colors focus:outline-none"
+        className="w-full flex justify-between items-center text-left p-6 font-body-md text-on-surface font-medium hover:text-primary transition-all duration-300 focus:outline-none group cursor-pointer"
       >
-        <span className="flex flex-col gap-0.5">
-          <span className="text-sm font-mono text-primary font-bold">{malayalamQuestion}</span>
-          <span className="text-base text-on-surface">{question}</span>
+        <span className="text-base tracking-wide text-on-surface group-hover:text-primary transition-colors duration-300">
+          {question}
         </span>
-        <span className="material-symbols-outlined text-secondary transition-transform duration-200">
-          {isOpen ? "remove" : "add"}
-        </span>
+        <div className={`relative w-8 h-8 flex items-center justify-center transition-transform duration-500 ease-out shrink-0 ml-4 ${isOpen ? "rotate-90 scale-110" : "group-hover:scale-110"}`}>
+          <span className={`absolute w-full h-0.5 rounded-full transition-all duration-500 ${isOpen ? "bg-pink-700 rotate-45" : "bg-gray-700 group-hover:bg-accent"}`}></span>
+          <span className={`absolute h-full w-0.5 rounded-full transition-all duration-500 ${isOpen ? "bg-gray-700 opacity-0" : "bg-gray-700 group-hover:bg-accent"}`}></span>
+        </div>
       </button>
       
       {isOpen && (
-        <div className="mt-2 pl-2 text-secondary text-sm space-y-2 animate-scale-up">
-          <p className="font-semibold text-on-surface-variant font-mono">{malayalamAnswer}</p>
+        <div className="px-5 pb-5 pt-0 text-secondary text-sm space-y-2 animate-scale-up">
           <p className="leading-relaxed text-secondary">{answer}</p>
         </div>
       )}
@@ -40,38 +37,29 @@ function FaqItem({ question, malayalamQuestion, answer, malayalamAnswer }: FaqIt
 export default function Faq() {
   const faqs = [
     {
-      malayalamQuestion: "ഇത് ശരിക്കും സൗജന്യമാണോ? സർവർ ചെലവൊന്നും ഇല്ലേ?",
       question: "Is this really free? Are there any hidden costs?",
-      malayalamAnswer: "അതെ മച്ചാനേ, ഇത് ഫുൾ ഫ്രീ ആണ്! ഇതിൽ സർവർ അണ്ണൻ ചില്ലിംഗ് ആയതുകൊണ്ട് ഞങ്ങൾക്ക് വലിയ ചെലവൊന്നുമില്ല.",
-      answer: "Yes, this toolbox is 100% free with no limits. Because all tools execute inside your browser (client-side), we don't have to pay for cloud processing servers.",
+      answer: "Athe machane, ithu 100% free aanu! Since all tools execute client-side right in your browser, cloud processing server-inu extra charges onnum kodukkan venda.",
     },
     {
-      malayalamQuestion: "എന്റെ ചിത്രങ്ങളും ഫയലുകളും ചോരുമോ? സെക്യൂർ ആണോ?",
-      question: "Will my images or input data leak? Is it secure?",
-      malayalamAnswer: "ഒരു കുഴപ്പവുമില്ല ജി! ഫയലുകൾ ഒരിടത്തും അപ്‌ലോഡ് ചെയ്യുന്നില്ല. നിന്റെ സിസ്റ്റത്തിൽ മാത്രം നടക്കുന്നു.",
-      answer: "Absolutely safe. Your files never touch a remote server. Everything runs locally on your device via browser Canvas and Javascript APIs. You can even use it offline!",
+      question: "Will my images and input files leak? Is it secure?",
+      answer: "Oru kuzhappavum illa ji! Your files are never uploaded to any remote server. Ellam ninte device-il thanne browser Canvas-um JavaScript APIs-um use cheythu locally aanu nadakkunnath. You can even use it completely offline!",
     },
     {
-      malayalamQuestion: "എന്തിനാണ് ഇതിൽ മലയാളം എഴുതി വെച്ചിരിക്കുന്നത്?",
-      question: "Why is there Malayalam slang on a developer site?",
-      malayalamAnswer: "ചുമ്മാ ഒരു രസത്തിന്! എപ്പോഴും ഒരേ കടുപ്പമുള്ള ഇംഗ്ലീഷ് വായിച്ചു ബോറടിക്കുന്ന ഡെവലപ്പർമാർക്ക് ഒരു കുഞ്ഞു തമാശ.",
-      answer: "Just for fun! We wanted to add a touch of local Kerala culture and humor to break the monotony of boring, overly corporate tech platforms.",
+      question: "Why is there Malayalam slang used on the developer site?",
+      answer: "Chumma oru rasathinu! It adds a fun Kerala touch for developers who might otherwise get bored reading serious technical English content all the time.",
     },
     {
-      malayalamQuestion: "നിങ്ങൾക്ക് പുതിയ ടൂൾ സജസ്റ്റ് ചെയ്യാൻ പറ്റുമോ?",
-      question: "Can I request custom features or tools?",
-      malayalamAnswer: "തീർച്ചയായും! മുകളിലുള്ള 'Suggest a Tool' ബട്ടൺ ഞെക്കി അടുത്ത പണി എന്താണെന്ന് പറഞ്ഞു തരൂ.",
-      answer: "Definitely! Open the 'Suggest a Tool' modal from the dashboard grid and tell us your idea. We regularly build utilities based on community requests.",
+      question: "Can I suggest custom features or new tools?",
+      answer: "Theerchayayum! Just click the 'Suggest a Tool' button on the dashboard and share your idea. Community requests anusarichu njangal regular aayi puthiya utilities build cheyyunnundu.",
     },
   ];
 
   return (
     <section className="w-full max-w-4xl mx-auto py-lg px-margin-mobile md:px-margin-desktop scroll-mt-20">
       <div className="text-center space-y-2 mb-lg">
-        <span className="text-xs font-label-caps uppercase tracking-widest text-primary font-bold">ചില സംശയങ്ങൾ</span>
-        <h2 className="font-headline-md text-headline-md text-on-surface">Frequently Asked Questions</h2>
+        <h2 className="font-headline-md text-headline-md text-on-surface text-3xl">Frequently Asked Questions<span className="text-amber-800 font-semibold"> (FAQ's)</span></h2>
       </div>
-      <div className="border border-outline-variant/60 rounded-lg p-6 bg-surface-container-low/40">
+      <div className="flex flex-col">
         {faqs.map((faq, index) => (
           <FaqItem key={index} {...faq} />
         ))}

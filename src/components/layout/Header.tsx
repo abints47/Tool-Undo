@@ -1,89 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface HeaderProps {
   onNavClick?: (section: string) => void;
   activeSection?: string;
 }
 
-const navItems = [
-  { label: "Tools", id: "tools" },
-  { label: "Features", id: "features" },
-  { label: "About", id: "about" },
-];
-
-export default function Header({ onNavClick, activeSection }: HeaderProps) {
+export default function Header({ onNavClick, activeSection = "tools" }: HeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleNavClick = (id: string) => {
-    onNavClick?.(id);
-    setMobileOpen(false);
-  };
+  const nav = (s: string) => { onNavClick?.(s); setMobileOpen(false); };
+
+  const linkClass = (s: string) =>
+    `text-sm transition-colors duration-200 ${
+      activeSection === s
+        ? "text-accent font-semibold"
+        : "text-ink-muted hover:text-ink"
+    }`;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)]">
+    <header className="sticky top-0 z-50 bg-cream/80 backdrop-blur-xl border-b border-border">
+      <div className="max-w-6xl mx-auto flex items-center justify-between h-16 px-margin-mobile md:px-margin-desktop">
         {/* Logo */}
-        <span className="text-lg font-bold tracking-tight text-white">
+        <button onClick={() => nav("home")} className="text-lg font-bold tracking-tight text-ink select-none">
           ToolUndo
-        </span>
+        </button>
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-8 md:flex">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`text-sm transition-colors duration-200 ${
-                activeSection === item.id
-                  ? "font-medium text-white"
-                  : "text-neutral-400 hover:text-white"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-8">
+          <button onClick={() => nav("tools")} className={linkClass("tools")}>Tools</button>
+          <button onClick={() => nav("features")} className={linkClass("features")}>Features</button>
+          <button onClick={() => nav("about")} className={linkClass("about")}>About</button>
         </nav>
 
         {/* Desktop CTA */}
-        <button className="hidden rounded-lg bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-violet-500 md:inline-flex">
+        <button
+          onClick={() => nav("tools")}
+          className="hidden md:inline-flex text-sm font-medium bg-ink text-cream px-5 py-2 rounded-full hover:bg-ink-light transition-colors"
+        >
           Get Started
         </button>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="inline-flex items-center justify-center text-neutral-400 transition-colors hover:text-white md:hidden"
-          aria-label="Toggle menu"
-        >
-          <span className="material-symbols-outlined text-[24px]">
-            {mobileOpen ? "close" : "menu"}
-          </span>
+        {/* Mobile toggle */}
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-ink p-1">
+          <span className="material-symbols-outlined text-2xl">{mobileOpen ? "close" : "menu"}</span>
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="animate-fade-in border-t border-white/[0.06] bg-black/95 md:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col gap-1 p-4">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`rounded-lg px-4 py-2.5 text-left text-sm transition-colors duration-200 ${
-                  activeSection === item.id
-                    ? "font-medium text-white"
-                    : "text-neutral-400 hover:text-white"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-            <button className="mt-2 w-full rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-violet-500">
+        <div className="md:hidden border-t border-border bg-cream/95 backdrop-blur-xl animate-scale-in">
+          <nav className="flex flex-col p-5 gap-4">
+            <button onClick={() => nav("tools")} className={`${linkClass("tools")} text-left text-base`}>Tools</button>
+            <button onClick={() => nav("features")} className={`${linkClass("features")} text-left text-base`}>Features</button>
+            <button onClick={() => nav("about")} className={`${linkClass("about")} text-left text-base`}>About</button>
+            <button
+              onClick={() => nav("tools")}
+              className="mt-2 text-sm font-medium bg-ink text-cream px-5 py-2.5 rounded-full text-center"
+            >
               Get Started
             </button>
-          </div>
+          </nav>
         </div>
       )}
     </header>

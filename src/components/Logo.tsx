@@ -25,7 +25,7 @@ export default function Logo({ size = "md", showText = true, className = "", dar
 
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      <div className="rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 p-2 flex items-center justify-center shadow-md">
+      <div className="rounded-xl bg-linear-to-br from-violet-500 to-purple-600 p-2 flex items-center justify-center shadow-md">
         <Wrench size={iconSizes[size]} className="text-white" strokeWidth={2.5} />
       </div>
       {showText && (

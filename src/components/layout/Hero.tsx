@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 
 interface HeroProps {
   onExploreClick?: () => void;
@@ -7,63 +6,62 @@ interface HeroProps {
 
 export default function Hero({ onExploreClick }: HeroProps) {
   return (
-    <section className="relative overflow-hidden bg-black">
-      {/* Subtle radial glow behind hero */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(139,92,246,0.12),transparent)]" />
+    <section className="relative overflow-hidden">
+      {/* Subtle warm gradient background */}
+      <div className="absolute inset-0 bg-linear-to-b from-cream via-warm-100/40 to-cream pointer-events-none" />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-40">
-        <div className="flex flex-col items-center text-center">
-          {/* Pill badge */}
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-neutral-400">
-            🚀 സംഗതി കൊള്ളാം, പണി പാളരുത്!
-          </span>
+      <div className="relative max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop pt-20 pb-24 md:pt-32 md:pb-40">
+        <div className="flex flex-col items-center text-center animate-slide-up">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-warm-white text-xs font-medium text-ink-muted mb-8 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            🔧 സംഗതി കൊള്ളാം, പണി പാളരുത്!
+          </div>
 
-          {/* Main heading */}
-          <h1 className="mt-8 text-5xl font-extrabold leading-[1.1] tracking-tight text-white md:text-7xl">
-            Build faster with
-            <br />
-            <span className="bg-gradient-to-r from-violet-400 to-purple-600 bg-clip-text text-transparent">
+          {/* Heading */}
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-ink leading-[1.08] max-w-4xl">
+            Build faster with{" "}
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-accent to-accent-light">
               ToolUndo
             </span>
           </h1>
 
-          {/* Subtext */}
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-neutral-400 md:text-xl">
-            ബ്രൗസറിൽ തന്നെ ഓടുന്ന developer tools — no servers, no uploads, no drama.
-            Image compression, QR codes, gradient meshes, എല്ലാം ഇവിടെ ഒരൊറ്റ ചെക്കിൽ.
-            സെർവർ ഇല്ല, tension ഇല്ല. 🔥
+          {/* Subtitle */}
+          <p className="mt-6 text-base md:text-lg text-ink-muted leading-relaxed max-w-5xl">
+            വല്യ കാര്യത്തിൽ പണിതുണ്ടാക്കിയതാ! Premium browser-based utilities —
+            compress images, generate QR codes, design gradient meshes.
+            Zero server, zero data sharing. ചുമ്മാ ഉപയോഗിക്കാം മച്ചാനേ!
           </p>
 
-          {/* CTA row */}
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+          {/* CTA */}
+          <div className="mt-10 flex flex-col sm:flex-row gap-4">
             <button
               onClick={onExploreClick}
-              className="rounded-xl bg-violet-600 px-8 py-3 text-base font-semibold text-white transition-all hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/20 active:scale-[0.98]"
+              className="bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200 hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98]"
             >
-              ടൂളുകൾ നോക്കാം →
+              Checkout The Tools →
             </button>
             <a
               href="https://github.com"
               target="_blank"
-              rel="noreferrer"
-              className="rounded-xl border border-white/10 bg-white/[0.05] px-8 py-3 text-base font-semibold text-neutral-300 transition-all hover:border-white/20 hover:bg-white/[0.08]"
+              rel="noopener noreferrer"
+              className="border border-border hover:border-warm-300 bg-warm-white hover:bg-warm-50 text-ink-muted px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200"
             >
               GitHub
             </a>
           </div>
+        </div>
 
-          {/* Hero image */}
-          <div className="relative mt-16 w-full overflow-hidden rounded-2xl border border-white/[0.06] shadow-2xl shadow-violet-500/5">
-            <Image
+        {/* Hero Image */}
+        <div className="mt-16 md:mt-24 rounded-2xl overflow-hidden border border-border shadow-2xl shadow-ink/5 mx-auto max-w-5xl animate-fade-in">
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/hero_neon_glow.png"
-              alt="ToolUndo dashboard preview"
-              width={1200}
-              height={675}
-              className="aspect-video w-full object-cover"
-              priority
+              alt="ToolUndo Preview"
+              className="w-full aspect-video object-cover"
             />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-cream/50 via-transparent to-transparent pointer-events-none" />
           </div>
         </div>
       </div>

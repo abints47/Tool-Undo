@@ -3,29 +3,31 @@
 
 @import "tailwindcss";
 
-/* ──────────────────────────────────────────────
-   Design Tokens — Tailwind v4 Theme
-   ────────────────────────────────────────────── */
 @theme {
-  /* Color palette */
-  --color-surface-0: #000000;
-  --color-surface-1: #0a0a0a;
-  --color-surface-2: #111111;
-  --color-surface-3: #171717;
+  /* Warm Cream Palette */
+  --color-cream: #FFFCF5;
+  --color-cream-dark: #FEF3E2;
+  --color-warm-white: #FFFFFF;
+  --color-warm-50: #FFF9F0;
+  --color-warm-100: #FEF0DC;
+  --color-warm-200: #E8DDD0;
+  --color-warm-300: #D4C8B8;
+  --color-warm-400: #A89A8A;
 
-  --color-text-primary: #fafafa;
-  --color-text-secondary: #e5e5e5;
-  --color-text-muted: #a3a3a3;
-  --color-text-faint: #737373;
+  --color-ink: #1A1613;
+  --color-ink-light: #3D3630;
+  --color-ink-muted: #7A7068;
+  --color-ink-faint: #A89E96;
 
-  --color-accent: #8b5cf6;
-  --color-accent-hover: #7c3aed;
-  --color-accent-light: #a78bfa;
+  --color-accent: #C2410C;
+  --color-accent-hover: #9A3412;
+  --color-accent-light: #FB923C;
+  --color-accent-bg: #FFF1E6;
 
-  --color-border: rgba(255, 255, 255, 0.06);
-  --color-border-hover: rgba(139, 92, 246, 0.3);
+  --color-border: #E8E0D4;
+  --color-border-light: #F0EAE0;
 
-  /* Spacing scale */
+  /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
@@ -33,159 +35,57 @@
   --spacing-xl: 64px;
   --spacing-2xl: 96px;
   --spacing-gutter: 24px;
+  --spacing-section: 120px;
   --spacing-margin-mobile: 20px;
   --spacing-margin-desktop: 80px;
 
-  /* Font family */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Typography — all Inter */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* Font sizes: [size, { lineHeight, letterSpacing?, fontWeight? }] */
-  --font-size-display: 72px;
-  --font-size-display-mobile: 48px;
-  --font-size-headline-lg: 40px;
-  --font-size-headline: 30px;
-  --font-size-title: 22px;
-  --font-size-body-lg: 18px;
-  --font-size-body: 16px;
-  --font-size-body-sm: 14px;
-  --font-size-label: 12px;
-  --font-size-caption: 11px;
+  --animate-fade-in: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-slide-up: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-scale-in: scale-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Animations */
-  --animate-fade-in: fade-in 0.5s ease both;
-  --animate-slide-up: slide-up 0.5s ease both;
-  --animate-scale-in: scale-in 0.3s ease both;
-}
-
-/* ──────────────────────────────────────────────
-   Keyframes
-   ────────────────────────────────────────────── */
-@keyframes fade-in {
-  from {
-    opacity: 0;
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
-  to {
-    opacity: 1;
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
   }
 }
 
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Utility classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.card-lift {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(26, 22, 19, 0.06), 0 2px 8px rgba(26, 22, 19, 0.04);
+  border-color: var(--color-warm-300);
 }
 
-/* ──────────────────────────────────────────────
-   Utility Classes
-   ────────────────────────────────────────────── */
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-}
-
-.card-hover {
-  transition: all 0.3s ease;
-}
-
-.card-hover:hover {
-  border-color: rgba(139, 92, 246, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.08);
-}
-
-/* ──────────────────────────────────────────────
-   Typography presets
-   ────────────────────────────────────────────── */
-.text-display {
-  font-size: var(--font-size-display);
-  line-height: 80px;
-  letter-spacing: -0.03em;
-  font-weight: 800;
-}
-
-.text-display-mobile {
-  font-size: var(--font-size-display-mobile);
-  line-height: 52px;
-  letter-spacing: -0.03em;
-  font-weight: 800;
-}
-
-.text-headline-lg {
-  font-size: var(--font-size-headline-lg);
-  line-height: 48px;
-  font-weight: 700;
-}
-
-.text-headline {
-  font-size: var(--font-size-headline);
-  line-height: 36px;
-  font-weight: 700;
-}
-
-.text-title {
-  font-size: var(--font-size-title);
-  line-height: 28px;
-  font-weight: 600;
-}
-
-.text-body-lg {
-  font-size: var(--font-size-body-lg);
-  line-height: 28px;
-  font-weight: 400;
-}
-
-.text-body {
-  font-size: var(--font-size-body);
-  line-height: 24px;
-  font-weight: 400;
-}
-
-.text-body-sm {
-  font-size: var(--font-size-body-sm);
-  line-height: 20px;
-  font-weight: 400;
-}
-
-.text-label {
-  font-size: var(--font-size-label);
-  line-height: 16px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-}
-
-.text-caption {
-  font-size: var(--font-size-caption);
-  line-height: 14px;
-}
-
-/* ──────────────────────────────────────────────
-   Global Base Styles
-   ────────────────────────────────────────────── */
+/* Base */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: #000000;
-  color: #fafafa;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
@@ -193,66 +93,38 @@ body {
   flex-direction: column;
 }
 
-/* ──────────────────────────────────────────────
-   Custom Scrollbar
-   ────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #222222;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #444444;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555555;
-}
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #444444 #222222;
-}
-
-/* ──────────────────────────────────────────────
-   Form Elements
-   ────────────────────────────────────────────── */
-input,
-textarea,
-select {
-  background-color: #111111;
-  border: 1px solid #262626;
-  color: #ffffff;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-family: inherit;
-  font-size: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #737373;
-}
-
-/* ──────────────────────────────────────────────
-   Selection
-   ────────────────────────────────────────────── */
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
-  color: #ffffff;
+  background-color: var(--color-accent-bg);
+  color: var(--color-accent);
 }
+
+/* Form elements */
+input[type="text"], input[type="email"], textarea, select {
+  background-color: var(--color-warm-white);
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1);
+}
+
+/* Swiss utility compat */
+.swiss-border { border: 1px solid var(--color-border); }
+.swiss-focus:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.1); }
+.swiss-hover { transition: all 0.3s ease; }
+.swiss-hover:hover { background-color: var(--color-warm-50); border-color: var(--color-warm-300); }
+
+/* Range slider accent */
+input[type="range"] { accent-color: var(--color-accent); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-cream); }
+::-webkit-scrollbar-thumb { background: var(--color-warm-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-warm-400); }

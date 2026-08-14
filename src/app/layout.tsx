@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ToolUndo — Browser-Based Developer Tools",
   description:
-    "Premium collection of fast, private, browser-based utilities. Image compression, QR generation, CSS gradient mesh design — all running locally.",
+    "Premium collection of fast, private, browser-based utilities. Image compression, QR generation, CSS gradient mesh — all running locally.",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );

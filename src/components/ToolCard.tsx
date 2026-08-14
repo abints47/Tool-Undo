@@ -23,7 +23,7 @@ export default function ToolCard({
     <Link href={href} className="group block h-full">
       <div className="card flex h-full flex-col gap-5 p-7">
         <div className="flex items-start justify-between">
-          <div className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md transition-transform duration-300 group-hover:scale-110`}>
+          <div className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br ${gradient} text-white shadow-md transition-transform duration-300 group-hover:scale-110`}>
             <Icon size={26} />
           </div>
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-faint transition-all duration-300 group-hover:border-brand-400 group-hover:bg-brand-soft group-hover:text-brand-600">
