@@ -103,13 +103,12 @@ export default function ImageToWebpPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
-      <Header showBackLink={true} backHref="/" />
 
       <main className="flex-1 py-12 lg:py-16">
         <div className="container-x max-w-4xl">
           {/* Title */}
           <div className="mb-8 flex items-center gap-4">
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md">
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-cyan-500 text-white shadow-md">
               <ImageIcon size={28} />
             </div>
             <div>
@@ -148,9 +147,9 @@ export default function ImageToWebpPage() {
           ) : (
             <div className="card p-6 md:p-8">
               {/* Preview */}
-              <div className="mb-6 flex min-h-[220px] items-center justify-center overflow-hidden rounded-xl bg-canvas">
+              <div className="mb-6 flex min-h-55 items-center justify-center overflow-hidden rounded-xl bg-canvas">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl ?? ""} alt={`Preview of ${selectedFile?.name ?? "uploaded image"}`} className="max-h-[360px] w-auto object-contain" />
+                <img src={previewUrl ?? ""} alt={`Preview of ${selectedFile?.name ?? "uploaded image"}`} className="max-h-90 w-auto object-contain" />
               </div>
 
               {/* Stats grid */}

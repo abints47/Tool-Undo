@@ -29,7 +29,7 @@ export default function ImageToWebp() {
 
   const processFile = (file: File) => {
     if (!file.type.startsWith("image/")) {
-      alert("ഇതൊരു പടം അല്ലല്ലോ മച്ചാനേ! ശരിക്കുള്ള പടം വെയ്ക്ക് (PNG/JPG).");
+      alert("Machane, this is not an image! Please upload a valid image (PNG/JPG).");
       return;
     }
     setSelectedFile(file);
@@ -69,7 +69,7 @@ export default function ImageToWebp() {
 
       const ctx = canvas.getContext("2d");
       if (!ctx) {
-        alert("അയ്യോ, ക്യാൻവാസ് കിട്ടുന്നില്ല!");
+        alert("Aiyo, canvas context not found!");
         setIsConverting(false);
         return;
       }
@@ -84,7 +84,7 @@ export default function ImageToWebp() {
             setConvertedUrl(url);
             setConvertedSize(blob.size);
           } else {
-            alert("എന്തോ പണി പാളി! കൺവേർട്ട് ചെയ്യാൻ പറ്റുന്നില്ല.");
+            alert("Something went wrong! Couldn't convert the image.");
           }
           setIsConverting(false);
         },
@@ -94,7 +94,7 @@ export default function ImageToWebp() {
     };
 
     img.onerror = () => {
-      alert("ഇമേജ് ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല.");
+      alert("Failed to load image.");
       setIsConverting(false);
     };
   };
@@ -122,12 +122,12 @@ export default function ImageToWebp() {
   return (
     <div className="bg-surface swiss-border rounded-lg p-6 md:p-8 flex flex-col gap-6 w-full max-w-3xl mx-auto shadow-sm">
       <div className="flex flex-col gap-2">
-        <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
-          <span className="material-symbols-outlined text-primary-container">image</span>
-          ഇമേജ് സൈസ് കുറയ്ക്കൽ യന്ത്രം (Image → WebP)
+        <h2 className="font-headline-sm text-xl pb-5 text-on-surface flex items-center gap-sm">
+          <span className="material-symbols-outlined text- text-primary-container">image</span>
+          Image Size Reducer Machine (Image → WebP)
         </h2>
         <p className="font-body-sm text-body-sm text-secondary">
-          PNG, JPEG ഫയലുകൾ ഒറിജിനൽ ക്വാളിറ്റിയോടെ വലിപ്പം കുറച്ചെടുക്കാം. എല്ലാം നിന്റെ ബ്രൗസറിൽ തന്നെ!
+          Shrink your PNG and JPEG files while keeping the original quality. Everything happens right inside your browser,
         </p>
       </div>
 
@@ -151,13 +151,13 @@ export default function ImageToWebp() {
             className="hidden"
           />
           <span className="material-symbols-outlined text-5xl text-secondary mb-4 opacity-50">
-            cloud_upload
+            Image_upload
           </span>
           <p className="font-body-md text-on-surface font-semibold">
-            ഇമേജ് ഇവിടെ വലിച്ച് ഇട്ടോളൂ, അല്ലെങ്കിൽ <span className="text-primary-container underline">ബ്രൗസ് ചെയ്യ്!</span>
+            Drop your image here, or <span className="text-primary-container underline">browse it</span>
           </p>
           <p className="font-body-sm text-body-sm text-secondary mt-2">
-            PNG, JPEG, static GIFs (പരമാവധി 10MB വരെ താങ്ങും)
+            PNG, JPEG, static GIFs (Supports up to 10MB)
           </p>
         </div>
       ) : (
@@ -172,7 +172,7 @@ export default function ImageToWebp() {
                 className="max-h-full max-w-full object-contain rounded"
               />
               <span className="absolute top-2 left-2 bg-surface/90 px-2 py-1 text-xs rounded border border-outline-variant font-semibold">
-                ഇപ്പോഴത്തെ സൈസ്: {formatSize(selectedFile.size)}
+                Current Size: {formatSize(selectedFile.size)}
               </span>
             </div>
 
@@ -181,7 +181,7 @@ export default function ImageToWebp() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <label htmlFor="quality-slider" className="font-body-sm text-on-surface font-semibold">
-                    ക്വാളിറ്റി എത്ര ശതമാനം വേണം മച്ചാ?
+                    What quality percentage do you <br/> need ?
                   </label>
                   <span className="bg-primary-container/10 text-primary-container px-2 py-0.5 rounded font-mono font-bold text-sm">
                     {quality}%
@@ -194,12 +194,12 @@ export default function ImageToWebp() {
                   max="100"
                   value={quality}
                   onChange={(e) => setQuality(parseInt(e.target.value))}
-                  className="w-full h-2 bg-outline-variant rounded-lg appearance-none cursor-pointer accent-primary-container focus:outline-none"
+                  className="w-full h-2 bg-accent-light bg-outline-variant rounded-lg appearance-none cursor-pointer accent-primary-container focus:outline-none"
                 />
                 <div className="flex justify-between text-xs text-secondary font-mono">
-                  <span>5% (വളരെ കുറവ്)</span>
-                  <span>80% (ഇതാണ് ഉചിതം!)</span>
-                  <span>100% (അടിപൊളി!)</span>
+                  <span>5% (Very Low)</span>
+                  <span>80% (Ideal)</span>
+                  <span>100% (Superb!)</span>
                 </div>
               </div>
 
@@ -208,18 +208,15 @@ export default function ImageToWebp() {
                 <button
                   onClick={handleConvert}
                   disabled={isConverting}
-                  className="flex-grow bg-primary-container text-white py-3 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-primary transition-all duration-200 disabled:opacity-50 active:scale-95 flex items-center justify-center gap-xs"
+                  className="bg-[#FFFDF8] border hover:bg-[#64d36d] hover:text-[#166534] border-outline text-[#111827] py-3 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-low transition-all duration-200"
                 >
-                  <span className="material-symbols-outlined text-[18px]">
-                    {isConverting ? "autorenew" : "sync"}
-                  </span>
-                  {isConverting ? "മാറ്റി കൊണ്ടിരിക്കുകയാണ്..." : "ദാ.. സൈസ് കുറച്ചേക്ക്!"}
+                  {isConverting ? "Converting..." : "Download !"}
                 </button>
                 <button
                   onClick={handleReset}
-                  className="bg-transparent border border-outline text-secondary py-3 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-low transition-all duration-200"
+                  className="bg-[#FFFDF8] border hover:bg-[#fda970] hover:text-[#f13404] border-outline text-[#111827] py-3 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-low transition-all duration-200"
                 >
-                  വേണ്ട കളഞ്ഞേക്ക്!
+                  Cancel
                 </button>
               </div>
             </div>
@@ -230,15 +227,22 @@ export default function ImageToWebp() {
             <div className="border border-outline-variant rounded-lg p-5 bg-surface-container-low flex flex-col sm:flex-row justify-between items-center gap-4 animate-scale-up">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-green-500 font-bold text-lg">check_circle</span>
-                  <h4 className="font-body-md text-on-surface font-bold">അളിയാ... സംഗതി വിജയിച്ചു!</h4>
+                  <svg 
+                    className="w-5 h-5 text-green-500 shrink-0" 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <h4 className="font-body-md text-on-surface font-bold">mission accomplished!</h4>
                 </div>
                 <p className="font-body-sm text-body-sm text-secondary">
-                  പുതിയ ഫയൽ സൈസ്: <span className="font-bold text-on-surface">{formatSize(convertedSize)}</span> 
+                  New file size: <span className="font-bold text-on-surface">{formatSize(convertedSize)}</span> 
                   {" | "}
-                  ലാഭിച്ചത്:{" "}
+                  Saved:{" "}
                   <span className="font-bold text-green-500">
-                    {Math.max(0, Math.round(((selectedFile.size - convertedSize) / selectedFile.size) * 100))}% അത്രയും കുറഞ്ഞു!
+                    {Math.max(0, Math.round(((selectedFile.size - convertedSize) / selectedFile.size) * 100))}% reduced!
                   </span>
                 </p>
               </div>
@@ -246,8 +250,8 @@ export default function ImageToWebp() {
                 onClick={handleDownload}
                 className="bg-green-600 text-white py-2.5 px-6 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-green-700 transition-all duration-200 flex items-center gap-xs active:scale-95 shadow-sm"
               >
-                <span className="material-symbols-outlined text-[18px]">download</span>
-                ഫയൽ അങ്ങ് ഡൗൺലോഡിക്കോ!
+                <span className="material-symbols-outlined text-[18px]"> Download WebP! </span>
+                
               </button>
             </div>
           )}
