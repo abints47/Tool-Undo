@@ -187,8 +187,11 @@ export default function Home() {
                 onClick={() => setActiveTool(null)}
                 className="flex items-center gap-2 text-lg text-ink-muted hover:text-accent font-semibold mb-8 transition-colors"
               >
-                <span className="material-symbols-outlined text-[24px]">arrow_back</span>
-                തിരികെ പോവാം (Back)
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
+                  <path d="M0 0h24v24H0V0z" fill="none"/>
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                Go Back
               </button>
               <div className="animate-scale-in">
                 {activeTool === "image-to-webp" && <ImageToWebp />}

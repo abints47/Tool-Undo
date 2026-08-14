@@ -18,10 +18,10 @@ export default function QrGeneratorPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!canvasRef.current || !text.trim()) return;
+    if (!canvasRef.current) return;
     QRCode.toCanvas(
       canvasRef.current,
-      text,
+      text.trim() ? text : " ",
       {
         width: size,
         margin: margin,
@@ -35,7 +35,7 @@ export default function QrGeneratorPage() {
   }, [text, fgColor, bgColor, size, margin, errorLevel]);
 
   const handleDownload = () => {
-    if (!canvasRef.current || !text.trim()) return;
+    if (!canvasRef.current) return;
     const link = document.createElement("a");
     link.href = canvasRef.current.toDataURL("image/png");
     link.download = `qrcode_${Date.now()}.png`;
@@ -45,7 +45,7 @@ export default function QrGeneratorPage() {
   };
 
   const handleCopyImage = async () => {
-    if (!canvasRef.current || !text.trim()) return;
+    if (!canvasRef.current) return;
     try {
       canvasRef.current.toBlob(async (blob) => {
         if (blob) {
@@ -196,23 +196,28 @@ export default function QrGeneratorPage() {
 
               {/* Preview */}
               <div className="flex flex-col items-center justify-center">
-                <div className="mb-6 rounded-2xl border border-line bg-canvas p-6 shadow-inner flex items-center justify-center">
-                  <canvas ref={canvasRef} className="h-auto w-full max-w-60 rounded-lg" />
-                </div>
-                {text.trim() && (
-                  <div className="flex w-full flex-col gap-3">
-                    <button onClick={handleDownload} className="btn-primary w-full flex items-center justify-center gap-2">
-                      <Download size={18} /> Download PNG 💾
-                    </button>
-                    <button onClick={handleCopyImage} className="btn-ghost w-full flex items-center justify-center gap-2">
-                      {isCopied ? (
-                        <><Check size={18} /> Copied! ✅</>
-                      ) : (
-                        <><Copy size={18} /> Copy Image 📋</>
-                      )}
-                    </button>
+                <div className="mb-6 rounded-2xl border border-line bg-canvas p-6 shadow-inner flex items-center justify-center w-full">
+                  <div className="flex flex-col items-center gap-4 w-full">
+                    <canvas ref={canvasRef} className="h-auto w-full max-w-60 rounded-lg" />
+                    {text.trim() && (
+                      <p className="text-xs text-ink-soft text-center break-all max-w-full px-2 line-clamp-2">
+                        {text}
+                      </p>
+                    )}
                   </div>
-                )}
+                </div>
+                <div className="flex w-full flex-col gap-3">
+                  <button onClick={handleDownload} className="btn-primary w-full flex items-center justify-center gap-2">
+                    <Download size={18} /> Download PNG 💾
+                  </button>
+                  <button onClick={handleCopyImage} className="btn-primary w-full flex items-center justify-center gap-2">
+                    {isCopied ? (
+                      <><Check size={18} /> Copied! ✅</>
+                    ) : (
+                      <><Copy size={18} /> Copy Image 📋</>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

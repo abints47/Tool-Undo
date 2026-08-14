@@ -5,7 +5,7 @@ import QRCode from "qrcode";
 
 export default function QrGenerator() {
   const [text, setText] = useState<string>("https://toolundo.com");
-  const [fgColor, setFgColor] = useState<string>("#0d1c2d"); // Matches on-surface color
+  const [fgColor, setFgColor] = useState<string>("#0d1c2d");
   const [bgColor, setBgColor] = useState<string>("#ffffff");
   const [size, setSize] = useState<number>(256);
   const [margin, setMargin] = useState<number>(4);
@@ -76,12 +76,11 @@ export default function QrGenerator() {
   return (
     <div className="bg-surface swiss-border rounded-lg p-6 md:p-8 flex flex-col gap-6 w-full max-w-3xl mx-auto shadow-sm">
       <div className="flex flex-col gap-2">
-        <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
-          <span className="material-symbols-outlined text-primary-container">qr_code_2</span>
-          QR Code Generator
+        <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+          <span className="material-symbols-outlined text-accent text-primary-container">QR Code Generator</span>
         </h2>
         <p className="font-body-sm text-body-sm text-secondary">
-          Enter any link or text to instantly create custom QR codes with adjustable colors and styles!
+          Enter any link or text to instantly create custom QR codes with adjustable colors and styles.
         </p>
       </div>
 
@@ -115,7 +114,7 @@ export default function QrGenerator() {
                   type="color"
                   value={fgColor}
                   onChange={(e) => setFgColor(e.target.value)}
-                  className="w-9 h-9 border border-outline-variant rounded cursor-pointer p-0"
+                  className="w-9 h-9 border border-outline-variant rounded cursor-pointer p-0 bg-transparent"
                 />
                 <span className="font-mono text-xs uppercase text-secondary">{fgColor}</span>
               </div>
@@ -132,7 +131,7 @@ export default function QrGenerator() {
                   type="color"
                   value={bgColor}
                   onChange={(e) => setBgColor(e.target.value)}
-                  className="w-9 h-9 border border-outline-variant rounded cursor-pointer p-0"
+                  className="w-9 h-9 border border-outline-variant rounded cursor-pointer p-0 bg-transparent"
                 />
                 <span className="font-mono text-xs uppercase text-secondary">{bgColor}</span>
               </div>
@@ -187,7 +186,7 @@ export default function QrGenerator() {
             </label>
             <div className="grid grid-cols-4 gap-2">
               {(["L", "M", "Q", "H"] as const).map((level) => {
-                const labelMap = { L: "Low (~7%)", M: "Medium (~15%)", Q: "Quart (~25%)", H: "High (~30%)" };
+                const labelMap = { L: "Low (~7%)", M: "Med (~15%)", Q: "Quart (~25%)", H: "High (~30%)" };
                 return (
                   <button
                     key={level}
@@ -205,7 +204,7 @@ export default function QrGenerator() {
               })}
             </div>
             <p className="text-[11px] text-secondary leading-tight mt-0.5">
-              Higher levels allow the QR code to remain scannable even if parts of it are damaged or obscured.
+              Higher levels allow the QR code to remain scannable even if parts are damaged or obscured.
             </p>
           </div>
         </div>
@@ -215,7 +214,7 @@ export default function QrGenerator() {
           <div className="bg-white rounded border border-outline-variant p-2 flex items-center justify-center shadow-inner relative max-w-full overflow-hidden">
             <canvas ref={canvasRef} className="max-w-full h-auto max-h-55 object-contain" />
             {!text.trim() && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white text-secondary/40 font-mono text-sm p-4">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white text-secondary/40 font-mono text-sm p-4 text-center">
                 <span className="material-symbols-outlined text-4xl">qr_code_scanner</span>
                 <span>Enter text to preview QR code!</span>
               </div>
@@ -226,17 +225,15 @@ export default function QrGenerator() {
             <div className="flex flex-col gap-2 w-full mt-2">
               <button
                 onClick={handleDownload}
-                className="w-full bg-primary-container text-white py-2.5 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-primary transition-all duration-200 active:scale-95 flex items-center justify-center gap-xs shadow-sm"
+                className="w-full bg-[#FFFDF8] border border-outline hover:bg-[#FFF0E6] hover:text-[#E85D04] text-[#111827] py-2.5 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-lowest hover:text-primary transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-95"
               >
-                <span className="material-symbols-outlined text-[18px]">download</span>
-                Download PNG
+                <span className="material-symbols-outlined text-[18px]">Download</span>
               </button>
               <button
                 onClick={handleCopyImage}
-                className="w-full bg-transparent border border-outline text-secondary py-2.5 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-lowest hover:text-primary transition-all duration-200 flex items-center justify-center gap-xs active:scale-95"
+                className="w-full bg-[#FFFDF8] border border-outline hover:bg-[#FFF0E6] hover:text-[#E85D04] text-[#111827] py-2.5 px-4 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold hover:bg-surface-container-lowest hover:text-primary transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-95"
               >
                 <span className="material-symbols-outlined text-[18px]">
-                  {isCopied ? "check" : "content_copy"}
                 </span>
                 {isCopied ? "Copied to Clipboard!" : "Copy Image"}
               </button>
