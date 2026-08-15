@@ -13,8 +13,8 @@ export default function Hero({ onExploreClick }: HeroProps) {
       <div className="relative max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop pt-20 pb-24 md:pt-32 md:pb-40">
         <div className="flex flex-col items-center text-center animate-slide-up">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-warm-white text-xs font-medium text-ink-muted mb-8 shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-warm-white text-sm font-medium text-red-800 mb-8 shadow-sm">
+            <span className="w-1.5 h-1.5 text-accent rounded-full bg-accent animate-pulse" />
             🔧 സംഗതി കൊള്ളാം, പണി പാളരുത്!
           </div>
 
@@ -28,9 +28,9 @@ export default function Hero({ onExploreClick }: HeroProps) {
 
           {/* Subtitle */}
           <p className="mt-6 text-base md:text-lg text-ink-muted leading-relaxed max-w-5xl">
-            വല്യ കാര്യത്തിൽ പണിതുണ്ടാക്കിയതാ! Premium browser-based utilities —
+            വല്യ കാര്യത്തിൽ പണിതുണ്ടാക്കിയതാ! Premium browser-based utilities <br/>
             compress images, generate QR codes, design gradient meshes.
-            Zero server, zero data sharing. ചുമ്മാ ഉപയോഗിക്കാം മച്ചാനേ!
+            Zero server, zero data sharing.<br/> ചുമ്മാ ഉപയോഗിക്കാം മച്ചാനേ!
           </p>
 
           {/* CTA */}
@@ -42,7 +42,7 @@ export default function Hero({ onExploreClick }: HeroProps) {
               Checkout The Tools →
             </button>
             <a
-              href="https://github.com"
+              href="https://github.com/abints47"
               target="_blank"
               rel="noopener noreferrer"
               className="border border-border hover:border-warm-300 bg-warm-white hover:bg-warm-50 text-ink-muted px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200"

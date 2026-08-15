@@ -29,7 +29,7 @@ export default function SuggestTool({ isOpen, onClose }: SuggestToolProps) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!toolName.trim() || !description.trim()) {
-      alert("ടൂളിന്റെ പേരും വിവരങ്ങളും പൂരിപ്പിക്കൂ കൂട്ടുകാരാ!");
+      alert("Please fill in the tool name and description!");
       return;
     }
 
@@ -53,69 +53,76 @@ export default function SuggestTool({ isOpen, onClose }: SuggestToolProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="absolute inset-0" onClick={onClose}></div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+      {/* Backdrop click to close */}
+      <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="bg-surface border border-outline-variant rounded-lg w-full max-w-lg p-6 md:p-8 shadow-xl relative z-10 animate-scale-up">
+      {/* Widened Modal Dialog Container */}
+      <div className="bg-white border border-gray-200 rounded-3xl w-[95vw] sm:w-162.5 md:w-180 max-w-3xl p-6 sm:p-10 shadow-2xl relative z-10 animate-scale-up my-auto max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-secondary hover:text-primary-container p-1 rounded-full focus:outline-none transition-colors"
+          className="absolute top-6 right-6 text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition-colors"
           aria-label="Close modal"
         >
-          <span className="material-symbols-outlined text-2xl">close</span>
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
 
         {!isSubmitted ? (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1 pr-8">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
-                <span className="material-symbols-outlined text-primary-container">lightbulb</span>
-                അടുത്ത പണി എന്താ? (Suggest a Tool)
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6 text-left">
+            <div className="flex flex-col gap-1.5 pr-8">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2.5">
+                <span>💡</span>
+                <span>Suggest a Tool</span>
               </h3>
-              <p className="font-body-sm text-body-sm text-secondary">
-                നിനക്ക് ആവശ്യമുള്ള എന്തെങ്കിലും കാൽക്കുലേറ്ററോ, കണക്കുകൂട്ടൽ യന്ത്രങ്ങളോ വേണോ? താഴെ എഴുത്, ബാക്കി ഞങ്ങൾ നോക്കാം.
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                Have an idea for a calculator, converter, or utility? Let us know and we'll build it.
               </p>
             </div>
 
-            {/* Tool Name Input */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="tool-name" className="font-body-sm text-on-surface font-semibold text-xs">
-                ഉണ്ടാക്കേണ്ട ടൂളിന്റെ പേര് <span className="text-error">*</span>
-              </label>
-              <input
-                id="tool-name"
-                type="text"
-                required
-                value={toolName}
-                onChange={(e) => setToolName(e.target.value)}
-                placeholder="ഉദാഹരണത്തിന്: JSON വടിവൊപ്പിക്കൽ, Base64 മാറ്റിമറിക്കൽ..."
-                className="w-full swiss-border rounded px-3 py-2 text-body-sm swiss-focus bg-surface-container-lowest"
-              />
-            </div>
+            {/* Grid for Name & Category */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Tool Name Input */}
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="tool-name" className="text-xs sm:text-sm font-semibold text-gray-800">
+                  Tool Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="tool-name"
+                  type="text"
+                  required
+                  value={toolName}
+                  onChange={(e) => setToolName(e.target.value)}
+                  placeholder="e.g. JSON Formatter, Base64 Converter..."
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600 transition-all"
+                />
+              </div>
 
-            {/* Category Select */}
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="tool-category" className="font-body-sm text-on-surface font-semibold text-xs">
-                ഇത് ഏത് വകുപ്പിൽ പെടും? (Category)
-              </label>
-              <select
-                id="tool-category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full swiss-border rounded px-3 py-2 text-body-sm swiss-focus bg-surface-container-lowest"
-              >
-                <option value="Developer Utility">ഡെവലപ്പർ സാധനം</option>
-                <option value="Image/Media Tool">പടം / വീഡിയോ ടൂൾ</option>
-                <option value="Format Converter">മാറ്റിമറിക്കൽ യന്ത്രം (Converter)</option>
-                <option value="Text Manipulation">അക്ഷരക്കളി (Text Editor)</option>
-                <option value="Other Utility">മറ്റുള്ളവ</option>
-              </select>
+              {/* Category Select */}
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="tool-category" className="text-xs sm:text-sm font-semibold text-gray-800">
+                  Category
+                </label>
+                <select
+                  id="tool-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600 transition-all"
+                >
+                  <option value="Developer Utility">Developer Utility</option>
+                  <option value="Image/Media Tool">Image / Media Tool</option>
+                  <option value="Format Converter">Format Converter</option>
+                  <option value="Text Manipulation">Text Manipulation</option>
+                  <option value="Other Utility">Other Utility</option>
+                </select>
+              </div>
             </div>
 
             {/* Description Textarea */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="tool-desc" className="font-body-sm text-on-surface font-semibold text-xs">
-                എന്താണ് ഇത് കൊണ്ട് ചെയ്യേണ്ടത്? <span className="text-error">*</span>
+              <label htmlFor="tool-desc" className="text-xs sm:text-sm font-semibold text-gray-800">
+                How should it work? <span className="text-red-500">*</span>
               </label>
               <textarea
                 id="tool-desc"
@@ -123,64 +130,64 @@ export default function SuggestTool({ isOpen, onClose }: SuggestToolProps) {
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="എന്ത് ഇൻപുട്ട് കൊടുക്കണം? കൺവേർട്ട് ചെയ്താൽ എന്ത് കിട്ടണം? നിന്റെ സങ്കല്പം ഇവിടെ ടൈപ്പ് ചെയ്യ്..."
-                className="w-full swiss-border rounded p-3 text-body-sm swiss-focus bg-surface-container-lowest resize-none"
+                placeholder="What input should it take? What should the output look like? Describe your vision..."
+                className="w-full border border-gray-300 rounded-xl p-4 text-sm text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600 transition-all resize-none leading-relaxed"
               />
             </div>
 
             {/* Contact Email Input */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="tool-email" className="font-body-sm text-on-surface font-semibold text-xs">
-                നിന്റെ ഇമെയിൽ ഐഡി <span className="text-secondary font-normal">(നിർബന്ധമില്ല മച്ചാനേ!)</span>
+              <label htmlFor="tool-email" className="text-xs sm:text-sm font-semibold text-gray-800 flex items-center gap-1.5">
+                <span>Email address</span>
+                <span className="text-gray-500 font-normal">(Optional)</span>
               </label>
               <input
                 id="tool-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ടൂൾ ലൈവ് ആകുമ്പോൾ ഞങ്ങൾ അറിയിക്കാം"
-                className="w-full swiss-border rounded px-3 py-2 text-body-sm swiss-focus bg-surface-container-lowest"
+                placeholder="We'll notify you when it goes live"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600 transition-all"
               />
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-3 mt-2">
+            <div className="flex justify-end gap-3 mt-4 pt-2 border-t border-gray-100">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-5 py-2.5 rounded font-label-caps text-label-caps uppercase border border-outline text-secondary hover:bg-surface-container-low transition-colors"
+                className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider border border-gray-300 text-gray-600 hover:bg-gray-100 transition-colors"
               >
-                വേണ്ട മടുത്തു!
+                Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSending}
-                className="px-6 py-2.5 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold bg-primary-container text-white hover:bg-primary transition-all duration-200 disabled:opacity-50 active:scale-95 flex items-center gap-xs"
+                className="px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-600 text-white hover:bg-amber-700 transition-all duration-200 disabled:opacity-50 active:scale-95 flex items-center gap-2 shadow-sm shadow-amber-600/20"
               >
-                {isSending && (
-                  <span className="animate-spin material-symbols-outlined text-[16px]">sync</span>
-                )}
-                {isSending ? "അയച്ചുകൊണ്ടിരിക്കുന്നു..." : "അങ്ങ് സമർപ്പിച്ചേക്ക്!"}
+                {isSending ? "Submitting..." : "Submit Suggestion"}
               </button>
             </div>
           </form>
         ) : (
           /* Success State Content */
-          <div className="flex flex-col items-center justify-center text-center py-6 gap-5 animate-scale-up">
-            <div className="w-16 h-16 rounded-full bg-green-900/30 border border-green-500 flex items-center justify-center text-green-500">
-              <span className="material-symbols-outlined text-4xl">check_circle</span>
+          <div className="flex flex-col items-center justify-center text-center py-8 gap-5 animate-scale-up">
+            <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-600">
+              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+              </svg>
             </div>
             <div className="space-y-2">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface">വളരെയധികം നന്ദി മച്ചാനേ!</h3>
-              <p className="font-body-md text-secondary max-w-sm">
-                സംഗതി ഞങ്ങൾ ഡയറിയിൽ കുറിച്ചിട്ടുണ്ട്. സമയം കിട്ടുമ്പോൾ പണിതു തരാം. അതുവരെ പോയി ചായ കുടിച്ചിട്ട് വാ!
+              <h3 className="text-6xl font-bold text-gray-900">Thank you!</h3>
+              <p className=" text-6xl sm:text-base text-gray-600 max-w-5xl leading-relaxed">
+                We've received your suggestion and will look into adding it soon.
               </p>
             </div>
             <button
               onClick={handleReset}
-              className="mt-4 bg-primary-container text-white px-8 py-3 rounded font-label-caps text-label-caps uppercase tracking-widest hover:bg-primary transition-all duration-200 active:scale-95 shadow-sm"
+              className="mt-2 bg-amber-600 text-white px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition-all duration-200 active:scale-95 shadow-lg shadow-amber-600/20"
             >
-              ശരി, തിരികെ പോവാം
+              Back to Tools
             </button>
           </div>
         )}

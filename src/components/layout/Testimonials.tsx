@@ -4,26 +4,42 @@ interface TestimonialCardProps {
   name: string;
   role: string;
   quote: string;
-  malayalamQuote: string;
+  tagline: string;
   avatarLetter: string;
 }
 
-function TestimonialCard({ name, role, quote, malayalamQuote, avatarLetter }: TestimonialCardProps) {
+function TestimonialCard({ name, role, quote, tagline, avatarLetter }: TestimonialCardProps) {
   return (
-    <div className="bg-surface-container-low border border-outline-variant/60 rounded-lg p-6 flex flex-col gap-4 shadow-sm hover:border-primary-container/30 transition-all duration-300">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm">
+    <div className="group relative bg-warm-white/90 backdrop-blur-sm border border-border/80 rounded-3xl p-8 flex flex-col justify-between shadow-sm hover:shadow-2xl hover:border-accent/40 hover:-translate-y-2 hover:bg-linear-to-b hover:from-warm-white hover:to-accent-bg/40 transition-all duration-300 overflow-hidden">
+      <div className="space-y-4">
+        {/* Rating Stars */}
+        <div className="flex items-center gap-1 text-amber-500 text-sm">
+          {"★".repeat(5)}
+        </div>
+
+        {/* Highlight Tagline */}
+        <p className="text-xs font-semibold text-accent tracking-wide uppercase transition-colors">
+          ⚡ &ldquo;{tagline}&rdquo;
+        </p>
+
+        {/* Core Review */}
+        <p className="text-ink-muted text-sm sm:text-base leading-relaxed">
+          &ldquo;{quote}&rdquo;
+        </p>
+      </div>
+
+      <div className="flex items-center gap-3.5 pt-6 mt-6 border-t border-border/50">
+        <div className="w-11 h-11 rounded-2xl bg-accent-bg/80 border border-accent/20 text-accent flex items-center justify-center font-bold text-sm shadow-sm group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-md group-hover:shadow-accent/25 transition-all duration-300">
           {avatarLetter}
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-bold text-on-surface leading-none">{name}</span>
-          <span className="text-xs text-secondary mt-1">{role}</span>
+          <span className="text-sm font-bold text-ink tracking-tight">{name}</span>
+          <span className="text-xs text-ink-faint mt-0.5">{role}</span>
         </div>
       </div>
-      <div className="space-y-1.5 grow">
-        <p className="font-mono text-xs text-primary font-bold">💬 &quot;{malayalamQuote}&quot;</p>
-        <p className="text-secondary text-sm leading-relaxed">&quot;{quote}&quot;</p>
-      </div>
+
+      {/* Subtle bottom gradient line accent */}
+      <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-3xl" />
     </div>
   );
 }
@@ -31,35 +47,58 @@ function TestimonialCard({ name, role, quote, malayalamQuote, avatarLetter }: Te
 export default function Testimonials() {
   const reviews = [
     {
-      name: "വിഷ്ണു പ്രസാദ്",
+      name: "Vishnu Prasad",
       role: "Frontend Developer",
       avatarLetter: "VP",
-      malayalamQuote: "ഇമേജ് കൺവേർട്ടർ വെരി ഫാസ്റ്റ്! 5MB ഉള്ള ഫോട്ടോ ഒരു സെക്കൻഡിൽ WebP ആക്കി തന്നു.",
-      quote: "The WebP converter is extremely fast. Shrunk my 5MB assets down in a single browser tick without any upload latency.",
+      tagline: "Instant client-side speed",
+      quote: "The WebP converter is remarkably fast. It compressed 5MB image assets in a single browser frame with zero network delay and complete privacy.",
     },
     {
-      name: "അഞ്ജന കെ.",
+      name: "Anjana K.",
       role: "UI/UX Designer",
       avatarLetter: "AK",
-      malayalamQuote: "കളർ കോഡ് വെച്ച് ബ്രാൻഡ് മാച്ച് ചെയ്യാൻ ഇതിലും എളുപ്പമുള്ള ക്യു.ആർ കാണിച്ചിട്ടില്ല.",
-      quote: "Color customization on the QR generator makes brand alignments so easy. The clipboard copy feature is super convenient.",
+      tagline: "Seamless brand customization",
+      quote: "The color controls on the QR generator make brand integration effortless. Direct clipboard export saves significant time in my design workflow.",
     },
     {
-      name: "ഫൈസൽ റഹ്മാൻ",
+      name: "Faizal Rahman",
       role: "Fullstack Engineer",
       avatarLetter: "FR",
-      malayalamQuote: "മെഷ് ഗ്രേഡിയന്റ് കളർ പൂരം തന്നെയാണ്! CSS കോപ്പി ചെയ്യാൻ വൺ ക്ലിക്ക് മതി.",
-      quote: "The gradient mesh builder is visual poetry. Dragging points directly on the black canvas lets me prototype mesh backgrounds in seconds.",
+      tagline: "Intuitive developer workflow",
+      quote: "The CSS gradient mesh builder is exceptionally smooth. Dragging coordinate nodes directly on the canvas lets me prototype mesh backgrounds in seconds.",
     },
   ];
 
   return (
-    <section className="w-full max-w-7xl mx-auto py-lg px-margin-mobile md:px-margin-desktop">
-      <div className="text-center space-y-2 mb-lg">
-        <span className="text-xs font-label-caps uppercase tracking-widest text-primary font-bold">അഭിപ്രായങ്ങൾ</span>
-        <h2 className="font-headline-md text-headline-md text-on-surface">Developer Testimonials</h2>
+    <section className="w-full max-w-6xl mx-auto px-4 md:px-8">
+      {/* Header */}
+      <div 
+        style={{ width: "100%", display: "block", textAlign: "center", marginBottom: "3rem" }}
+      >
+        <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-2">
+          Community Feedback
+        </span>
+        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-ink mb-3">
+          Loved by Developers & Designers
+        </h2>
+        <p 
+          style={{ 
+            display: "block", 
+            width: "100%", 
+            maxWidth: "680px", 
+            minWidth: "280px", 
+            margin: "0 auto", 
+            whiteSpace: "normal", 
+            wordBreak: "normal" 
+          }}
+          className="text-sm sm:text-base text-ink-muted leading-relaxed"
+        >
+          Discover how teams streamline their daily development and design workflows with ToolUndo.
+        </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+      {/* Grid Cards */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
         {reviews.map((rev, index) => (
           <TestimonialCard key={index} {...rev} />
         ))}
