@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Header from "../components/layout/Header";
 import Hero from "../components/layout/Hero";
 import Footer from "../components/layout/Footer";
@@ -16,6 +16,80 @@ interface ToolItem {
   title: string;
   desc: string;
 }
+
+/* ── Custom 5-second Funky Loading Screen ── */
+const LoadingScreen = () => {
+  const funkyPhrases = [
+    "Welcome To Undo-Universe! 🌌",
+    "Oru chaya kudikkunna time-il sambavam set aakkam! ☕",
+    "No lag, no scene, pure browser rocket speed! 🚀",
+    "Server scene illa machane, full browser kalip vibes! ⚡",
+    "URL kodukku, color maattu, direct scan cheythu polikku! 🎨",
+    "Scene aakkalle,  tool-Undo! → 🔥",
+  ];
+
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const phraseInterval = setInterval(() => {
+      setPhraseIndex((prev) => (prev + 1) % funkyPhrases.length);
+    }, 1000);
+
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 50);
+
+    return () => {
+      clearInterval(phraseInterval);
+      clearInterval(progressInterval);
+    };
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-warm-white/95 backdrop-blur-md px-6 text-center select-none">
+      {/* Animated Glowing Icon Ring */}
+      <div className="relative flex items-center justify-center mb-8">
+        <div className="w-24 h-24 rounded-3xl bg-accent/15 animate-ping absolute inset-0 m-auto" />
+        <div className="w-20 h-20 rounded-3xl bg-linear-to-tr from-accent to-amber-500 flex items-center justify-center shadow-xl shadow-accent/30 animate-bounce">
+          <svg className="w-10 h-10 text-white animate-spin" style={{ animationDuration: "3s" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Brand Title */}
+      <h1 className="text-3xl sm:text-4xl font-black text-ink tracking-tight mb-2">
+        ToolUndo<span className="text-accent animate-pulse">.</span>
+      </h1>
+
+      {/* Funky Cycling Text */}
+      <div className="h-8 mb-6 flex items-center justify-center">
+        <p className="text-sm sm:text-base font-semibold text-ink-muted transition-all duration-300 transform">
+          {funkyPhrases[phraseIndex]}
+        </p>
+      </div>
+
+      {/* Progress Bar Container */}
+      <div className="w-full max-w-xs bg-warm-200/80 rounded-full h-2 overflow-hidden p-0.5 border border-border">
+        <div 
+          className="h-full bg-linear-to-r from-accent to-amber-500 rounded-full transition-all duration-75 ease-out shadow-xs"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <span className="text-xs font-mono font-semibold text-accent mt-3">
+        {progress}%
+      </span>
+    </div>
+  );
+};
 
 /* ── Tiny section divider ── */
 const Divider = () => (
@@ -157,6 +231,7 @@ const KEY_FEATURES = [
 ];
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState("tools");
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
@@ -164,6 +239,14 @@ export default function Home() {
   const toolsRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+
+  // 5-second initial loading timer
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -298,8 +381,12 @@ export default function Home() {
     }
   };
 
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen animate-fade-in">
       <Header onNavClick={handleNav} activeSection={activeSection} />
       <Hero onExploreClick={() => scrollTo(toolsRef)} />
 
@@ -310,7 +397,7 @@ export default function Home() {
             <div>
               <button
                 onClick={() => setActiveTool(null)}
-                className="flex items-center gap-2 text-base text-ink-muted hover:text-accent font-semibold mb-6 transition-colors"
+                className="flex items-center gap-2 text-base text-ink-muted hover:text-accent font-semibold mb-6 transition-colors cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
                   <path d="M0 0h24v24H0V0z" fill="none"/>
@@ -528,7 +615,7 @@ export default function Home() {
             <p className="mt-2 text-base text-ink-muted">Open a tool and start building zero sign-up required.</p>
             <button
               onClick={() => scrollTo(toolsRef)}
-              className="mt-6 bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98]"
+              className="mt-6 bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98] cursor-pointer"
             >
               Explore Tools →
             </button>
