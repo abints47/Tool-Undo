@@ -629,11 +629,11 @@ export default function Home() {
         <Divider />
 
         {/* ════════ ABOUT ════════ */}
-        <section ref={aboutRef} className="scroll-mt-24 w-full py-section text-left px-6 md:px-12">
-          <div className="max-w-7xl mx-auto">
+        <section ref={aboutRef} className="scroll-mt-24 w-full py-section text-center px-6 md:px-12">
+          <div className="max-w-7xl mx-auto flex flex-col items-center">
             <h2 className="text-ink font-bold text-3xl sm:text-4xl pb-4 tracking-tight"> About ToolUndo </h2>
             
-            <div className="space-y-4 max-w-4xl text-base text-ink-muted leading-relaxed">
+            <div className="space-y-4 max-w-4xl text-base text-ink-muted leading-relaxed text-center">
               <p>
                 A small initiative created to make daily tasks faster for developers and everyday users alike.
                 Swap heavy desktop utilities with instant browser tools!
@@ -644,7 +644,7 @@ export default function Home() {
             </div>
 
             {/* Stats */}
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl">
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl w-full">
               {[
                 { num: "3+", label: "Tools Available" },
                 { num: "Instant", label: "Client Performance" },
@@ -652,7 +652,7 @@ export default function Home() {
               ].map((s, i) => (
                 <div 
                   key={i} 
-                  className="bg-warm-white border border-border rounded-2xl p-5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 text-left"
+                  className="bg-warm-white border border-border rounded-2xl p-5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 text-center flex flex-col items-center justify-center"
                 >
                   <div className="text-2xl sm:text-3xl font-extrabold text-ink">{s.num}</div>
                   <div className="text-xs font-medium text-ink-muted mt-1.5">{s.label}</div>
@@ -667,7 +667,7 @@ export default function Home() {
         {/* ════════ CTA BANNER ════════ */}
         <section className="w-full py-section px-6 md:px-12">
           <div className="max-w-7xl mx-auto">
-            <div className="w-full rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-100 border border-border p-10 md:p-14 text-left">
+            <div className="w-full rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-200 border border-border p-10 md:p-14 text-center flex flex-col items-center">
               <h2 className="text-2xl md:text-3xl font-bold text-ink tracking-tight">
                 Ready to get started?
               </h2>

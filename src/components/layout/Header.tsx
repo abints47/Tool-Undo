@@ -60,7 +60,7 @@ export default function Header({ onNavClick, activeSection = "tools" }: HeaderPr
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 bg-warm-50/90 backdrop-blur-xl border-b border-border shadow-xs w-full transition-transform duration-300 ${
+        className={`fixed inset-x-0 top-0 z-50 bg-warm-500/90 backdrop-blur-xl border-b border-border shadow-xs w-full transition-transform duration-300 ${
           showNavbar ? "translate-y-0" : "-translate-y-full"
         }`}
       >
