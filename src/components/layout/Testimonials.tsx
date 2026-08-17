@@ -47,23 +47,23 @@ function TestimonialCard({ name, role, quote, tagline, avatarLetter }: Testimoni
 export default function Testimonials() {
   const reviews = [
     {
-      name: "Vishnu Prasad",
+      name: "Abin Surendran. ",
       role: "Frontend Developer",
-      avatarLetter: "VP",
+      avatarLetter: "ATS",
       tagline: "Instant client-side speed",
       quote: "The WebP converter is remarkably fast. It compressed 5MB image assets in a single browser frame with zero network delay and complete privacy.",
     },
     {
-      name: "Anjana K.",
+      name: "Arjun K.",
       role: "UI/UX Designer",
       avatarLetter: "AK",
       tagline: "Seamless brand customization",
       quote: "The color controls on the QR generator make brand integration effortless. Direct clipboard export saves significant time in my design workflow.",
     },
     {
-      name: "Faizal Rahman",
+      name: "Sinan M.",
       role: "Fullstack Engineer",
-      avatarLetter: "FR",
+      avatarLetter: "SM",
       tagline: "Intuitive developer workflow",
       quote: "The CSS gradient mesh builder is exceptionally smooth. Dragging coordinate nodes directly on the canvas lets me prototype mesh backgrounds in seconds.",
     },
