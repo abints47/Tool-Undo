@@ -6,6 +6,7 @@ import "aos/dist/aos.css";
 import Header from "../components/layout/Header";
 import Hero from "../components/layout/Hero";
 import Footer from "../components/layout/Footer";
+import FeedbackSection from "@/components/FeedbackSection";
 import Faq from "../components/layout/Faq";
 import Testimonials from "../components/layout/Testimonials";
 import ImageToWebp from "../components/tools/ImageToWebp";
@@ -687,55 +688,11 @@ export default function Home() {
 
         <Divider />
 
-        {/* ════════ CTA BANNER ════════ */}
-        <section className="w-full py-section px-6 md:px-12">
-          <div className="max-w-7xl mx-auto">
-            <div 
-              className="w-full max-w-6xl mx-auto rounded-4xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-200 border border-border p-8 md:p-14 text-center flex flex-col items-center shadow-xs" 
-              data-aos="zoom-in" 
-              data-aos-once="true"
-            >
-              <h2 className="text-2xl md:text-3xl font-bold text-ink tracking-tight">
-                Help us improve
-              </h2>
-              <p className="mt-2 text-base text-ink-muted max-w-5xl">
-                Have a suggestion, bug report, or feature request? Send your feedback directly to the developer.
-              </p>
+        { /* FeedBack Section Added Component */}
+        <FeedbackSection />
 
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // Add your submission logic here (e.g., API call, email service)
-                  alert('Thank you for your feedback!');
-                }}
-                className="mt-6 w-full max-w-3xl flex flex-col gap-4 text-left"
-              >
-                <div>
-                  <textarea
-                    required
-                    rows={4}
-                    placeholder="Share your thoughts, report a bug, or suggest a new feature..."
-                    className="w-full rounded-2xl border border-border bg-white/70 backdrop-blur-sm p-4 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none transition-all shadow-xs"
-                  />
-                </div>
-                <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <input
-                    type="email"
-                    placeholder="Your name or Email (optional, for follow-up)"
-                    className="w-full sm:flex-1 rounded-full border border-border bg-white/70 backdrop-blur-sm px-5 py-3 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:ring-2 focus:ring-accent/40 transition-all shadow-xs"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98] cursor-pointer whitespace-nowrap"
-                  >
-                    Send Feedback →
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </section>
-      </main>
+
+      </main> 
 
       <Footer />
      {isSuggestOpen && (
