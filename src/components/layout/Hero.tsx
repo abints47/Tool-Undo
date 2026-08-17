@@ -1,10 +1,22 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface HeroProps {
   onExploreClick?: () => void;
 }
 
 export default function Hero({ onExploreClick }: HeroProps) {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      easing: "ease-out-cubic",
+    });
+  }, []);
+
   return (
     <section className="relative overflow-hidden bg-warm-50 py-20 md:py-32">
       {/* Richer warm distinct gradient background for the hero section */}
@@ -43,16 +55,16 @@ export default function Hero({ onExploreClick }: HeroProps) {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-margin-mobile md:px-margin-desktop pt-10 pb-16">
-        <div className="flex flex-col items-center text-center animate-slide-up z-10 relative">
+        <div className="flex flex-col items-center text-center z-10 relative">
           
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-warm-white text-sm font-medium text-red-800 mb-8 shadow-sm">
+          <div data-aos="fade-down" data-aos-delay="100" className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border bg-warm-white text-sm font-medium text-red-800 mb-8 shadow-sm">
             <span className="w-1.5 h-1.5 text-accent rounded-full bg-accent animate-pulse" />
             🔧 സംഗതി കൊള്ളാം, പണി പാളരുത്!
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-ink leading-[1.08] max-w-4xl">
+          <h1 data-aos="fade-up" data-aos-delay="200" className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-ink leading-[1.08] max-w-4xl">
             Build faster with{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-accent to-accent-light">
               ToolUndo
@@ -60,14 +72,14 @@ export default function Hero({ onExploreClick }: HeroProps) {
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-6 text-base md:text-lg text-ink-muted leading-relaxed max-w-5xl">
+          <p data-aos="fade-up" data-aos-delay="300" className="mt-6 text-base md:text-lg text-ink-muted leading-relaxed max-w-5xl">
             വല്യ കാര്യത്തിൽ പണിതുണ്ടാക്കിയതാ! Premium browser-based utilities <br/>
             compress images, generate QR codes, design gradient meshes.
             Zero server, zero data sharing.<br/> ചുമ്മാ ഉപയോഗിക്കാം മച്ചാനേ!
           </p>
 
           {/* CTA */}
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
+          <div data-aos="fade-up" data-aos-delay="400" className="mt-10 flex flex-col sm:flex-row gap-4">
             <button
               onClick={onExploreClick}
               className="bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200 hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98]"
@@ -86,8 +98,8 @@ export default function Hero({ onExploreClick }: HeroProps) {
         </div>
 
         {/* Dynamic Animated Tool Showcase / Overlay Card Grid */}
-        <div className="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto animate-fade-in z-10 relative">
-          <div className="p-6 rounded-2xl border border-border bg-warm-white/80 backdrop-blur-md shadow-xl shadow-ink/5 hover:border-accent/40 transition-all duration-300 transform hover:-translate-y-1">
+        <div className="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto z-10 relative">
+          <div data-aos="fade-up" data-aos-delay="500" className="p-6 rounded-2xl border border-border bg-warm-white/80 backdrop-blur-md shadow-xl shadow-ink/5 hover:border-accent/40 transition-all duration-300 transform hover:-translate-y-1">
             <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -97,7 +109,7 @@ export default function Hero({ onExploreClick }: HeroProps) {
             <p className="text-sm text-ink-muted">Lightning fast compression & conversions right in your tab.</p>
           </div>
 
-          <div className="p-6 rounded-2xl border border-border bg-warm-white/80 backdrop-blur-md shadow-xl shadow-ink/5 hover:border-accent/40 transition-all duration-300 transform hover:-translate-y-1">
+          <div data-aos="fade-up" data-aos-delay="600" className="p-6 rounded-2xl border border-border bg-warm-white/80 backdrop-blur-md shadow-xl shadow-ink/5 hover:border-accent/40 transition-all duration-300 transform hover:-translate-y-1">
             <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
@@ -107,7 +119,7 @@ export default function Hero({ onExploreClick }: HeroProps) {
             <p className="text-sm text-ink-muted">Generate customizable QR codes securely without any tracking.</p>
           </div>
 
-          <div className="p-6 rounded-2xl border border-border bg-warm-white/80 backdrop-blur-md shadow-xl shadow-ink/5 hover:border-accent/40 transition-all duration-300 transform hover:-translate-y-1">
+          <div data-aos="fade-up" data-aos-delay="700" className="p-6 rounded-2xl border border-border bg-warm-white/80 backdrop-blur-md shadow-xl shadow-ink/5 hover:border-accent/40 transition-all duration-300 transform hover:-translate-y-1">
             <div className="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import Header from "../components/layout/Header";
 import Hero from "../components/layout/Hero";
 import Footer from "../components/layout/Footer";
@@ -126,7 +128,7 @@ const SectionLabel = ({
   heading: string;
   sub?: React.ReactNode;
 }) => (
-  <div className="w-full text-left mb-10 max-w-7xl mx-auto">
+  <div data-aos="fade-down" data-aos-once="true" className="w-full text-left mb-10 max-w-7xl mx-auto">
     <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-2">
       {label}
     </span>
@@ -240,6 +242,16 @@ export default function Home() {
   const toolsRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
+
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      mirror: false,
+      anchorPlacement: "top-bottom",
+    });
+  }, []);
 
   // 5-second initial loading timer
   useEffect(() => {
@@ -427,7 +439,7 @@ export default function Home() {
 
           <div className="max-w-7xl mx-auto relative z-10">
             {activeTool ? (
-              <div className="w-full text-left">
+              <div className="w-full text-left" data-aos="fade-up" data-aos-once="true">
                 <button
                   onClick={() => setActiveTool(null)}
                   className="flex items-center gap-2 text-base text-ink-muted hover:text-accent font-semibold mb-6 transition-colors cursor-pointer"
@@ -453,9 +465,12 @@ export default function Home() {
                 />
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                  {TOOLS.map((t) => (
+                  {TOOLS.map((t, index) => (
                     <div
                       key={t.id}
+                      data-aos="fade-up"
+                      data-aos-once="true"
+                      data-aos-delay={(index + 1) * 100}
                       onClick={() => { setActiveTool(t.id); scrollTo(toolsRef); }}
                       className="group relative bg-warm-white/95 backdrop-blur-sm border border-border/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 flex flex-col justify-between min-h-57.5 text-left"
                     >
@@ -481,6 +496,9 @@ export default function Home() {
 
                   {/* Suggest card */}
                   <div
+                    data-aos="fade-up"
+                    data-aos-once="true"
+                    data-aos-delay={400}
                     onClick={() => setIsSuggestOpen(true)}
                     className="group relative bg-warm-50/70 backdrop-blur-sm border-2 border-dashed border-warm-300 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-accent flex flex-col justify-between text-left min-h-57.5"
                   >
@@ -523,6 +541,8 @@ export default function Home() {
               {FEATURES_ROWS.map((f, i) => (
                 <div 
                   key={f.id} 
+                  data-aos="fade-up"
+                  data-aos-once="true"
                   className={`grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-14 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
                 >
                   {/* SVG Graphic Mockup */}
@@ -590,6 +610,9 @@ export default function Home() {
               {KEY_FEATURES.map((f, i) => (
                 <div 
                   key={i} 
+                  data-aos="fade-up"
+                  data-aos-once="true"
+                  data-aos-delay={(i + 1) * 150}
                   className="group relative bg-warm-white/80 backdrop-blur-sm border border-border/60 rounded-3xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 text-left"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-lg group-hover:shadow-accent/25">
@@ -629,7 +652,7 @@ export default function Home() {
         <Divider />
 
         {/* ════════ ABOUT ════════ */}
-        <section ref={aboutRef} className="scroll-mt-24 w-full py-section text-center px-6 md:px-12">
+        <section ref={aboutRef} className="scroll-mt-24 w-full py-section text-center px-6 md:px-12" data-aos="fade-up" data-aos-once="true">
           <div className="max-w-7xl mx-auto flex flex-col items-center">
             <h2 className="text-ink font-bold text-3xl sm:text-4xl pb-4 tracking-tight"> About ToolUndo </h2>
             
@@ -667,7 +690,7 @@ export default function Home() {
         {/* ════════ CTA BANNER ════════ */}
         <section className="w-full py-section px-6 md:px-12">
           <div className="max-w-7xl mx-auto">
-            <div className="w-full rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-200 border border-border p-10 md:p-14 text-center flex flex-col items-center">
+            <div className="w-full rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-200 border border-border p-10 md:p-14 text-center flex flex-col items-center" data-aos="zoom-in" data-aos-once="true">
               <h2 className="text-2xl md:text-3xl font-bold text-ink tracking-tight">
                 Ready to get started?
               </h2>
@@ -684,7 +707,12 @@ export default function Home() {
       </main>
 
       <Footer />
-      <SuggestTool isOpen={isSuggestOpen} onClose={() => setIsSuggestOpen(false)} />
+     {isSuggestOpen && (
+        <SuggestTool 
+          isOpen={isSuggestOpen} 
+          onClose={() => setIsSuggestOpen(false)} 
+        />
+      )}
     </div>
   );
 }

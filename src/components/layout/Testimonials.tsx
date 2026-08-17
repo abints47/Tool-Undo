@@ -1,16 +1,28 @@
 "use client";
 
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 interface TestimonialCardProps {
   name: string;
   role: string;
   quote: string;
   tagline: string;
   avatarLetter: string;
+  index: number;
 }
 
-function TestimonialCard({ name, role, quote, tagline, avatarLetter }: TestimonialCardProps) {
+function TestimonialCard({ name, role, quote, tagline, avatarLetter, index }: TestimonialCardProps) {
+  // Calculate dynamic delay based on card index (100ms, 200ms, 300ms)
+  const delay = (index + 1) * 150;
+
   return (
-    <div className="group relative bg-warm-white/90 backdrop-blur-sm border border-border/80 rounded-3xl p-8 flex flex-col justify-between shadow-sm hover:shadow-2xl hover:border-accent/40 hover:-translate-y-2 hover:bg-linear-to-b hover:from-warm-white hover:to-accent-bg/40 transition-all duration-300 overflow-hidden">
+    <div 
+      data-aos="fade-up" 
+      data-aos-delay={delay}
+      className="group relative bg-warm-white/90 backdrop-blur-sm border border-border/80 rounded-3xl p-8 flex flex-col justify-between shadow-sm hover:shadow-2xl hover:border-accent/40 hover:-translate-y-2 hover:bg-linear-to-b hover:from-warm-white hover:to-accent-bg/40 transition-all duration-300 overflow-hidden"
+    >
       <div className="space-y-4">
         {/* Rating Stars */}
         <div className="flex items-center gap-1 text-amber-500 text-sm">
@@ -45,9 +57,17 @@ function TestimonialCard({ name, role, quote, tagline, avatarLetter }: Testimoni
 }
 
 export default function Testimonials() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      easing: "ease-out-cubic",
+    });
+  }, []);
+
   const reviews = [
     {
-      name: "Abin Surendran. ",
+      name: "Abin Surendran.",
       role: "Frontend Developer",
       avatarLetter: "ATS",
       tagline: "Instant client-side speed",
@@ -70,9 +90,10 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-4 md:px-8">
+    <section className="w-full max-w-6xl mx-auto px-4 md:px-8 py-16">
       {/* Header */}
       <div 
+        data-aos="fade-down"
         style={{ width: "100%", display: "block", textAlign: "center", marginBottom: "3rem" }}
       >
         <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-2">
@@ -100,7 +121,7 @@ export default function Testimonials() {
       {/* Grid Cards */}
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
         {reviews.map((rev, index) => (
-          <TestimonialCard key={index} {...rev} />
+          <TestimonialCard key={index} {...rev} index={index} />
         ))}
       </div>
     </section>
