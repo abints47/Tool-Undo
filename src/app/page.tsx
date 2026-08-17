@@ -25,7 +25,7 @@ const LoadingScreen = () => {
     "No lag, no scene, pure browser rocket speed! 🚀",
     "Server scene illa machane, full browser kalip vibes! ⚡",
     "URL kodukku, color maattu, direct scan cheythu polikku! 🎨",
-    "Scene aakkalle,  tool-Undo! → 🔥",
+    "Scene aakkalle, tool-Undo! → 🔥",
   ];
 
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -53,7 +53,25 @@ const LoadingScreen = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-warm-white/95 backdrop-blur-md px-6 text-center select-none">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-warm-white/95 backdrop-blur-md px-6 text-center select-none overflow-hidden">
+      {/* Background Animated Tool Icons positioned on absolute left and right */}
+      <div className="absolute inset-0 pointer-events-none opacity-10 flex justify-between px-6 sm:px-12 items-center">
+        <div className="flex flex-col gap-32">
+          <div className="animate-[bounce_5s_infinite] text-accent">
+            <svg className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.121 2.121 0 0121 17.25l-5.83-5.83m-3.75 3.75a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        </div>
+        <div className="flex flex-col gap-32">
+          <div className="animate-[spin_10s_linear_infinite] text-amber-600">
+            <svg className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
       {/* Animated Glowing Icon Ring */}
       <div className="relative flex items-center justify-center mb-8">
         <div className="w-24 h-24 rounded-3xl bg-accent/15 animate-ping absolute inset-0 m-auto" />
@@ -93,12 +111,12 @@ const LoadingScreen = () => {
 
 /* ── Tiny section divider ── */
 const Divider = () => (
-  <div className="max-w-6xl mx-auto px-4 md:px-8">
-    <div className="h-px bg-border" />
+  <div className="w-full px-6 md:px-12">
+    <div className="h-px bg-border max-w-7xl mx-auto" />
   </div>
 );
 
-/* ── Section label (Guaranteed horizontal layout fix) ── */
+/* ── Section label (Left-aligned explicitly) ── */
 const SectionLabel = ({
   label,
   heading,
@@ -108,14 +126,7 @@ const SectionLabel = ({
   heading: string;
   sub?: React.ReactNode;
 }) => (
-  <div 
-    style={{ 
-      width: "100%", 
-      display: "block", 
-      textAlign: "left", 
-      marginBottom: "2.5rem" 
-    }}
-  >
+  <div className="w-full text-left mb-10 max-w-7xl mx-auto">
     <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-2">
       {label}
     </span>
@@ -123,17 +134,7 @@ const SectionLabel = ({
       {heading}
     </h2>
     {sub && (
-      <div 
-        style={{ 
-          display: "block", 
-          width: "100%", 
-          maxWidth: "650px", 
-          minWidth: "300px", 
-          whiteSpace: "normal", 
-          wordBreak: "normal" 
-        }} 
-        className="text-base sm:text-lg text-ink-muted leading-relaxed"
-      >
+      <div className="text-base sm:text-lg text-ink-muted leading-relaxed max-w-3xl">
         {sub}
       </div>
     )}
@@ -386,239 +387,298 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen animate-fade-in">
+    <div className="flex flex-col min-h-screen animate-fade-in w-full overflow-x-hidden">
       <Header onNavClick={handleNav} activeSection={activeSection} />
       <Hero onExploreClick={() => scrollTo(toolsRef)} />
 
-      <main className="grow">
+      <main className="grow w-full">
         {/* ════════ TOOLBOX ════════ */}
-        <section ref={toolsRef} className="scroll-mt-24 max-w-6xl mx-auto px-4 md:px-8 py-section">
-          {activeTool ? (
-            <div>
-              <button
-                onClick={() => setActiveTool(null)}
-                className="flex items-center gap-2 text-base text-ink-muted hover:text-accent font-semibold mb-6 transition-colors cursor-pointer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
-                  <path d="M0 0h24v24H0V0z" fill="none"/>
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        <section ref={toolsRef} className="relative overflow-hidden w-full py-section px-6 md:px-12">
+          {/* Animated Background Decorative Tools SVGs on strict left and right sides */}
+          <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden flex justify-between px-6 sm:px-12">
+            {/* Left Side SVGs */}
+            <div className="flex flex-col justify-between py-12">
+              <div className="animate-[bounce_7s_infinite] text-accent">
+                <svg className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
                 </svg>
-                Back to Tools
-              </button>
-              <div className="animate-scale-in">
-                {activeTool === "image-to-webp" && <ImageToWebp />}
-                {activeTool === "qr-generator" && <QrGenerator />}
-                {activeTool === "gradient-mesh" && <GradientMesh />}
+              </div>
+              <div className="animate-[pulse_5s_infinite] text-amber-500">
+                <svg className="w-24 h-24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                </svg>
               </div>
             </div>
-          ) : (
-            <>
-              <SectionLabel
-                label="Toolbox"
-                heading="Explore Tools"
-                sub="Scene illa, pure speed! Everything runs privately in your browser."
-              />
-              
-              <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {TOOLS.map((t) => (
+
+            {/* Right Side SVGs */}
+            <div className="flex flex-col justify-between py-12">
+              <div className="animate-[spin_12s_linear_infinite] text-amber-600">
+                <svg className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                </svg>
+              </div>
+              <div className="animate-[bounce_6s_infinite] text-accent">
+                <svg className="w-24 h-24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.121 2.121 0 0121 17.25l-5.83-5.83m-3.75 3.75a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-7xl mx-auto relative z-10">
+            {activeTool ? (
+              <div className="w-full text-left">
+                <button
+                  onClick={() => setActiveTool(null)}
+                  className="flex items-center gap-2 text-base text-ink-muted hover:text-accent font-semibold mb-6 transition-colors cursor-pointer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
+                    <path d="M0 0h24v24H0V0z" fill="none"/>
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                  </svg>
+                  Back to Tools
+                </button>
+                <div className="animate-scale-in">
+                  {activeTool === "image-to-webp" && <ImageToWebp />}
+                  {activeTool === "qr-generator" && <QrGenerator />}
+                  {activeTool === "gradient-mesh" && <GradientMesh />}
+                </div>
+              </div>
+            ) : (
+              <div className="w-full text-left">
+                <SectionLabel
+                  label="Toolbox"
+                  heading="Explore Tools"
+                  sub="Scene illa, pure speed! Everything runs privately in your browser."
+                />
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+                  {TOOLS.map((t) => (
+                    <div
+                      key={t.id}
+                      onClick={() => { setActiveTool(t.id); scrollTo(toolsRef); }}
+                      className="group relative bg-warm-white/95 backdrop-blur-sm border border-border/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 flex flex-col justify-between min-h-57.5 text-left"
+                    >
+                      <div>
+                        <div className="w-12 h-12 rounded-xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-md group-hover:shadow-accent/20">
+                          {renderToolSvg(t.id)}
+                        </div>
+                        <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
+                          {t.title}
+                        </h3>
+                        <p className="mt-2 text-base text-ink-muted leading-relaxed">
+                          {t.desc}
+                        </p>
+                      </div>
+
+                      <div className="mt-5 flex items-center text-sm font-semibold text-accent opacity-90 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                        <span>Open tool →</span>
+                      </div>
+
+                      <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-2xl" />
+                    </div>
+                  ))}
+
+                  {/* Suggest card */}
                   <div
-                    key={t.id}
-                    onClick={() => { setActiveTool(t.id); scrollTo(toolsRef); }}
-                    className="group relative bg-warm-white/95 backdrop-blur-sm border border-border/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 flex flex-col justify-between min-h-57.5"
+                    onClick={() => setIsSuggestOpen(true)}
+                    className="group relative bg-warm-50/70 backdrop-blur-sm border-2 border-dashed border-warm-300 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-accent flex flex-col justify-between text-left min-h-57.5"
                   >
                     <div>
-                      <div className="w-12 h-12 rounded-xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-md group-hover:shadow-accent/20">
-                        {renderToolSvg(t.id)}
+                      <div className="w-12 h-12 rounded-xl border-2 border-dashed border-ink-faint/40 flex items-center justify-center text-ink-faint group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all shadow-xs">
+                        <svg className="w-6 h-6 transition-transform duration-500 group-hover:rotate-90" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
                       </div>
                       <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
-                        {t.title}
+                        Suggest a Tool
                       </h3>
                       <p className="mt-2 text-base text-ink-muted leading-relaxed">
-                        {t.desc}
+                        Have an idea for a converter or utility?
                       </p>
                     </div>
 
-                    <div className="mt-5 flex items-center text-sm font-semibold text-accent opacity-90 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                      <span>Open tool →</span>
+                    <div className="mt-5 flex items-center text-sm font-semibold text-ink-muted group-hover:text-accent transition-colors">
+                      <span>Submit idea →</span>
                     </div>
-
-                    <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-2xl" />
-                  </div>
-                ))}
-
-                {/* Suggest card */}
-                <div
-                  onClick={() => setIsSuggestOpen(true)}
-                  className="group relative bg-warm-50/70 backdrop-blur-sm border-2 border-dashed border-warm-300 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-accent flex flex-col justify-between text-left min-h-57.5"
-                >
-                  <div>
-                    <div className="w-12 h-12 rounded-xl border-2 border-dashed border-ink-faint/40 flex items-center justify-center text-ink-faint group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all shadow-xs">
-                      <svg className="w-6 h-6 transition-transform duration-500 group-hover:rotate-90" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                      </svg>
-                    </div>
-                    <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
-                      Suggest a Tool
-                    </h3>
-                    <p className="mt-2 text-base text-ink-muted leading-relaxed">
-                      Have an idea for a converter or utility?
-                    </p>
-                  </div>
-
-                  <div className="mt-5 flex items-center text-sm font-semibold text-ink-muted group-hover:text-accent transition-colors">
-                    <span>Submit idea →</span>
                   </div>
                 </div>
               </div>
-            </>
-          )}
+            )}
+          </div>
         </section>
 
         <Divider />
 
         {/* ════════ FEATURE SHOWCASE ════════ */}
-        <section ref={featuresRef} className="scroll-mt-24 max-w-6xl mx-auto px-4 md:px-8 py-section">
-          <SectionLabel
-            label="Highlights"
-            heading="Feature Showcase"
-            sub="Each tool is built to be lightning fast, beautifully designed, and 100% private in your browser."
-          />
+        <section ref={featuresRef} className="scroll-mt-24 w-full py-section text-left px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <SectionLabel
+              label="Highlights"
+              heading="Feature Showcase"
+              sub="Each tool is built to be lightning fast, beautifully designed, and 100% private in your browser."
+            />
 
-          <div className="flex flex-col gap-20 md:gap-28">
-            {FEATURES_ROWS.map((f, i) => (
-              <div 
-                key={f.id} 
-                className={`grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-14 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
-              >
-                {/* SVG Graphic Mockup */}
-                <div className={`lg:col-span-5 ${i % 2 === 1 ? "lg:order-last" : ""}`}>
-                  <div className="rounded-3xl border border-border/80 shadow-xl bg-warm-white p-2 group hover:border-accent/40 transition-all duration-300">
-                    <div className="transition-transform duration-500 group-hover:scale-[1.02]">
-                      {renderFeatureMock(f.id)}
+            <div className="flex flex-col gap-20 md:gap-28 w-full">
+              {FEATURES_ROWS.map((f, i) => (
+                <div 
+                  key={f.id} 
+                  className={`grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-14 items-center ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
+                >
+                  {/* SVG Graphic Mockup */}
+                  <div className={`lg:col-span-5 ${i % 2 === 1 ? "lg:order-last" : ""}`}>
+                    <div className="rounded-3xl border border-border/80 shadow-xl bg-warm-white p-2 group hover:border-accent/40 transition-all duration-300">
+                      <div className="transition-transform duration-500 group-hover:scale-[1.02]">
+                        {renderFeatureMock(f.id)}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className={`lg:col-span-7 space-y-4 ${i % 2 === 1 ? "lg:order-first" : ""}`}>
-                  <span className="inline-flex px-3.5 py-1 rounded-full border border-border bg-warm-white text-xs font-semibold uppercase tracking-wider text-accent shadow-xs">
-                    {f.label}
-                  </span>
-                  <h3 className="text-2xl md:text-3xl font-extrabold text-ink tracking-tight">
-                    {f.title}
-                  </h3>
-                  <p className="text-base text-ink-muted leading-relaxed">
-                    {f.desc}
-                  </p>
-                  <ul className="space-y-2.5 pt-1">
-                    {f.checks.map((c, j) => (
-                      <li key={j} className="flex items-center gap-2.5 text-sm text-ink-muted">
-                        <span className="w-4 h-4 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xs font-bold shrink-0">
-                          ✓
-                        </span>
-                        <span>{c}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Content */}
+                  <div className={`lg:col-span-7 space-y-4 text-left ${i % 2 === 1 ? "lg:order-first" : ""}`}>
+                    <span className="inline-flex px-3.5 py-1 rounded-full border border-border bg-warm-white text-xs font-semibold uppercase tracking-wider text-accent shadow-xs">
+                      {f.label}
+                    </span>
+                    <h3 className="text-2xl md:text-3xl font-extrabold text-ink tracking-tight">
+                      {f.title}
+                    </h3>
+                    <p className="text-base text-ink-muted leading-relaxed">
+                      {f.desc}
+                    </p>
+                    <ul className="space-y-2.5 pt-1">
+                      {f.checks.map((c, j) => (
+                        <li key={j} className="flex items-center gap-2.5 text-sm text-ink-muted">
+                          <span className="w-4 h-4 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xs font-bold shrink-0">
+                            ✓
+                          </span>
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
         <Divider />
 
         {/* ════════ WHY TOOLUNDO ════════ */}
-        <section className="max-w-6xl mx-auto px-4 md:px-8 py-section bg-linear-to-b from-warm-white/50 to-accent-bg/20">
-          <SectionLabel 
-            label="Why Choose Us?" 
-            heading="Why ToolUndo?" 
-            sub="Fast, privacy-first tools crafted for an effortless developer workflow." 
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {KEY_FEATURES.map((f, i) => (
-              <div 
-                key={i} 
-                className="group relative bg-warm-white/80 backdrop-blur-sm border border-border/60 rounded-3xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-lg group-hover:shadow-accent/25">
-                  {f.svg}
+        <section className="relative overflow-hidden w-full py-section bg-linear-to-b from-warm-white/50 to-accent-bg/20 px-6 md:px-12">
+          {/* Animated Background Icons strictly on left and right sides */}
+          <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden flex justify-between px-6 sm:px-12 items-center">
+            <div className="animate-[spin_15s_linear_infinite] text-accent">
+              <svg className="w-24 h-24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="animate-[pulse_6s_infinite] text-amber-600">
+              <svg className="w-24 h-24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+          </div>
+
+          <div className="max-w-7xl mx-auto relative z-10">
+            <SectionLabel 
+              label="Why Choose Us?" 
+              heading="Why ToolUndo?" 
+              sub="Fast, privacy-first tools crafted for an effortless developer workflow." 
+            />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              {KEY_FEATURES.map((f, i) => (
+                <div 
+                  key={i} 
+                  className="group relative bg-warm-white/80 backdrop-blur-sm border border-border/60 rounded-3xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-lg group-hover:shadow-accent/25">
+                    {f.svg}
+                  </div>
+                  <h3 className="mt-5 text-xl font-extrabold text-ink tracking-tight">{f.title}</h3>
+                  <span className="inline-block mt-1 text-xs text-accent font-semibold tracking-wide uppercase">
+                    {f.tagline}
+                  </span>
+                  <p className="mt-2.5 text-sm text-ink-light leading-relaxed">{f.desc}</p>
+                  
+                  <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-3xl" />
                 </div>
-                <h3 className="mt-5 text-xl font-extrabold text-ink tracking-tight">{f.title}</h3>
-                <span className="inline-block mt-1 text-xs text-accent font-semibold tracking-wide uppercase">
-                  {f.tagline}
-                </span>
-                <p className="mt-2.5 text-sm text-ink-light leading-relaxed">{f.desc}</p>
-                
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-3xl" />
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
         <Divider />
 
         {/* ════════ TESTIMONIALS ════════ */}
-        <section className="py-section">
-          <Testimonials />
+        <section className="py-section w-full text-left px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <Testimonials />
+          </div>
         </section>
 
         <Divider />
 
         {/* ════════ FAQ ════════ */}
-        <section className="py-section">
-          <Faq />
+        <section className="py-section w-full text-left px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <Faq />
+          </div>
         </section>
 
         <Divider />
 
         {/* ════════ ABOUT ════════ */}
-        <section ref={aboutRef} className="scroll-mt-24 max-w-4xl mx-auto px-4 md:px-8 py-section text-center">
-          <h2 className="text-ink-light font-semibold text-4xl sm:text-5xl pb-6 tracking-tight"> About ToolUndo </h2>
-          
-          <div className="space-y-4 max-w-7xl mx-auto text-base text-ink-muted leading-relaxed">
-            <p>
-              A small initiative created to make daily tasks faster for developers and everyday users alike.
-              Swap heavy desktop utilities with instant browser tools!
-            </p>
-            <p>
-              Next.js, Tailwind CSS, TypeScript running 100% locally on your machine.
-            </p>
-          </div>
+        <section ref={aboutRef} className="scroll-mt-24 w-full py-section text-left px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-ink font-bold text-3xl sm:text-4xl pb-4 tracking-tight"> About ToolUndo </h2>
+            
+            <div className="space-y-4 max-w-4xl text-base text-ink-muted leading-relaxed">
+              <p>
+                A small initiative created to make daily tasks faster for developers and everyday users alike.
+                Swap heavy desktop utilities with instant browser tools!
+              </p>
+              <p>
+                Next.js, Tailwind CSS, TypeScript running 100% locally on your machine.
+              </p>
+            </div>
 
-          {/* Stats */}
-          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-7xl mx-auto">
-            {[
-              { num: "3+", label: "Tools Available" },
-              { num: "Instant", label: "Client Performance" },
-              { num: "100%", label: "Private & Local" },
-            ].map((s, i) => (
-              <div 
-                key={i} 
-                className="bg-warm-white border border-border rounded-2xl p-5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-              >
-                <div className="text-2xl sm:text-3xl font-extrabold text-ink">{s.num}</div>
-                <div className="text-xs font-medium text-ink-muted mt-1.5">{s.label}</div>
-              </div>
-            ))}
+            {/* Stats */}
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl">
+              {[
+                { num: "3+", label: "Tools Available" },
+                { num: "Instant", label: "Client Performance" },
+                { num: "100%", label: "Private & Local" },
+              ].map((s, i) => (
+                <div 
+                  key={i} 
+                  className="bg-warm-white border border-border rounded-2xl p-5 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 text-left"
+                >
+                  <div className="text-2xl sm:text-3xl font-extrabold text-ink">{s.num}</div>
+                  <div className="text-xs font-medium text-ink-muted mt-1.5">{s.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         <Divider />
 
         {/* ════════ CTA BANNER ════════ */}
-        <section className="max-w-4xl mx-auto px-4 md:px-8 py-section text-center">
-          <div className="rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-100 border border-border p-10 md:p-14">
-            <h2 className="text-2xl md:text-3xl font-bold text-ink tracking-tight">
-              Ready to get started?
-            </h2>
-            <p className="mt-2 text-base text-ink-muted">Open a tool and start building zero sign-up required.</p>
-            <button
-              onClick={() => scrollTo(toolsRef)}
-              className="mt-6 bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98] cursor-pointer"
-            >
-              Explore Tools →
-            </button>
+        <section className="w-full py-section px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="w-full rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-100 border border-border p-10 md:p-14 text-left">
+              <h2 className="text-2xl md:text-3xl font-bold text-ink tracking-tight">
+                Ready to get started?
+              </h2>
+              <p className="mt-2 text-base text-ink-muted">Open a tool and start building zero sign-up required.</p>
+              <button
+                onClick={() => scrollTo(toolsRef)}
+                className="mt-6 bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98] cursor-pointer"
+              >
+                Explore Tools →
+              </button>
+            </div>
           </div>
         </section>
       </main>
