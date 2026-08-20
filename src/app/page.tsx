@@ -13,6 +13,7 @@ import ImageToWebp from "../components/tools/ImageToWebp";
 import QrGenerator from "../components/tools/QrGenerator";
 import GradientMesh from "../components/tools/GradientMesh";
 import SuggestTool from "../components/tools/SuggestTool";
+import YoutubeMp3 from "../components/tools/YoutubeMp3";
 
 interface ToolItem {
   id: string;
@@ -161,6 +162,11 @@ const TOOLS: ToolItem[] = [
     title: "CSS Mesh Gradient",
     desc: "Design beautiful multi-point mesh gradients and copy pure CSS.",
   },
+  {
+    id: "youtube-mp3",
+    title: "YouTube → MP3",
+    desc: "Extract and download audio from any YouTube video as an MP3 file.",
+  },
 ];
 
 /* ── Feature showcase data ── */
@@ -196,6 +202,17 @@ const FEATURES_ROWS = [
       "Interactive drag-to-position color nodes",
       "Support for up to 10 custom color stops",
       "One-click pure CSS code copy",
+    ],
+  },
+  {
+    id: "youtube-mp3",
+    label: "🎵 YouTube → MP3",
+    title: "Extract Audio From Any YouTube Video",
+    desc: "Paste a YouTube URL, hit download, and grab the MP3 audio instantly. No apps, no extensions — just your browser.",
+    checks: [
+      "Supports all YouTube video and Shorts URLs",
+      "Highest quality audio extraction",
+      "One-click MP3 download to your device",
     ],
   },
 ];
@@ -301,6 +318,12 @@ export default function Home() {
             <path d="M2 12h20" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         );
+      case "youtube-mp3":
+        return (
+          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" />
+          </svg>
+        );
       default:
         return (
           <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -390,6 +413,27 @@ export default function Home() {
           </div>
         );
 
+      case "youtube-mp3":
+        return (
+          <div className="w-full aspect-square bg-warm-50 rounded-2xl p-6 flex flex-col justify-between border border-border/40 select-none overflow-hidden relative">
+            <div className="flex justify-between items-center text-xs font-semibold text-ink-muted z-10">
+              <span className="bg-warm-white px-2.5 py-1 rounded-md border border-border">YouTube → MP3</span>
+              <span className="text-accent font-bold">Audio Ready</span>
+            </div>
+
+            <div className="my-auto relative h-36 w-full rounded-xl bg-warm-white border border-border/80 flex items-center justify-center overflow-hidden shadow-inner">
+              <svg className="w-16 h-16 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
+                <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white"/>
+              </svg>
+            </div>
+
+            <div className="w-full bg-warm-white/90 border border-border/80 rounded-lg px-3 py-1 text-center text-xs font-mono text-ink-muted truncate z-10">
+              paste URL → extract audio → download MP3
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -455,6 +499,7 @@ export default function Home() {
                   {activeTool === "image-to-webp" && <ImageToWebp />}
                   {activeTool === "qr-generator" && <QrGenerator />}
                   {activeTool === "gradient-mesh" && <GradientMesh />}
+                  {activeTool === "youtube-mp3" && <YoutubeMp3 />}
                 </div>
               </div>
             ) : (
@@ -466,34 +511,39 @@ export default function Home() {
                 />
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                  {TOOLS.map((t, index) => (
-                    <div
-                      key={t.id}
-                      data-aos="fade-up"
-                      data-aos-once="true"
-                      data-aos-delay={(index + 1) * 100}
-                      onClick={() => { setActiveTool(t.id); scrollTo(toolsRef); }}
-                      className="group relative bg-warm-white/95 backdrop-blur-sm border border-border/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 flex flex-col justify-between min-h-57.5 text-left"
-                    >
-                      <div>
-                        <div className="w-12 h-12 rounded-xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-md group-hover:shadow-accent/20">
-                          {renderToolSvg(t.id)}
+                  {TOOLS.map((t, index) => {
+                    const isYoutube = t.id === "youtube-mp3";
+                    return (
+                      <div
+                        key={t.id}
+                        data-aos="fade-up"
+                        data-aos-once="true"
+                        data-aos-delay={(index + 1) * 100}
+                        onClick={() => { setActiveTool(t.id); scrollTo(toolsRef); }}
+                        className={`group relative bg-warm-white/95 backdrop-blur-sm border border-border/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 flex flex-col justify-between min-h-57.5 text-left ${
+                          isYoutube ? "sm:col-span-2 lg:col-span-3" : ""
+                        }`}
+                      >
+                        <div>
+                          <div className="w-12 h-12 rounded-xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-md group-hover:shadow-accent/20">
+                            {renderToolSvg(t.id)}
+                          </div>
+                          <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
+                            {t.title}
+                          </h3>
+                          <p className="mt-2 text-base text-ink-muted leading-relaxed">
+                            {t.desc}
+                          </p>
                         </div>
-                        <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
-                          {t.title}
-                        </h3>
-                        <p className="mt-2 text-base text-ink-muted leading-relaxed">
-                          {t.desc}
-                        </p>
-                      </div>
 
-                      <div className="mt-5 flex items-center text-sm font-semibold text-accent opacity-90 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                        <span>Open tool →</span>
-                      </div>
+                        <div className="mt-5 flex items-center text-sm font-semibold text-accent opacity-90 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                          <span>Open tool →</span>
+                        </div>
 
-                      <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-2xl" />
-                    </div>
-                  ))}
+                        <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-2xl" />
+                      </div>
+                    );
+                  })}
 
                   {/* Suggest card */}
                   <div
@@ -670,7 +720,7 @@ export default function Home() {
             {/* Stats */}
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl w-full">
               {[
-                { num: "3+", label: "Tools Available" },
+                { num: "4+", label: "Tools Available" },
                 { num: "Instant", label: "Client Performance" },
                 { num: "100%", label: "Private & Local" },
               ].map((s, i) => (
