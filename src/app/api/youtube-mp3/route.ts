@@ -1,5 +1,9 @@
 import { NextRequest } from "next/server";
-import { execFile } from "child_process";
+import { execFile, spawn } from "child_process";
+import { readFile, unlink, mkdir } from "fs/promises";
+import { readdirSync } from "fs";
+import { join } from "path";
+import { tmpdir } from "os";
 
 export const dynamic = "force-dynamic";
 
@@ -11,38 +15,77 @@ function extractVideoId(input: string): string | null {
   return match ? match[1] : null;
 }
 
-// Find yt-dlp executable path
-function getYtdlpPath(): string {
-  // On Windows: python -m yt_dlp
-  // On Linux/Mac: yt-dlp or python3 -m yt_dlp
-  return process.platform === "win32" ? "python" : "yt-dlp";
-}
-
-function getYtdlpArgs(url: string): string[] {
-  if (process.platform === "win32") {
-    return ["-m", "yt_dlp", ...commonArgs(url)];
-  }
-  return commonArgs(url);
-}
-
-function commonArgs(url: string): string[] {
-  return [
-    "--extract-audio",
-    "--audio-format", "mp3",
-    "--audio-quality", "192K",
-    "--no-playlist",
-    "--no-warnings",
-    "--print", "filename:%(title)s.%(ext)s",
-    "-o", "-",
-    url,
-  ];
-}
-
 function sanitizeFilename(name: string): string {
   return name.replace(/[^\w\s\-()[\]]/g, "").trim() || "youtube-audio";
 }
 
+function getExeAndArgs(extraArgs: string[]): { exe: string; args: string[] } {
+  if (process.platform === "win32") {
+    return { exe: "python", args: ["-m", "yt_dlp", ...extraArgs] };
+  }
+  return { exe: "yt-dlp", args: extraArgs };
+}
+
+const COMMON_FLAGS = [
+  "--js-runtimes", "node",
+  "--remote-components", "ejs:github",
+  "--no-playlist",
+];
+
+function runYtdlp(args: string[], timeoutMs = 30000): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const { exe, args: fullArgs } = getExeAndArgs(args);
+    execFile(exe, fullArgs, { timeout: timeoutMs }, (err, stdout, stderr) => {
+      if (err) {
+        console.error("[YouTube MP3] title fetch stderr:", stderr);
+        reject(err);
+      } else {
+        resolve(stdout.trim());
+      }
+    });
+  });
+}
+
+function runYtdlpDownload(args: string[], timeoutMs = 120000): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const { exe, args: fullArgs } = getExeAndArgs(args);
+    console.log(`[YouTube MP3] Spawning: ${exe} ${fullArgs.join(" ").substring(0, 300)}`);
+
+    const child = spawn(exe, fullArgs, {
+      stdio: ["pipe", "pipe", "pipe"],
+      timeout: timeoutMs,
+    });
+
+    let stderrData = "";
+
+    child.stderr?.on("data", (chunk: Buffer) => {
+      stderrData += chunk.toString();
+      const line = chunk.toString().trim();
+      if (line && !line.startsWith("\r")) {
+        console.log(`[yt-dlp] ${line.substring(0, 200)}`);
+      }
+    });
+
+    child.on("error", (err: Error) => {
+      console.error("[YouTube MP3] spawn error:", err.message);
+      reject(err);
+    });
+
+    child.on("close", (code: number | null) => {
+      console.log(`[YouTube MP3] yt-dlp exit code: ${code}`);
+      if (code !== 0 && code !== null) {
+        console.error(`[YouTube MP3] stderr: ${stderrData.substring(0, 500)}`);
+        reject(new Error(`yt-dlp failed (code ${code})`));
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 export async function POST(request: NextRequest) {
+  let tempFilePath: string | null = null;
+
   try {
     const body = await request.json();
     const url = body?.url;
@@ -64,72 +107,88 @@ export async function POST(request: NextRequest) {
 
     const trimmedUrl = url.trim();
 
-    // First, get the video title
+    // Step 1: Get the video title
     let title = "youtube-audio";
     try {
-      const titleResult = await new Promise<string>((resolve, reject) => {
-        const titleArgs =
-          process.platform === "win32"
-            ? ["-m", "yt_dlp", "--print", "title", "--no-playlist", trimmedUrl]
-            : ["--print", "title", "--no-playlist", trimmedUrl];
-
-        execFile(getYtdlpPath(), titleArgs, { timeout: 15000 }, (err, stdout) => {
-          if (err) reject(err);
-          else resolve(stdout.trim());
-        });
-      });
-      title = sanitizeFilename(titleResult);
+      const titleOutput = await runYtdlp([
+        ...COMMON_FLAGS,
+        "--print", "title",
+        trimmedUrl,
+      ]);
+      title = sanitizeFilename(titleOutput);
     } catch {
-      console.error("[YouTube MP3] Could not fetch title, using fallback");
+      console.error("[YouTube MP3] Could not fetch title");
     }
 
-    console.log(`[YouTube MP3] Downloading: ${title} from ${trimmedUrl}`);
+    console.log(`[YouTube MP3] Title: "${title}"`);
 
-    // Run yt-dlp to extract audio and output to stdout
-    const exePath = getYtdlpPath();
-    const exeArgs = getYtdlpArgs(trimmedUrl);
+    // Step 2: Create temp directory
+    const tmpDir = join(tmpdir(), "yt-mp3");
+    await mkdir(tmpDir, { recursive: true });
 
-    const child = require("child_process").spawn(exePath, exeArgs, {
-      stdio: ["pipe", "pipe", "pipe"],
-      timeout: 120000,
-    });
+    const outputTemplate = join(tmpDir, `${videoId}.%(ext)s`);
+    const expectedFile = join(tmpDir, `${videoId}.webm`);
 
-    // Check for early errors
-    let stderrData = "";
-    child.stderr.on("data", (chunk: Buffer) => {
-      stderrData += chunk.toString();
-    });
+    // Step 3: Download — raw audio, no conversion
+    await runYtdlpDownload([
+      ...COMMON_FLAGS,
+      "--format", "bestaudio",
+      "-o", outputTemplate,
+      trimmedUrl,
+    ]);
 
-    // If yt-dlp exits with error before streaming starts
-    child.on("error", (err: Error) => {
-      console.error("[YouTube MP3] spawn error:", err.message);
-    });
+    // Step 4: Find the output file
+    const allFiles = readdirSync(tmpDir);
+    console.log(`[YouTube MP3] Files in tmpDir:`, allFiles.filter(f => f.includes(videoId)));
 
-    child.on("close", (code: number | null) => {
-      if (code !== 0 && code !== null) {
-        console.error(`[YouTube MP3] yt-dlp exited with code ${code}: ${stderrData}`);
-      }
-    });
+    const matchingFile = allFiles.find((f) => f.startsWith(`${videoId}.`));
 
-    // Convert Node.js Readable to Web ReadableStream
-    const webStream = new ReadableStream({
-      start(controller) {
-        child.stdout.on("data", (chunk: Buffer) => {
-          controller.enqueue(new Uint8Array(chunk));
-        });
-        child.stdout.on("end", () => {
-          controller.close();
-        });
-        child.stdout.on("error", (err: Error) => {
-          controller.error(err);
-        });
-      },
-    });
+    if (!matchingFile) {
+      return Response.json(
+        { error: "Download succeeded but no output file found." },
+        { status: 500 }
+      );
+    }
 
-    return new Response(webStream, {
+    const foundFile = join(tmpDir, matchingFile);
+    tempFilePath = foundFile;
+
+    console.log(`[YouTube MP3] Reading: ${foundFile}`);
+
+    // Step 5: Read the file into a buffer
+    const fileBuffer = await readFile(foundFile);
+    const fileSize = fileBuffer.length;
+
+    console.log(`[YouTube MP3] File size: ${fileSize} bytes (${(fileSize / 1024 / 1024).toFixed(2)} MB)`);
+
+    if (fileSize === 0) {
+      return Response.json(
+        { error: "Downloaded file is empty." },
+        { status: 500 }
+      );
+    }
+
+    // Step 6: Determine content type
+    const ext = matchingFile.split(".").pop()?.toLowerCase() || "webm";
+    const contentTypeMap: Record<string, string> = {
+      mp3: "audio/mpeg",
+      webm: "audio/webm",
+      opus: "audio/opus",
+      m4a: "audio/mp4",
+      ogg: "audio/ogg",
+    };
+    const contentType = contentTypeMap[ext] || "audio/webm";
+
+    console.log(`[YouTube MP3] Sending ${fileSize} bytes as ${contentType}`);
+
+    // Step 7: Return the response — file will be cleaned up by OS temp cleanup
+    // DO NOT unlink in finally — it runs before the response is sent!
+    return new Response(fileBuffer, {
       headers: {
-        "Content-Type": "audio/mpeg",
-        "Content-Disposition": `attachment; filename="${title}.mp3"`,
+        "Content-Type": contentType,
+        "Content-Disposition": `attachment; filename="${title}.${ext}"`,
+        "Content-Length": String(fileSize),
+        "Cache-Control": "no-store",
       },
     });
   } catch (error: unknown) {
@@ -138,4 +197,6 @@ export async function POST(request: NextRequest) {
       error instanceof Error ? error.message : "Failed to process the video.";
     return Response.json({ error: message }, { status: 500 });
   }
+  // Note: NO finally block — temp files are cleaned up by the OS
+  // A finally block would run BEFORE the Response body is streamed to the client
 }
