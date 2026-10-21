@@ -10,6 +10,7 @@ import ImageToWebp from "../components/tools/ImageToWebp";
 import QrGenerator from "../components/tools/QrGenerator";
 import GradientMesh from "../components/tools/GradientMesh";
 import SuggestTool from "../components/tools/SuggestTool";
+import Image from "next/image";
 
 interface ToolItem {
   id: string;
@@ -17,88 +18,141 @@ interface ToolItem {
   desc: string;
 }
 
-/* ── Custom 5-second Funky Loading Screen ── */
+/* ── Custom 5-second Premium Loading Screen ── */
 const LoadingScreen = () => {
-  const funkyPhrases = [
-    "Welcome To Undo-Universe! 🌌",
-    "Oru chaya kudikkunna time-il sambavam set aakkam! ☕",
-    "No lag, no scene, pure browser rocket speed! 🚀",
-    "Server scene illa machane, full browser kalip vibes! ⚡",
-    "URL kodukku, color maattu, direct scan cheythu polikku! 🎨",
-    "Scene aakkalle,  tool-Undo! → 🔥",
+  const premiumPhrases = [
+    "Welcome to ToolUndo 🌌",
+    "Crafting premium tools for developers... ☕",
+    "Zero server. Zero compromise. Pure speed. 🚀",
+    "Your data, your rules. Always. 🔒",
+    "Initializing premium experience... ✨",
+    "Ready to build faster! 🔥",
   ];
 
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [dots, setDots] = useState("");
 
   useEffect(() => {
     const phraseInterval = setInterval(() => {
-      setPhraseIndex((prev) => (prev + 1) % funkyPhrases.length);
-    }, 1000);
+      setPhraseIndex((prev) => (prev + 1) % premiumPhrases.length);
+    }, 800);
+
+    const dotInterval = setInterval(() => {
+      setDots((prev) => (prev.length >= 3 ? "" : prev + "•"));
+    }, 400);
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
+          clearInterval(phraseInterval);
+          clearInterval(dotInterval);
           return 100;
         }
-        return prev + 1;
+        return prev + Math.random() * 3 + 1;
       });
-    }, 50);
+    }, 60);
 
     return () => {
       clearInterval(phraseInterval);
       clearInterval(progressInterval);
+      clearInterval(dotInterval);
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-warm-white/95 backdrop-blur-md px-6 text-center select-none">
-      {/* Animated Glowing Icon Ring */}
-      <div className="relative flex items-center justify-center mb-8">
-        <div className="w-24 h-24 rounded-3xl bg-accent/15 animate-ping absolute inset-0 m-auto" />
-        <div className="w-20 h-20 rounded-3xl bg-linear-to-tr from-accent to-amber-500 flex items-center justify-center shadow-xl shadow-accent/30 animate-bounce">
-          <svg className="w-10 h-10 text-white animate-spin" style={{ animationDuration: "3s" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-cream px-6 text-center select-none">
+      {/* Premium Animated Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-accent/10 blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-accent/5 blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+      </div>
+
+      {/* Brand */}
+      <div className="relative z-10 flex flex-col items-center gap-6">
+        {/* Logo with premium animation */}
+        <div className="relative flex items-center justify-center">
+          <div className="absolute inset-0 w-24 h-24 rounded-3xl bg-accent/10 animate-ping" />
+          <div className="absolute inset-0 w-20 h-20 rounded-3xl bg-accent/20 animate-ping" style={{ animationDelay: "0.5s" }} />
+          <div className="relative w-20 h-20 rounded-3xl bg-linear-to-br from-accent to-accent-light flex items-center justify-center shadow-2xl shadow-accent/30 animate-float-gentle">
+            <Image 
+              src="/icon.png" 
+              alt="ToolUndo" 
+              width={48} 
+              height={48} 
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+        </div>
+
+        {/* Brand Title */}
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight premium-gradient-text">
+            ToolUndo
+          </h1>
+          <p className="mt-2 text-sm text-ink-muted font-medium">Premium Browser-Native Utilities</p>
+        </div>
+
+        {/* Premium Cycling Text */}
+        <div className="h-10 min-w-[300px] flex items-center justify-center">
+          <p className="text-base sm:text-lg font-medium text-ink-muted transition-all duration-500 transform">
+            {premiumPhrases[phraseIndex]}<span className="text-accent animate-pulse">{dots}</span>
+          </p>
+        </div>
+
+        {/* Premium Progress Bar */}
+        <div className="w-full max-w-md">
+          <div className="flex justify-between text-xs font-mono text-ink-muted mb-2">
+            <span>Loading premium experience</span>
+            <span className="text-accent font-bold">{Math.min(Math.round(progress), 100)}%</span>
+          </div>
+          <div className="relative w-full h-2 bg-warm-200/80 rounded-full overflow-hidden border border-border/40">
+            <div 
+              className="h-full bg-linear-to-r from-accent via-accent-light to-amber-500 rounded-full transition-all duration-500 ease-out shadow-lg shadow-accent/30 bg-[length:200%_100%] animate-gradient-shift"
+              style={{ width: `${Math.min(progress, 100)}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Premium feature hints */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs text-ink-faint opacity-60">
+          <span className="flex items-center gap-1 px-3 py-1.5 bg-warm-white/80 backdrop-blur-sm rounded-full border border-border/40">
+            <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            100% Client-Side
+          </span>
+          <span className="flex items-center gap-1 px-3 py-1.5 bg-warm-white/80 backdrop-blur-sm rounded-full border border-border/40">
+            <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Instant Speed
+          </span>
+          <span className="flex items-center gap-1 px-3 py-1.5 bg-warm-white/80 backdrop-blur-sm rounded-full border border-border/40">
+            <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Zero Tracking
+          </span>
         </div>
       </div>
-
-      {/* Brand Title */}
-      <h1 className="text-3xl sm:text-4xl font-black text-ink tracking-tight mb-2">
-        ToolUndo<span className="text-accent animate-pulse">.</span>
-      </h1>
-
-      {/* Funky Cycling Text */}
-      <div className="h-8 mb-6 flex items-center justify-center">
-        <p className="text-sm sm:text-base font-semibold text-ink-muted transition-all duration-300 transform">
-          {funkyPhrases[phraseIndex]}
-        </p>
-      </div>
-
-      {/* Progress Bar Container */}
-      <div className="w-full max-w-xs bg-warm-200/80 rounded-full h-2 overflow-hidden p-0.5 border border-border">
-        <div 
-          className="h-full bg-linear-to-r from-accent to-amber-500 rounded-full transition-all duration-75 ease-out shadow-xs"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      <span className="text-xs font-mono font-semibold text-accent mt-3">
-        {progress}%
-      </span>
     </div>
   );
 };
 
-/* ── Tiny section divider ── */
+/* ── Premium Section Divider ── */
 const Divider = () => (
-  <div className="max-w-6xl mx-auto px-4 md:px-8">
-    <div className="h-px bg-border" />
+  <div className="max-w-6xl mx-auto px-4 md:px-8 my-8 md:my-12">
+    <div className="relative h-px bg-linear-to-r from-transparent via-border to-transparent">
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-px bg-linear-to-r from-transparent via-accent/50 to-transparent" />
+    </div>
   </div>
 );
 
-/* ── Section label (Guaranteed horizontal layout fix) ── */
+/* ── Premium Section Label ── */
 const SectionLabel = ({
   label,
   heading,
@@ -108,35 +162,25 @@ const SectionLabel = ({
   heading: string;
   sub?: React.ReactNode;
 }) => (
-  <div 
-    style={{ 
-      width: "100%", 
-      display: "block", 
-      textAlign: "left", 
-      marginBottom: "2.5rem" 
-    }}
-  >
-    <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-2">
+  <div className="max-w-6xl mx-auto px-4 md:px-8 mb-12 md:mb-16 text-center">
+    <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-bg/50 border border-accent/20 text-xs font-semibold uppercase tracking-widest text-accent mb-4">
+      <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
       {label}
     </span>
-    <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-ink mb-3">
+    <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-ink mb-4 premium-gradient-text">
       {heading}
     </h2>
     {sub && (
-      <div 
-        style={{ 
-          display: "block", 
-          width: "100%", 
-          maxWidth: "650px", 
-          minWidth: "300px", 
-          whiteSpace: "normal", 
-          wordBreak: "normal" 
-        }} 
-        className="text-base sm:text-lg text-ink-muted leading-relaxed"
-      >
+      <div className="mx-auto max-w-3xl text-base sm:text-lg text-ink-muted leading-relaxed text-balance">
         {sub}
       </div>
     )}
+    {/* Decorative accent line */}
+    <div className="mt-6 flex items-center justify-center gap-3">
+      <div className="w-12 h-px bg-linear-to-r from-transparent via-accent/40 to-transparent" />
+      <div className="w-2.5 h-2.5 rounded-full bg-accent/40" />
+      <div className="w-12 h-px bg-linear-to-r from-transparent via-accent/40 to-transparent" />
+    </div>
   </div>
 );
 
@@ -433,7 +477,7 @@ export default function Home() {
                       <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
                         {t.title}
                       </h3>
-                      <p className="mt-2 text-base text-ink-muted leading-relaxed">
+                      <p className="mt-2 text-lg text-ink-muted leading-relaxed">
                         {t.desc}
                       </p>
                     </div>
@@ -460,7 +504,7 @@ export default function Home() {
                     <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
                       Suggest a Tool
                     </h3>
-                    <p className="mt-2 text-base text-ink-muted leading-relaxed">
+                    <p className="mt-2 text-lg text-ink-muted leading-relaxed">
                       Have an idea for a converter or utility?
                     </p>
                   </div>
@@ -504,15 +548,15 @@ export default function Home() {
                   <span className="inline-flex px-3.5 py-1 rounded-full border border-border bg-warm-white text-xs font-semibold uppercase tracking-wider text-accent shadow-xs">
                     {f.label}
                   </span>
-                  <h3 className="text-2xl md:text-3xl font-extrabold text-ink tracking-tight">
+                  <h3 className="text-2xl md:text-5xl font-extrabold text-ink tracking-tight">
                     {f.title}
                   </h3>
-                  <p className="text-base text-ink-muted leading-relaxed">
+                  <p className="text-xl md:text-1xl text-ink-muted leading-relaxed text-balance max-w-5xl">
                     {f.desc}
                   </p>
                   <ul className="space-y-2.5 pt-1">
                     {f.checks.map((c, j) => (
-                      <li key={j} className="flex items-center gap-2.5 text-sm text-ink-muted">
+                      <li key={j} className="flex items-center gap-2.5 text-base text-ink-muted">
                         <span className="w-4 h-4 rounded-full bg-accent/10 text-accent flex items-center justify-center text-xs font-bold shrink-0">
                           ✓
                         </span>
@@ -548,7 +592,7 @@ export default function Home() {
                 <span className="inline-block mt-1 text-xs text-accent font-semibold tracking-wide uppercase">
                   {f.tagline}
                 </span>
-                <p className="mt-2.5 text-sm text-ink-light leading-relaxed">{f.desc}</p>
+                <p className="mt-2.5 text-base text-ink-light leading-relaxed text-balance">{f.desc}</p>
                 
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-3xl" />
               </div>
@@ -574,9 +618,9 @@ export default function Home() {
 
         {/* ════════ ABOUT ════════ */}
         <section ref={aboutRef} className="scroll-mt-24 max-w-4xl mx-auto px-4 md:px-8 py-section text-center">
-          <h2 className="text-ink-light font-semibold text-4xl sm:text-5xl pb-6 tracking-tight"> About ToolUndo </h2>
+          <h2 className="text-ink-light font-extrabold text-4xl sm:text-5xl pb-6 tracking-tight"> About ToolUndo </h2>
           
-          <div className="space-y-4 max-w-7xl mx-auto text-base text-ink-muted leading-relaxed">
+          <div className="space-y-4 max-w-6xl mx-auto text-base text-ink-muted leading-relaxed text-balance">
             <p>
               A small initiative created to make daily tasks faster for developers and everyday users alike.
               Swap heavy desktop utilities with instant browser tools!
@@ -609,10 +653,10 @@ export default function Home() {
         {/* ════════ CTA BANNER ════════ */}
         <section className="max-w-4xl mx-auto px-4 md:px-8 py-section text-center">
           <div className="rounded-3xl bg-linear-to-br from-warm-100 via-accent-bg/60 to-warm-100 border border-border p-10 md:p-14">
-            <h2 className="text-2xl md:text-3xl font-bold text-ink tracking-tight">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-ink tracking-tight">
               Ready to get started?
             </h2>
-            <p className="mt-2 text-base text-ink-muted">Open a tool and start building zero sign-up required.</p>
+            <p className="mt-2 text-base text-ink-muted text-balance">Open a tool and start building zero sign-up required.</p>
             <button
               onClick={() => scrollTo(toolsRef)}
               className="mt-6 bg-accent hover:bg-accent-hover text-white px-8 py-3 rounded-full font-semibold text-sm transition-all hover:shadow-lg hover:shadow-accent/15 active:scale-[0.98] cursor-pointer"

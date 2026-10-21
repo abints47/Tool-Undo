@@ -1,5 +1,6 @@
 # Toolundo 🛠️🐘
-> *"നമ്മുടെ സ്വന്തം Tooling Companion!"* (Our very own Tooling Companion!)
+
+> _"നമ്മുടെ സ്വന്തം Tooling Companion!"_ (Our very own Tooling Companion!)
 
 > ⚠️ **Note:** This project is currently in its **initial stage of monitoring** (പ്രാരംഭ നിരീക്ഷണ ഘട്ടം). Core metrics, system stability, and logs are actively being observed.
 
@@ -9,11 +10,11 @@ Welcome to **Toolundo** — a lightweight, modular, and developer-friendly tool 
 
 ## 🌟 Features (സവിശേഷതകൾ)
 
-* **⚡ Ultra Fast & Lightweight:** Minimal dependencies for maximum execution speed.
-* **🧩 Modular Architecture:** Easily plug in new sub-tools, plugins, or custom scripts (`.py`, `.sh`, `.js`).
-* **🌴 Localized & Context-Aware:** Built with special defaults for regional Malayalam context processing, text conversion (Manglish to Malayalam / Unicode formatting), and local data handling.
-* **🔒 Secure & Private:** Runs completely on your local machine — no data leaves your system.
-* **🛠️ Developer-First CLI:** Intuitive command-line interface with shell auto-completion.
+- **⚡ Ultra Fast & Lightweight:** Minimal dependencies for maximum execution speed.
+- **🧩 Modular Architecture:** Easily plug in new sub-tools, plugins, or custom scripts (`.py`, `.sh`, `.js`).
+- **🌴 Localized & Context-Aware:** Built with special defaults for regional Malayalam context processing, text conversion (Manglish to Malayalam / Unicode formatting), and local data handling.
+- **🔒 Secure & Private:** Runs completely on your local machine — no data leaves your system.
+- **🛠️ Developer-First CLI:** Intuitive command-line interface with shell auto-completion.
 
 ---
 
@@ -25,17 +26,19 @@ Welcome to **Toolundo** — a lightweight, modular, and developer-friendly tool 
 ```
 
 Toolundo is currently undergoing its **initial stage of monitoring**:
-* Real-time logs, performance bottlenecks, and resource consumption are being analyzed.
-* Modules and APIs may undergo minor adjustments based on initial evaluation.
-* Community feedback and bug reports during this phase are highly appreciated.
+
+- Real-time logs, performance bottlenecks, and resource consumption are being analyzed.
+- Modules and APIs may undergo minor adjustments based on initial evaluation.
+- Community feedback and bug reports during this phase are highly appreciated.
 
 ---
 
 ## 🚀 Quick Start (എങ്ങനെ തുടങ്ങാം)
 
 ### Prerequisites
-* Python 3.9+ or Node.js (depending on module usage)
-* Git
+
+- Python 3.9+ or Node.js (depending on module usage)
+- Git
 
 ### Installation
 
@@ -78,7 +81,7 @@ Toolundo includes a dedicated module `toolundo-ml` designed specifically for Ker
 
 1. **Manglish Converter:** Convert Manglish text into standard Malayalam Unicode seamlessly.
 2. **Numbers & Currency Formatter:** Easily convert numbers into Indian numbering system and Malayalam verbal representations (എ.ഡി., ലക്ഷം, കോടി).
-3. **Date & Panchangam Utility:** Generate local Malayalam calendar dates (കൊല്ലവർഷം - Kolla Varsham: *Chingam, Kanni, etc.*).
+3. **Date & Panchangam Utility:** Generate local Malayalam calendar dates (കൊല്ലവർഷം - Kolla Varsham: _Chingam, Kanni, etc._).
 
 ```bash
 # Example Manglish conversion
@@ -124,3 +127,15 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <p align="center">
   Made with ❤️ in Kerala, India 🌴
 </p>
+
+Hi [Name],
+
+I recently built tool-undo.vercel.app and thought it would be a great fit for AppUndo.
+
+I've opened a GitHub Pull Request with the submission: [Insert PR Link Here].
+
+Would appreciate it if you could review and merge it when you get a chance. Open to any feedback!
+
+Best,
+
+Abin

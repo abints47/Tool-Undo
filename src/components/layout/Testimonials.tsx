@@ -23,7 +23,7 @@ function TestimonialCard({ name, role, quote, tagline, avatarLetter }: Testimoni
         </p>
 
         {/* Core Review */}
-        <p className="text-ink-muted text-sm sm:text-base leading-relaxed">
+        <p className="text-ink-muted text-base sm:text-lg leading-relaxed">
           &ldquo;{quote}&rdquo;
         </p>
       </div>
