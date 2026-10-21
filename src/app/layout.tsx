@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import LenisProvider from "@/components/LenisProvider";
 
 export const metadata: Metadata = {
   title: "ToolUndo — Browser-Based Developer Tools",
@@ -14,10 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <LenisProvider>{children}</LenisProvider>
-      </body>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body>{children}</body>
     </html>
   );
 }

@@ -39,7 +39,7 @@ export default function GradientMesh() {
 
   const handleAddPoint = () => {
     if (points.length >= 10) {
-      alert("പത്തിൽ കൂടുതൽ പിൻ വെയ്ക്കാൻ പറ്റില്ല അളിയാ, ഹാങ് ആവും!");
+      alert("You cannot add more than 10 pins!");
       return;
     }
     const newId = (Math.max(...points.map((p) => parseInt(p.id))) + 1).toString();
@@ -56,7 +56,7 @@ export default function GradientMesh() {
 
   const handleRemovePoint = () => {
     if (points.length <= 1) {
-      alert("ഒരു പിൻ എങ്കിലും ബാക്കി വെയ്ക്കണേ!");
+      alert("Please keep at least one pin!");
       return;
     }
     const remaining = points.filter((p) => p.id !== selectedPointId);
@@ -122,7 +122,7 @@ export default function GradientMesh() {
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
-      alert("കോപ്പി ചെയ്യാൻ പറ്റിയില്ല!");
+      alert("Failed to copy text!");
     }
   };
 
@@ -141,10 +141,10 @@ export default function GradientMesh() {
       <div className="flex flex-col gap-2">
         <h2 className="font-headline-sm text-headline-sm text-on-surface flex items-center gap-sm">
           <span className="material-symbols-outlined text-primary-container">gradient</span>
-          CSS മെഷ് ഗ്രേഡിയന്റ് കളർപൂരം (Gradient Mesh)
+          CSS Mesh Gradient Studio
         </h2>
         <p className="font-body-sm text-body-sm text-secondary">
-          കളറുകൾ മിക്സ് ചെയ്ത് അടിപൊളി പശ്ചാത്തലം നിർമ്മിക്കാം. കാൻവാസിൽ കാണുന്ന ബട്ടണുകൾ ഡ്രാഗ് ചെയ്ത് അങ്ങോട്ടും ഇങ്ങോട്ടും മാറ്റി നോക്കൂ!
+          Mix colors to create a stunning background. Drag and drop the pins on the canvas to experiment!
         </p>
       </div>
 
@@ -184,8 +184,8 @@ export default function GradientMesh() {
           </div>
 
           <div className="flex justify-between items-center bg-surface-container-low p-3 rounded border border-outline-variant text-xs text-secondary font-mono">
-            <span>✨ കാൻവാസിലെ പോയിന്റുകൾ വിരൽ കൊണ്ട് തൊട്ട് മാറ്റി നോക്കൂ</span>
-            <span>ആകെ സ്റ്റോപ്പുകൾ: {points.length}/10</span>
+            <span>✨ Drag or click points on the canvas to reposition</span>
+            <span>Total Stops: {points.length}/10</span>
           </div>
         </div>
 
@@ -193,7 +193,7 @@ export default function GradientMesh() {
         <div className="lg:col-span-5 flex flex-col gap-5">
           {/* Point Selector Pills */}
           <div className="flex flex-col gap-2">
-            <span className="font-body-sm text-on-surface font-semibold text-xs">പോയിന്റ് പിൻ തെരഞ്ഞെടുക്കൂ</span>
+            <span className="font-body-sm text-on-surface font-semibold text-xs">Select Pin Point</span>
             <div className="flex flex-wrap gap-2">
               {points.map((p, idx) => (
                 <button
@@ -209,7 +209,7 @@ export default function GradientMesh() {
                     style={{ backgroundColor: p.color }}
                     className="w-2.5 h-2.5 rounded-full border border-outline-variant/50"
                   ></span>
-                  പിൻ {idx + 1}
+                  Pin {idx + 1}
                 </button>
               ))}
               <button
@@ -217,7 +217,7 @@ export default function GradientMesh() {
                 disabled={points.length >= 10}
                 className="px-3 py-1.5 rounded text-xs font-semibold bg-surface-container-highest border border-outline-variant text-on-surface hover:bg-outline-variant/30 transition-all flex items-center gap-1 disabled:opacity-40"
               >
-                <span className="material-symbols-outlined text-[16px]">add</span> പുതിയത്
+                <span className="material-symbols-outlined text-[16px]">add</span> Add New
               </button>
             </div>
           </div>
@@ -226,20 +226,20 @@ export default function GradientMesh() {
           <div className="border border-outline-variant rounded-lg p-4 flex flex-col gap-4 bg-surface-container-lowest">
             <div className="flex justify-between items-center pb-2 border-b border-outline-variant/40">
               <span className="font-body-md text-on-surface font-bold text-xs uppercase tracking-wider">
-                പിൻ ക്രമീകരണങ്ങൾ
+                Pin Settings
               </span>
               <button
                 onClick={handleRemovePoint}
                 className="text-xs text-error font-semibold hover:underline flex items-center gap-0.5"
               >
-                <span className="material-symbols-outlined text-[14px]">delete</span> ഈ പിൻ വേണ്ടാ!
+                <span className="material-symbols-outlined text-[14px]">delete</span> Delete Pin
               </button>
             </div>
 
             {/* Color Stop Picker */}
             <div className="flex items-center justify-between">
               <label htmlFor="mesh-color" className="font-body-sm text-on-surface font-semibold text-xs">
-                പിന്നിന്റെ കളർ
+                Pin Color
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -262,7 +262,7 @@ export default function GradientMesh() {
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between text-xs">
                 <label htmlFor="mesh-size" className="font-body-sm text-on-surface font-semibold">
-                  കളർ പരക്കേണ്ട വ്യാസം (Radius)
+                  Radius Spread
                 </label>
                 <span className="font-mono font-bold text-secondary">{selectedPoint?.size || 50}%</span>
               </div>
@@ -283,7 +283,7 @@ export default function GradientMesh() {
               <div className="flex flex-col gap-1">
                 <div className="flex justify-between text-xs">
                   <label htmlFor="mesh-x" className="font-body-sm text-on-surface font-semibold text-[11px]">
-                    ഇടത്/വലത് ദിശ (X)
+                    Horizontal (X)
                   </label>
                   <span className="font-mono text-secondary text-[11px]">{selectedPoint?.x || 0}%</span>
                 </div>
@@ -302,7 +302,7 @@ export default function GradientMesh() {
               <div className="flex flex-col gap-1">
                 <div className="flex justify-between text-xs">
                   <label htmlFor="mesh-y" className="font-body-sm text-on-surface font-semibold text-[11px]">
-                    മുകളിൽ/താഴെ ദിശ (Y)
+                    Vertical (Y)
                   </label>
                   <span className="font-mono text-secondary text-[11px]">{selectedPoint?.y || 0}%</span>
                 </div>
@@ -328,7 +328,7 @@ export default function GradientMesh() {
               <span className="material-symbols-outlined text-[18px]">
                 {isCopied ? "check" : "content_copy"}
               </span>
-              {isCopied ? "കോഡ് പോക്കറ്റിലാക്കി!" : "CSS കോഡ് കോപ്പി ചെയ്യ് മച്ചാനേ!"}
+              {isCopied ? "Copied to Clipboard!" : "Copy CSS Code"}
             </button>
           </div>
         </div>
@@ -337,7 +337,7 @@ export default function GradientMesh() {
       {/* Code Preview Box */}
       <div className="mt-2 border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low font-mono text-xs">
         <div className="flex justify-between items-center px-4 py-2 border-b border-outline-variant/60 bg-surface-container-high text-secondary">
-          <span>ഇതാ നിന്റെ ഡിസൈനിന്റെ CSS കോഡ്</span>
+          <span>Generated CSS Code</span>
           <span className="text-[10px] bg-primary-container/15 text-primary-container px-2 py-0.5 rounded uppercase font-bold">
             Pure CSS
           </span>
