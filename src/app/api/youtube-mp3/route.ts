@@ -1,93 +1,30 @@
 import { NextRequest } from "next/server";
-import { execFile, spawn } from "child_process";
-import { readFile, unlink, mkdir } from "fs/promises";
-import { readdirSync } from "fs";
-import { join } from "path";
-import { tmpdir } from "os";
+import { Ytdl, chooseFormat, Quality, parseVideoId, YtdlError } from "@distube/ytdl-core";
+import { Readable } from "stream";
 
+// Must run on the Node.js runtime (no edge/streaming-limits)
+export const runtime = "nodejs";
+// Give the download enough time — Vercel Hobby/Fluid compute caps at 60s
+export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
-const YOUTUBE_REGEX =
-  /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([\w-]+)/;
-
-function extractVideoId(input: string): string | null {
-  const match = input.trim().match(YOUTUBE_REGEX);
-  return match ? match[1] : null;
-}
+// One reusable instance keeps its YouTube session between warm invocations
+const yt = new Ytdl();
 
 function sanitizeFilename(name: string): string {
   return name.replace(/[^\w\s\-()[\]]/g, "").trim() || "youtube-audio";
 }
 
-function getExeAndArgs(extraArgs: string[]): { exe: string; args: string[] } {
-  if (process.platform === "win32") {
-    return { exe: "python", args: ["-m", "yt_dlp", ...extraArgs] };
-  }
-  return { exe: "yt-dlp", args: extraArgs };
-}
-
-const COMMON_FLAGS = [
-  "--js-runtimes", "node",
-  "--remote-components", "ejs:github",
-  "--no-playlist",
-];
-
-function runYtdlp(args: string[], timeoutMs = 30000): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const { exe, args: fullArgs } = getExeAndArgs(args);
-    execFile(exe, fullArgs, { timeout: timeoutMs }, (err, stdout, stderr) => {
-      if (err) {
-        console.error("[YouTube MP3] title fetch stderr:", stderr);
-        reject(err);
-      } else {
-        resolve(stdout.trim());
-      }
-    });
-  });
-}
-
-function runYtdlpDownload(args: string[], timeoutMs = 120000): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const { exe, args: fullArgs } = getExeAndArgs(args);
-    console.log(`[YouTube MP3] Spawning: ${exe} ${fullArgs.join(" ").substring(0, 300)}`);
-
-    const child = spawn(exe, fullArgs, {
-      stdio: ["pipe", "pipe", "pipe"],
-      timeout: timeoutMs,
-    });
-
-    let stderrData = "";
-
-    child.stderr?.on("data", (chunk: Buffer) => {
-      stderrData += chunk.toString();
-      const line = chunk.toString().trim();
-      if (line && !line.startsWith("\r")) {
-        console.log(`[yt-dlp] ${line.substring(0, 200)}`);
-      }
-    });
-
-    child.on("error", (err: Error) => {
-      console.error("[YouTube MP3] spawn error:", err.message);
-      reject(err);
-    });
-
-    child.on("close", (code: number | null) => {
-      console.log(`[YouTube MP3] yt-dlp exit code: ${code}`);
-      if (code !== 0 && code !== null) {
-        console.error(`[YouTube MP3] stderr: ${stderrData.substring(0, 500)}`);
-        reject(new Error(`yt-dlp failed (code ${code})`));
-      } else {
-        resolve();
-      }
-    });
-  });
-}
+const ERROR_MESSAGES: Record<string, string> = {
+  PRIVATE: "This video is private and can't be converted.",
+  AGE_RESTRICTED: "This video is age-restricted and can't be converted here.",
+  NO_FORMAT: "No audio stream is available for this video.",
+  UNPLAYABLE: "This video is unplayable (removed, region-locked, or live event).",
+};
 
 export async function POST(request: NextRequest) {
-  let tempFilePath: string | null = null;
-
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => null);
     const url = body?.url;
 
     if (!url || typeof url !== "string" || url.trim().length === 0) {
@@ -97,106 +34,61 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const videoId = extractVideoId(url);
-    if (!videoId) {
+    if (parseVideoId(url) === undefined) {
       return Response.json(
         { error: "That doesn't look like a valid YouTube video URL." },
         { status: 400 }
       );
     }
 
-    const trimmedUrl = url.trim();
+    // Step 1: Resolve video info and the best audio-only format
+    const info = await yt.getInfo(url.trim());
+    const format = chooseFormat(info.formats, {
+      quality: Quality.HighestAudio,
+      filter: { hasAudio: true, hasVideo: false },
+    });
 
-    // Step 1: Get the video title
-    let title = "youtube-audio";
-    try {
-      const titleOutput = await runYtdlp([
-        ...COMMON_FLAGS,
-        "--print", "title",
-        trimmedUrl,
-      ]);
-      title = sanitizeFilename(titleOutput);
-    } catch {
-      console.error("[YouTube MP3] Could not fetch title");
-    }
-
-    console.log(`[YouTube MP3] Title: "${title}"`);
-
-    // Step 2: Create temp directory
-    const tmpDir = join(tmpdir(), "yt-mp3");
-    await mkdir(tmpDir, { recursive: true });
-
-    const outputTemplate = join(tmpDir, `${videoId}.%(ext)s`);
-    const expectedFile = join(tmpDir, `${videoId}.webm`);
-
-    // Step 3: Download — raw audio, no conversion
-    await runYtdlpDownload([
-      ...COMMON_FLAGS,
-      "--format", "bestaudio",
-      "-o", outputTemplate,
-      trimmedUrl,
-    ]);
-
-    // Step 4: Find the output file
-    const allFiles = readdirSync(tmpDir);
-    console.log(`[YouTube MP3] Files in tmpDir:`, allFiles.filter(f => f.includes(videoId)));
-
-    const matchingFile = allFiles.find((f) => f.startsWith(`${videoId}.`));
-
-    if (!matchingFile) {
+    if (!format) {
       return Response.json(
-        { error: "Download succeeded but no output file found." },
+        { error: "No audio stream is available for this video." },
         { status: 500 }
       );
     }
 
-    const foundFile = join(tmpDir, matchingFile);
-    tempFilePath = foundFile;
+    const title = sanitizeFilename(info.videoDetails.title ?? "youtube-audio");
+    const container = format.container?.replace(/^\./, "") || "m4a";
+    const contentType = format.mimeType?.split(";")[0] || "audio/mp4";
 
-    console.log(`[YouTube MP3] Reading: ${foundFile}`);
+    console.log(`[YouTube MP3] "${title}" -> ${contentType} (${(Number(format.contentLength) / 1048576).toFixed(1)} MB)`);
 
-    // Step 5: Read the file into a buffer
-    const fileBuffer = await readFile(foundFile);
-    const fileSize = fileBuffer.length;
+    // Step 2: Start the download stream and pipe it straight to the client.
+    // Streaming keeps memory flat — nothing is buffered in a temp file.
+    const download = yt.download(info, { format, signal: request.signal });
 
-    console.log(`[YouTube MP3] File size: ${fileSize} bytes (${(fileSize / 1024 / 1024).toFixed(2)} MB)`);
+    // Surface stream errors in the function logs
+    download.on("error", (err: unknown) => {
+      console.error("[YouTube MP3] stream error:", err);
+    });
 
-    if (fileSize === 0) {
-      return Response.json(
-        { error: "Downloaded file is empty." },
-        { status: 500 }
-      );
-    }
+    const webStream = Readable.toWeb(download) as unknown as ReadableStream<Uint8Array>;
 
-    // Step 6: Determine content type
-    const ext = matchingFile.split(".").pop()?.toLowerCase() || "webm";
-    const contentTypeMap: Record<string, string> = {
-      mp3: "audio/mpeg",
-      webm: "audio/webm",
-      opus: "audio/opus",
-      m4a: "audio/mp4",
-      ogg: "audio/ogg",
-    };
-    const contentType = contentTypeMap[ext] || "audio/webm";
-
-    console.log(`[YouTube MP3] Sending ${fileSize} bytes as ${contentType}`);
-
-    // Step 7: Return the response — file will be cleaned up by OS temp cleanup
-    // DO NOT unlink in finally — it runs before the response is sent!
-    return new Response(fileBuffer, {
+    return new Response(webStream, {
       headers: {
         "Content-Type": contentType,
-        "Content-Disposition": `attachment; filename="${title}.${ext}"`,
-        "Content-Length": String(fileSize),
+        "Content-Disposition": `attachment; filename="${title}.${container}"`,
         "Cache-Control": "no-store",
       },
     });
   } catch (error: unknown) {
     console.error("[YouTube MP3] Error:", error);
-    const message =
-      error instanceof Error ? error.message : "Failed to process the video.";
+
+    let message = "Couldn't extract audio from this video. Try another one?";
+    if (error instanceof YtdlError) {
+      message = ERROR_MESSAGES[error.code] ?? message;
+    } else if (error instanceof Error && error.message.includes("getInfo")) {
+      message = "YouTube refused the request. Please try again in a moment.";
+    }
+
     return Response.json({ error: message }, { status: 500 });
   }
-  // Note: NO finally block — temp files are cleaned up by the OS
-  // A finally block would run BEFORE the Response body is streamed to the client
 }

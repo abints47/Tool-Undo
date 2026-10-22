@@ -42,13 +42,13 @@ export default function YoutubeMp3() {
 
       // Extract filename from Content-Disposition header
       const disposition = res.headers.get("Content-Disposition");
-      let filename = "youtube-audio.mp3";
+      let filename = "youtube-audio.m4a";
       if (disposition) {
         const match = disposition.match(/filename="?([^"]+)"?/);
         if (match) filename = match[1];
       }
 
-      setVideoTitle(filename.replace(".mp3", ""));
+      setVideoTitle(filename);
 
       // Trigger download
       const blob = await res.blob();
@@ -170,7 +170,7 @@ export default function YoutubeMp3() {
             </div>
             <p className="font-body-sm text-body-sm text-secondary">
               Saved as:{" "}
-              <span className="font-bold text-on-surface">{videoTitle}.mp3</span>
+              <span className="font-bold text-on-surface">{videoTitle}</span>
             </p>
           </div>
           <button

@@ -14,6 +14,7 @@ import QrGenerator from "../components/tools/QrGenerator";
 import GradientMesh from "../components/tools/GradientMesh";
 import SuggestTool from "../components/tools/SuggestTool";
 import YoutubeMp3 from "../components/tools/YoutubeMp3";
+import JpgToPdf from "../components/tools/JpgToPdf";
 
 interface ToolItem {
   id: string;
@@ -163,6 +164,11 @@ const TOOLS: ToolItem[] = [
     desc: "Design beautiful multi-point mesh gradients and copy pure CSS.",
   },
   {
+    id: "jpg-to-pdf",
+    title: "JPG → PDF",
+    desc: "Convert images into share-ready PDF files instantly in your browser.",
+  },
+  {
     id: "youtube-mp3",
     title: "YouTube → MP3",
     desc: "Extract and download audio from any YouTube video as an MP3 file.",
@@ -202,6 +208,17 @@ const FEATURES_ROWS = [
       "Interactive drag-to-position color nodes",
       "Support for up to 10 custom color stops",
       "One-click pure CSS code copy",
+    ],
+  },
+  {
+    id: "jpg-to-pdf",
+    label: "📄 JPG → PDF",
+    title: "Turn Images Into Share-Ready PDFs",
+    desc: "Drop an image and download a perfectly formatted PDF in seconds. No uploads, no watermarks, no server round-trips!",
+    checks: [
+      "Lossless JPEG embedding inside the PDF",
+      "PNG, WebP and BMP images auto-supported too",
+      "Instant one-click PDF download",
     ],
   },
   {
@@ -324,6 +341,13 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" />
           </svg>
         );
+      case "jpg-to-pdf":
+        return (
+          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 2v6h6M9 15h6" />
+          </svg>
+        );
       default:
         return (
           <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -434,6 +458,28 @@ export default function Home() {
           </div>
         );
 
+      case "jpg-to-pdf":
+        return (
+          <div className="w-full aspect-square bg-warm-50 rounded-2xl p-6 flex flex-col justify-between border border-border/40 select-none overflow-hidden relative">
+            <div className="flex justify-between items-center text-xs font-semibold text-ink-muted z-10">
+              <span className="bg-warm-white px-2.5 py-1 rounded-md border border-border">JPG • 2.1 MB</span>
+              <span className="text-accent font-bold">PDF Ready</span>
+            </div>
+
+            <div className="my-auto relative h-36 w-full rounded-xl bg-warm-white border border-border/80 flex items-center justify-center overflow-hidden shadow-inner">
+              <svg className="w-16 h-16 text-red-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14 2v6h6" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 15h5m-2.5-2.5v5" />
+              </svg>
+            </div>
+
+            <div className="w-full bg-warm-white/90 border border-border/80 rounded-lg px-3 py-1 text-center text-xs font-mono text-ink-muted truncate z-10">
+              drop image → build PDF → download
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -500,6 +546,7 @@ export default function Home() {
                   {activeTool === "qr-generator" && <QrGenerator />}
                   {activeTool === "gradient-mesh" && <GradientMesh />}
                   {activeTool === "youtube-mp3" && <YoutubeMp3 />}
+                  {activeTool === "jpg-to-pdf" && <JpgToPdf />}
                 </div>
               </div>
             ) : (
@@ -720,7 +767,7 @@ export default function Home() {
             {/* Stats */}
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl w-full">
               {[
-                { num: "4+", label: "Tools Available" },
+                { num: "5+", label: "Tools Available" },
                 { num: "Instant", label: "Client Performance" },
                 { num: "100%", label: "Private & Local" },
               ].map((s, i) => (

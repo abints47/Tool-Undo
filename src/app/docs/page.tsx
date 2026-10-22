@@ -265,6 +265,7 @@ export default function DocsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
                     {[
                       { title: "Image Compressor", icon: "🖼️", desc: "Compress PNG, JPEG, and WebP images locally with customizable quality metrics and size optimization targets." },
+                      { title: "JPG → PDF Converter", icon: "📄", desc: "Turn JPG, PNG, WebP, and BMP images into clean, share-ready PDF files with lossless JPEG embedding — all in your browser." },
                       { title: "QR Code Generator", icon: "🔲", desc: "Generate high-resolution custom vector and raster QR codes for URLs, WiFi networks, and contact vCards instantly." },
                       { title: "Gradient Mesh", icon: "🎨", desc: "Design stunning multi-color fluid gradient mesh backgrounds for your landing pages, mockups, and creative projects." },
                       { title: "Format Converters", icon: "⚡", desc: "Convert digital file formats seamlessly without compromising visual fidelity, hitting upload caps, or risking data leaks." },

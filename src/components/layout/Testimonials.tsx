@@ -67,23 +67,23 @@ export default function Testimonials() {
 
   const reviews = [
     {
-      name: "Abin Surendran.",
+      name: "Rahul Nair.",
       role: "Frontend Developer",
-      avatarLetter: "ATS",
+      avatarLetter: "RN",
       tagline: "Instant client-side speed",
       quote: "The WebP converter is remarkably fast. It compressed 5MB image assets in a single browser frame with zero network delay and complete privacy.",
     },
     {
-      name: "Arjun K.",
+      name: "Priya S.",
       role: "UI/UX Designer",
-      avatarLetter: "AK",
+      avatarLetter: "PS",
       tagline: "Seamless brand customization",
       quote: "The color controls on the QR generator make brand integration effortless. Direct clipboard export saves significant time in my design workflow.",
     },
     {
-      name: "Sinan M.",
+      name: "Vikram T.",
       role: "Fullstack Engineer",
-      avatarLetter: "SM",
+      avatarLetter: "VT",
       tagline: "Intuitive developer workflow",
       quote: "The CSS gradient mesh builder is exceptionally smooth. Dragging coordinate nodes directly on the canvas lets me prototype mesh backgrounds in seconds.",
     },
