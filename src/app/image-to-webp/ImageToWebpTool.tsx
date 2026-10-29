@@ -1,9 +1,7 @@
 ﻿"use client";
 
-import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
+import { useState, useRef, DragEvent, ChangeEvent } from "react";
 import { Image as ImageIcon, Upload, Download, RotateCcw, CheckCircle, AlertCircle } from "lucide-react";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
 
 export default function ImageToWebpTool() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -29,7 +27,7 @@ export default function ImageToWebpTool() {
     setError(null);
     const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/bmp", "image/svg+xml"];
     if (!validTypes.includes(file.type)) {
-      setError("Hmm, that's not an image we recognize. Try PNG, JPG, GIF, BMP, or SVG â€” no PDFs of your cat, please. ðŸ±");
+      setError("Hmm, that's not an image we recognize. Try PNG, JPG, GIF, BMP, or SVG — no PDFs of your cat, please. 🐱");
       return;
     }
     setSelectedFile(file);
@@ -64,7 +62,7 @@ export default function ImageToWebpTool() {
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext("2d");
-      if (!ctx) { setError("Canvas went missing. Try a different browser? ðŸ¤”"); setIsConverting(false); return; }
+      if (!ctx) { setError("Canvas went missing. Try a different browser? 🤔"); setIsConverting(false); return; }
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         (blob) => {
@@ -103,7 +101,6 @@ export default function ImageToWebpTool() {
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
-
       <main className="flex-1 py-12 lg:py-16">
         <div className="container-x max-w-4xl">
           {/* Title */}
@@ -112,7 +109,7 @@ export default function ImageToWebpTool() {
               <ImageIcon size={28} />
             </div>
             <div>
-              <h1 className="text-2xl font-extrabold tracking-tight text-ink md:text-3xl">Image â†’ WebP</h1>
+              <h1 className="text-2xl font-extrabold tracking-tight text-ink md:text-3xl">Image → WebP</h1>
               <p className="text-sm text-ink-soft">Shrink it. Ship it. Nobody notices.</p>
             </div>
           </div>
@@ -139,10 +136,10 @@ export default function ImageToWebpTool() {
               <div>
                 <p className="text-lg font-semibold text-ink">Drop your image here</p>
                 <p className="mt-1 text-sm text-ink-soft">
-                  or <span className="font-medium text-brand-600">click to browse</span> â€” we won&apos;t tell anyone.
+                  or <span className="font-medium text-brand-600">click to browse</span> — we won&apos;t tell anyone.
                 </p>
               </div>
-              <p className="text-xs text-ink-faint">PNG, JPG, JPEG, GIF, BMP, SVG â€” yes, all of them.</p>
+              <p className="text-xs text-ink-faint">PNG, JPG, JPEG, GIF, BMP, SVG — yes, all of them.</p>
             </div>
           ) : (
             <div className="card p-6 md:p-8">
@@ -156,9 +153,9 @@ export default function ImageToWebpTool() {
               <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {[
                   ["File Name", selectedFile.name],
-                  ["Dimensions", imageDimensions ? `${imageDimensions.width} Ã— ${imageDimensions.height}` : "Loading..."],
+                  ["Dimensions", imageDimensions ? `${imageDimensions.width} × ${imageDimensions.height}` : "Loading..."],
                   ["Original", formatSize(selectedFile.size)],
-                  ["WebP", convertedSize !== null ? formatSize(convertedSize) : "â€”"],
+                  ["WebP", convertedSize !== null ? formatSize(convertedSize) : "—"],
                 ].map(([k, v]) => (
                   <div key={k} className="rounded-xl bg-canvas p-4">
                     <p className="mb-1 text-xs text-ink-faint">{k}</p>
@@ -173,8 +170,8 @@ export default function ImageToWebpTool() {
                     <CheckCircle size={24} className="text-emerald-600" />
                   </div>
                   <div>
-                    <p className="font-bold text-emerald-800">Boom. Done. ðŸŽ‰</p>
-                    <p className="text-sm text-emerald-600">You just saved {compressionPercentage}% â€” that&apos;s a win in our book.</p>
+                    <p className="font-bold text-emerald-800">Boom. Done. 🎉</p>
+                    <p className="text-sm text-emerald-600">You just saved {compressionPercentage}% — that&apos;s a win in our book.</p>
                   </div>
                 </div>
               )}
@@ -213,9 +210,6 @@ export default function ImageToWebpTool() {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
-

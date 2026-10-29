@@ -1,10 +1,8 @@
 ﻿"use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { QrCode, Download, Copy, Check } from "lucide-react";
 import QRCode from "qrcode";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
 
 export default function QrCodeTool() {
   const [text, setText] = useState("https://toolundo.com");
@@ -61,8 +59,6 @@ export default function QrCodeTool() {
 
   return (
     <div className="flex min-h-screen flex-col bg-canvas">
-      <Header />
-
       <main className="flex-1 py-12 lg:py-16">
         <div className="container-x max-w-4xl mx-auto px-4">
           {/* Title */}
@@ -82,7 +78,7 @@ export default function QrCodeTool() {
               <div className="space-y-6">
                 <div>
                   <label htmlFor="qr-text" className="mb-2 block text-sm font-semibold text-ink">
-                    What should it say? ðŸ¤”
+                    What should it say? 🤔
                   </label>
                   <textarea
                     id="qr-text"
@@ -96,7 +92,7 @@ export default function QrCodeTool() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="fg-color" className="mb-2 block text-sm font-semibold text-ink">Code Color ðŸŽ¨</label>
+                    <label htmlFor="fg-color" className="mb-2 block text-sm font-semibold text-ink">Code Color 🎨</label>
                     <div className="flex items-center gap-3">
                       <input
                         id="fg-color"
@@ -126,7 +122,7 @@ export default function QrCodeTool() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <div className="mb-2 flex items-center justify-between">
-                      <label htmlFor="size-range" className="text-sm font-semibold text-ink">Size ðŸ“</label>
+                      <label htmlFor="size-range" className="text-sm font-semibold text-ink">Size 📐</label>
                       <span className="font-mono text-sm font-bold text-brand-600">{size}px</span>
                     </div>
                     <input
@@ -147,7 +143,7 @@ export default function QrCodeTool() {
 
                   <div>
                     <div className="mb-2 flex items-center justify-between">
-                      <label htmlFor="margin-range" className="text-sm font-semibold text-ink">Margin ðŸ–¼ï¸</label>
+                      <label htmlFor="margin-range" className="text-sm font-semibold text-ink">Margin 🖼️</label>
                       <span className="font-mono text-sm font-bold text-brand-600">{margin}</span>
                     </div>
                     <input
@@ -168,7 +164,7 @@ export default function QrCodeTool() {
 
                 {/* Error Correction Level */}
                 <div className="space-y-2">
-                  <span className="block text-sm font-semibold text-ink">Error Correction Level ðŸ›¡ï¸</span>
+                  <span className="block text-sm font-semibold text-ink">Error Correction Level 🛡️</span>
                   <div className="grid grid-cols-4 gap-2">
                     {(["L", "M", "Q", "H"] as const).map((level) => {
                       const labelMap = { L: "Low (~7%)", M: "Med (~15%)", Q: "Quart (~25%)", H: "High (~30%)" };
@@ -208,13 +204,13 @@ export default function QrCodeTool() {
                 </div>
                 <div className="flex w-full flex-col gap-3">
                   <button onClick={handleDownload} className="btn-primary w-full flex items-center justify-center gap-2">
-                    <Download size={18} /> Download PNG ðŸ’¾
+                    <Download size={18} /> Download PNG 💾
                   </button>
                   <button onClick={handleCopyImage} className="btn-primary w-full flex items-center justify-center gap-2">
                     {isCopied ? (
-                      <><Check size={18} /> Copied! âœ…</>
+                      <><Check size={18} /> Copied! ✅</>
                     ) : (
-                      <><Copy size={18} /> Copy Image ðŸ“‹</>
+                      <><Copy size={18} /> Copy Image 📋</>
                     )}
                   </button>
                 </div>
@@ -223,8 +219,6 @@ export default function QrCodeTool() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

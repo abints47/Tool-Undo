@@ -1,12 +1,15 @@
 ﻿"use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/layout/Header";
 
 type DocSection = "introduction" | "getting-started" | "tools-overview" | "privacy-security" | "faq";
 
+/**
+ * Client island for the docs page (section navigation + dark mode toggle).
+ * The page shell around it is server-rendered by src/app/docs/page.tsx.
+ */
 export default function DocsClient() {
   const [activeSection, setActiveSection] = useState<DocSection>("introduction");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -29,7 +32,7 @@ export default function DocsClient() {
 
       {/* Main Docs Layout - Full Width Stretch */}
       <div className="pt-24 pb-16 w-full px-4 md:px-8 lg:px-12 flex-1 flex flex-col lg:flex-row gap-8">
-        
+
         {/* Mobile Sidebar Toggle & Dark Mode */}
         <div className={`lg:hidden flex items-center justify-between pb-4 border-b w-full ${
           darkMode ? "border-[#262422]" : "border-border"
@@ -42,7 +45,7 @@ export default function DocsClient() {
                 darkMode ? "bg-[#1E1C1A] text-amber-400 border border-[#2E2B28]" : "bg-ink text-cream"
               }`}
             >
-              {darkMode ? "â˜€ï¸ Light" : "ðŸŒ™ Dark"}
+              {darkMode ? "☀️ Light" : "🌙 Dark"}
             </button>
             <button
               onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
@@ -73,7 +76,7 @@ export default function DocsClient() {
                   darkMode ? "bg-[#1E1C1A] text-amber-400 border border-[#2E2B28] hover:bg-[#282522]" : "bg-warm-200/70 text-slate-800 hover:bg-warm-200"
                 }`}
               >
-                {darkMode ? "â˜€ï¸ Light Mode" : "ðŸŒ™ Dark Mode"}
+                {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
               </button>
             </div>
 
@@ -89,8 +92,8 @@ export default function DocsClient() {
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                     activeSection === sec.id
                       ? "bg-accent/10 text-accent font-semibold border border-accent/20"
-                      : darkMode 
-                        ? "text-[#A39E99] hover:text-[#EFECE6] hover:bg-[#1E1C1A]/60" 
+                      : darkMode
+                        ? "text-[#A39E99] hover:text-[#EFECE6] hover:bg-[#1E1C1A]/60"
                         : "text-ink-muted hover:text-ink hover:bg-warm-100/60"
                   }`}
                 >
@@ -103,7 +106,7 @@ export default function DocsClient() {
               <div className={`p-4 rounded-xl border text-xs space-y-2 ${
                 darkMode ? "bg-[#1A1816]/70 border-[#2E2B28] text-[#C4C0B8]" : "bg-orange-100/50 border-orange-200/60 text-slate-700"
               }`}>
-                <p className={`font-semibold ${darkMode ? "text-[#EFECE6]" : "text-slate-900"}`}>ðŸ’¡ Quick Tip</p>
+                <p className={`font-semibold ${darkMode ? "text-[#EFECE6]" : "text-slate-900"}`}>💡 Quick Tip</p>
                 <p>All ToolUndo utilities run 100% locally in your browser. No files are uploaded to any server.</p>
               </div>
             </div>
@@ -120,7 +123,7 @@ export default function DocsClient() {
 
         {/* Content Area - Stretched across available right space */}
         <main className="flex-1 w-full min-w-0 space-y-10 lg:pl-4">
-          
+
           {/* Conditional Rendering of Documentation Sections */}
 
           {activeSection === "introduction" && (
@@ -137,7 +140,7 @@ export default function DocsClient() {
 
                 <div className={`border-l-4 border-accent pl-5 py-4 my-6 rounded-r-xl shadow-xs ${darkMode ? "bg-[#1A1816]/70" : "bg-orange-50/50"}`}>
                     <p className={`text-sm md:text-base font-semibold ${darkMode ? "text-[#EFECE6]" : "text-slate-800"}`}>
-                    &ldquo;à´¸à´‚à´—à´¤à´¿ à´•àµŠà´³àµà´³à´¾à´‚, à´ªà´£à´¿ à´ªà´¾à´³à´°àµà´¤àµ!&rdquo;
+                    &ldquo;സംഗതി കൊള്ളാം, പണി പാളരുത്!&rdquo;
                     </p>
                     <p className={`text-xs md:text-sm mt-1 ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>
                     Engineered with strict adherence to absolute speed, robust engineering standards, uncompromising security, and an optimized native experience.
@@ -149,20 +152,20 @@ export default function DocsClient() {
                     <p className={`text-base leading-relaxed ${darkMode ? "text-[#C4C0B8]" : "text-slate-600"}`}>
                     Traditional web platforms process utility workloads by uploading your sensitive media, documents, and code to external data centers. ToolUndo completely subverts this architecture by shifting 100% of the computing workload directly into your browser instance.
                     </p>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
                     <div className={`p-6 rounded-2xl border shadow-xs space-y-3 ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
-                        <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-lg">ðŸ”’</div>
+                        <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-lg">🔒</div>
                         <h3 className={`font-bold text-lg ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>Zero Server Uploads</h3>
                         <p className={`text-sm leading-relaxed ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>Your files never leave your device storage. Everything executes locally using Web APIs, Canvas rendering engines, and WebAssembly modules.</p>
                     </div>
                     <div className={`p-6 rounded-2xl border shadow-xs space-y-3 ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
-                        <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-lg">âš¡</div>
+                        <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-lg">⚡</div>
                         <h3 className={`font-bold text-lg ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>Lightning Fast Execution</h3>
                         <p className={`text-sm leading-relaxed ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>Bypass cloud upload queues, network traffic bottlenecks, and conversion waiting bars. Experience instantaneous processing results right inside your active tab.</p>
                     </div>
                     <div className={`p-6 rounded-2xl border shadow-xs space-y-3 ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
-                        <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-lg">ðŸŽ¨</div>
+                        <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-lg">🎨</div>
                         <h3 className={`font-bold text-lg ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>Clean & Modern UI</h3>
                         <p className={`text-sm leading-relaxed ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>Minimalist, distraction-free visual layouts tailored meticulously for modern workflows, high-DPI displays, and seamless accessibility across devices.</p>
                     </div>
@@ -208,18 +211,18 @@ export default function DocsClient() {
                     <p className={`text-base leading-relaxed ${darkMode ? "text-[#C4C0B8]" : "text-slate-600"}`}>
                     Follow this intuitive four-step procedure to execute any digital task or utility processing request securely:
                     </p>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                     <div className={`p-6 rounded-2xl border shadow-xs space-y-3 ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
                         <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-base">01</div>
                         <h3 className={`font-bold text-lg ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>Browse Utilities</h3>
                         <p className={`text-sm leading-relaxed ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>Navigate directly to the <Link href="/#tools" className="text-accent underline font-medium">Tools Section</Link> on our homepage to explore the complete catalog of available client-side modules.</p>
                     </div>
-                    
+
                     <div className={`p-6 rounded-2xl border shadow-xs space-y-3 ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
                         <div className="w-10 h-10 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-base">02</div>
                         <h3 className={`font-bold text-lg ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>Select Your Tool</h3>
-                        <p className={`text-sm leading-relaxed ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>Click into your desired utility moduleâ€”whether it is the Image Compressor, QR Code Generator, or Fluid Gradient Mesh designer.</p>
+                        <p className={`text-sm leading-relaxed ${darkMode ? "text-[#A39E99]" : "text-slate-600"}`}>Click into your desired utility module—whether it is the Image Compressor, QR Code Generator, or Fluid Gradient Mesh designer.</p>
                     </div>
 
                     <div className={`p-6 rounded-2xl border shadow-xs space-y-3 ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
@@ -239,7 +242,7 @@ export default function DocsClient() {
                 <div className={`space-y-4 pt-4 border-t ${darkMode ? "border-[#262422]" : "border-border"}`}>
                     <h2 className={`text-2xl font-bold ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>System Requirements & Compatibility</h2>
                     <p className={`text-base leading-relaxed ${darkMode ? "text-[#C4C0B8]" : "text-slate-600"}`}>
-                    Because ToolUndo runs entirely via client-side web technologies, your device hardware directly powers the processing engine. 
+                    Because ToolUndo runs entirely via client-side web technologies, your device hardware directly powers the processing engine.
                     </p>
                     <ul className={`list-disc pl-6 space-y-2 text-base ${darkMode ? "text-[#C4C0B8]" : "text-slate-600"}`}>
                     <li><strong>Supported Browsers:</strong> Fully compatible with modern evergreen browsers including Google Chrome, Apple Safari, Mozilla Firefox, Microsoft Edge, and mobile web browsers.</li>
@@ -264,13 +267,13 @@ export default function DocsClient() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
                     {[
-                      { title: "Image Compressor", icon: "ðŸ–¼ï¸", desc: "Compress PNG, JPEG, and WebP images locally with customizable quality metrics and size optimization targets." },
-                      { title: "JPG â†’ PDF Converter", icon: "ðŸ“„", desc: "Turn JPG, PNG, WebP, and BMP images into clean, share-ready PDF files with lossless JPEG embedding â€” all in your browser." },
-                      { title: "QR Code Generator", icon: "ðŸ”²", desc: "Generate high-resolution custom vector and raster QR codes for URLs, WiFi networks, and contact vCards instantly." },
-                      { title: "Gradient Mesh", icon: "ðŸŽ¨", desc: "Design stunning multi-color fluid gradient mesh backgrounds for your landing pages, mockups, and creative projects." },
-                      { title: "Format Converters", icon: "âš¡", desc: "Convert digital file formats seamlessly without compromising visual fidelity, hitting upload caps, or risking data leaks." },
-                      { title: "Asset Resizer", icon: "ðŸ“", desc: "Batch resize graphic dimensions precisely by pixels or scale percentages to fit specific platform requirements." },
-                      { title: "Snippet Utils", icon: "ðŸ› ï¸", desc: "Quickly format code blocks, clean up text strings, and decode parameters straight in your browser." }
+                      { title: "Image Compressor", icon: "🖼️", desc: "Compress PNG, JPEG, and WebP images locally with customizable quality metrics and size optimization targets." },
+                      { title: "JPG → PDF Converter", icon: "📄", desc: "Turn JPG, PNG, WebP, and BMP images into clean, share-ready PDF files with lossless JPEG embedding — all in your browser." },
+                      { title: "QR Code Generator", icon: "🔲", desc: "Generate high-resolution custom vector and raster QR codes for URLs, WiFi networks, and contact vCards instantly." },
+                      { title: "Gradient Mesh", icon: "🎨", desc: "Design stunning multi-color fluid gradient mesh backgrounds for your landing pages, mockups, and creative projects." },
+                      { title: "Format Converters", icon: "⚡", desc: "Convert digital file formats seamlessly without compromising visual fidelity, hitting upload caps, or risking data leaks." },
+                      { title: "Asset Resizer", icon: "📐", desc: "Batch resize graphic dimensions precisely by pixels or scale percentages to fit specific platform requirements." },
+                      { title: "Snippet Utils", icon: "🛠️", desc: "Quickly format code blocks, clean up text strings, and decode parameters straight in your browser." }
                     ].map((tool, idx) => (
                       <div key={idx} className={`p-5 rounded-2xl border shadow-xs space-y-2.5 transition-all hover:shadow-md ${darkMode ? "bg-[#181614] border-[#2A2724]" : "bg-white border-border"}`}>
                         <div className="w-8 h-8 rounded-lg bg-orange-100/10 flex items-center justify-center text-accent font-bold text-sm">{tool.icon}</div>
@@ -296,11 +299,11 @@ export default function DocsClient() {
 
               <h2 className={`text-2xl font-bold pt-4 ${darkMode ? "text-[#FAF9F5]" : "text-slate-900"}`}>Client-Side Architecture</h2>
               <p className={`text-base leading-relaxed ${darkMode ? "text-[#C4C0B8]" : "text-slate-600"}`}>
-                Every calculation, compression, and conversion executed on ToolUndo runs directly within your browser&apos;s sandbox using modern JavaScript execution engines and browser memory. 
+                Every calculation, compression, and conversion executed on ToolUndo runs directly within your browser&apos;s sandbox using modern JavaScript execution engines and browser memory.
               </p>
 
               <div className={`p-5 rounded-2xl border text-sm space-y-1 ${darkMode ? "bg-[#16201B] border-[#20362B] text-[#85CEAB]" : "bg-emerald-50 border-emerald-200 text-emerald-900"}`}>
-                <p className="font-bold text-base">ðŸ”’ Guaranteed Security</p>
+                <p className="font-bold text-base">🔒 Guaranteed Security</p>
                 <p>Because no server requests transmit your files over the internet, data interception or cloud logging is technically impossible.</p>
               </div>
             </section>
@@ -341,7 +344,7 @@ export default function DocsClient() {
                 darkMode ? "text-[#A39E99] hover:text-[#FAF9F5]" : "text-ink-muted hover:text-ink"
               }`}
             >
-              â† Back to Home
+              ← Back to Home
             </Link>
             <a
               href="https://github.com/abints47"
@@ -349,7 +352,7 @@ export default function DocsClient() {
               rel="noopener noreferrer"
               className="text-sm font-medium text-accent hover:underline flex items-center gap-1"
             >
-              GitHub Repository â†’
+              GitHub Repository →
             </a>
           </div>
 
