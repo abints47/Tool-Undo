@@ -202,7 +202,7 @@ export default function QrGenerator() {
         </div>
 
         {/* Live Canvas View Area */}
-        <div className="md:col-span-5 flex flex-col items-center justify-between gap-5 bg-zinc-50 rounded-xl border border-zinc-200/80 p-5 min-h-[300px]">
+        <div className="md:col-span-5 flex flex-col items-center justify-between gap-5 bg-zinc-50 rounded-xl border border-zinc-200/80 p-5 min-h-75">
           <div className="my-auto flex items-center justify-center p-3 rounded-lg bg-white border border-zinc-200/60 shadow-xs max-w-full">
             <canvas ref={canvasRef} className="max-w-full h-auto max-h-48 object-contain" />
             {!text.trim() && (

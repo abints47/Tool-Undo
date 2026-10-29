@@ -2,9 +2,12 @@ import { Music, AlertCircle } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import YoutubeMp3 from "../../components/tools/YoutubeMp3";
+import { metadataForPath } from "@/lib/page-metadata";
 
 // Server-render every request (shows up as Dynamic/SSR during `next build`)
 export const dynamic = "force-dynamic";
+
+export const metadata = metadataForPath("/youtube-mp3");
 
 export default function YoutubeMp3Page() {
   return (

@@ -7,6 +7,8 @@ import Faq from "../components/layout/Faq";
 import Testimonials from "../components/layout/Testimonials";
 import Toolbox from "@/components/home/Toolbox";
 import LoadingSplash from "@/components/home/LoadingSplash";
+import { SITE_ROUTES, SITE, absoluteUrl } from "@/lib/site";
+import { FAQS } from "@/lib/faqs";
 
 // Server-render every request (shows up as Dynamic/SSR during `next build`)
 export const dynamic = "force-dynamic";
@@ -265,8 +267,47 @@ export default function Home() {
     }
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${SITE.url}/#website`,
+        url: SITE.url,
+        name: SITE.name,
+        description: SITE.description,
+        inLanguage: "en",
+        author: { "@type": "Person", name: SITE.author, url: SITE.authorUrl },
+      },
+      {
+        "@type": "ItemList",
+        name: "ToolUndo Tools",
+        itemListElement: SITE_ROUTES.filter(
+          (r) => r.path !== "/" && r.path !== "/docs"
+        ).map((r, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: r.title,
+          url: absoluteUrl(r.path),
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: FAQS.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text: f.answer },
+        })),
+      },
+    ],
+  };
+
   return (
     <div className="flex flex-col min-h-screen animate-fade-in w-full overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <LoadingSplash />
       <Header />
       <Hero />

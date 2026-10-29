@@ -2,9 +2,12 @@ import { AlertCircle } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import JpgToPdf from "../../components/tools/JpgToPdf";
+import { metadataForPath } from "@/lib/page-metadata";
 
 // Server-render every request (shows up as Dynamic/SSR during `next build`)
 export const dynamic = "force-dynamic";
+
+export const metadata = metadataForPath("/jpg-to-pdf");
 
 export default function JpgToPdfPage() {
   return (
