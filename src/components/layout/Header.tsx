@@ -61,9 +61,21 @@ export default function Header({
     setMobileOpen(false);
     if (isDocsPage || isBlogPage) {
       window.location.href = `/#${section}`;
-    } else {
-      onNavClick?.(section);
+      return;
     }
+    // When rendered inside a Server Component page there is no callback;
+    // fall back to scrolling to the section by its element id.
+    if (onNavClick) {
+      onNavClick(section);
+      return;
+    }
+    if (section === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    document
+      .getElementById(section)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const linkClass = (section: string) =>

@@ -1,8 +1,8 @@
-"use client";
-
-import React, { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+/**
+ * Server Component — rendered to HTML on the server.
+ * AOS animations are driven purely by `data-aos` attributes;
+ * the library is initialized once by <AosProvider />.
+ */
 
 interface TestimonialCardProps {
   name: string;
@@ -14,7 +14,7 @@ interface TestimonialCardProps {
 }
 
 function TestimonialCard({ name, role, quote, tagline, avatarLetter, index }: TestimonialCardProps) {
-  // Calculate dynamic delay based on card index (100ms, 200ms, 300ms)
+  // Calculate dynamic delay based on card index (150ms, 300ms, 450ms)
   const delay = (index + 1) * 150;
 
   return (
@@ -57,14 +57,6 @@ function TestimonialCard({ name, role, quote, tagline, avatarLetter, index }: Te
 }
 
 export default function Testimonials() {
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      easing: "ease-out-cubic",
-    });
-  }, []);
-
   const reviews = [
     {
       name: "Rahul Nair.",

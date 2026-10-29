@@ -1,10 +1,10 @@
-"use client";
-
-import React from "react";
 import { AlertCircle } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import JpgToPdf from "../../components/tools/JpgToPdf";
+
+// Server-render every request (shows up as Dynamic/SSR during `next build`)
+export const dynamic = "force-dynamic";
 
 export default function JpgToPdfPage() {
   return (
@@ -20,7 +20,7 @@ export default function JpgToPdfPage() {
           {/* Info section */}
           <div className="mt-8 rounded-2xl border border-line bg-canvas p-6">
             <h3 className="text-lg font-bold text-ink mb-3 flex items-center gap-2">
-              <AlertCircle size={20} className="text-accent" />
+              <AlertCircle className="text-accent" size={20} />
               How it works
             </h3>
             <ul className="space-y-2 text-sm text-ink-soft">

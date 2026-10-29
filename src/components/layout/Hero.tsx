@@ -1,22 +1,11 @@
-"use client";
+import React from "react";
 
-import React, { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
-
-interface HeroProps {
-  onExploreClick?: () => void;
-}
-
-export default function Hero({ onExploreClick }: HeroProps) {
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      easing: "ease-out-cubic",
-    });
-  }, []);
-
+/**
+ * Server Component — rendered to HTML on the server.
+ * AOS animations are driven purely by `data-aos` attributes;
+ * the library is initialized once by <AosProvider />.
+ */
+export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-linear-to-br from-rose-50/55 via-orange-50/40 to-amber-50/70 py-20 md:py-32 text-slate-900">
       {/* Dynamic Modern Mesh & Glow Accents */}
@@ -35,7 +24,7 @@ export default function Hero({ onExploreClick }: HeroProps) {
         {/* Floating Image/Canvas Icon */}
         <div className="absolute top-28 right-[12%] animate-[pulse_4s_infinite] text-orange-600 drop-shadow-md">
           <svg className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5 1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
           </svg>
         </div>
 
@@ -81,12 +70,12 @@ export default function Hero({ onExploreClick }: HeroProps) {
 
           {/* CTA */}
           <div data-aos="fade-up" data-aos-delay="400" className="mt-10 flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={onExploreClick}
+            <a
+              href="#tools"
               className="bg-accent hover:bg-accent-hover text-white px-8 py-3.5 rounded-full font-semibold text-base transition-all duration-200 shadow-md shadow-accent/25 hover:shadow-lg hover:shadow-accent/40 active:scale-[0.98] cursor-pointer"
             >
               Checkout The Tools →
-            </button>
+            </a>
             <a
               href="https://github.com/abints47"
               target="_blank"

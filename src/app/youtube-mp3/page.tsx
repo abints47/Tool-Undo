@@ -1,10 +1,10 @@
-"use client";
-
-import React from "react";
 import { Music, AlertCircle } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import YoutubeMp3 from "../../components/tools/YoutubeMp3";
+
+// Server-render every request (shows up as Dynamic/SSR during `next build`)
+export const dynamic = "force-dynamic";
 
 export default function YoutubeMp3Page() {
   return (

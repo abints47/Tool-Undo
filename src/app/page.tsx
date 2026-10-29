@@ -1,118 +1,15 @@
-"use client";
-
-import React, { useState, useEffect, useRef } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import type { ReactNode } from "react";
 import Header from "../components/layout/Header";
 import Hero from "../components/layout/Hero";
 import Footer from "../components/layout/Footer";
 import FeedbackSection from "@/components/FeedbackSection";
 import Faq from "../components/layout/Faq";
 import Testimonials from "../components/layout/Testimonials";
-import ImageToWebp from "../components/tools/ImageToWebp";
-import QrGenerator from "../components/tools/QrGenerator";
-import GradientMesh from "../components/tools/GradientMesh";
-import SuggestTool from "../components/tools/SuggestTool";
-import YoutubeMp3 from "../components/tools/YoutubeMp3";
-import JpgToPdf from "../components/tools/JpgToPdf";
+import Toolbox from "@/components/home/Toolbox";
+import LoadingSplash from "@/components/home/LoadingSplash";
 
-interface ToolItem {
-  id: string;
-  title: string;
-  desc: string;
-}
-
-/* ── Custom 5-second Funky Loading Screen ── */
-const LoadingScreen = () => {
-  const funkyPhrases = [
-    "Welcome To Undo-Universe! 🌌",
-    "Oru chaya kudikkunna time-il sambavam set aakkam! ☕",
-    "No lag, no scene, pure browser rocket speed! 🚀",
-    "Server scene illa machane, full browser kalip vibes! ⚡",
-    "URL kodukku, color maattu, direct scan cheythu polikku! 🎨",
-    "Scene aakkalle, tool-Undo! → 🔥",
-  ];
-
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const phraseInterval = setInterval(() => {
-      setPhraseIndex((prev) => (prev + 1) % funkyPhrases.length);
-    }, 1000);
-
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return prev + 1;
-      });
-    }, 50);
-
-    return () => {
-      clearInterval(phraseInterval);
-      clearInterval(progressInterval);
-    };
-  }, []);
-
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-warm-white/95 backdrop-blur-md px-6 text-center select-none overflow-hidden">
-      {/* Background Animated Tool Icons positioned on absolute left and right */}
-      <div className="absolute inset-0 pointer-events-none opacity-10 flex justify-between px-6 sm:px-12 items-center">
-        <div className="flex flex-col gap-32">
-          <div className="animate-[bounce_5s_infinite] text-accent">
-            <svg className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.121 2.121 0 0121 17.25l-5.83-5.83m-3.75 3.75a3 3 0 11-4.243-4.243 3 3 0 014.243 4.243zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-        </div>
-        <div className="flex flex-col gap-32">
-          <div className="animate-[spin_10s_linear_infinite] text-amber-600">
-            <svg className="w-20 h-20" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      {/* Animated Glowing Icon Ring */}
-      <div className="relative flex items-center justify-center mb-8">
-        <div className="w-24 h-24 rounded-3xl bg-accent/15 animate-ping absolute inset-0 m-auto" />
-        <div className="w-20 h-20 rounded-3xl bg-linear-to-tr from-accent to-amber-500 flex items-center justify-center shadow-xl shadow-accent/30 animate-bounce">
-          <svg className="w-10 h-10 text-white animate-spin" style={{ animationDuration: "3s" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Brand Title */}
-      <h1 className="text-3xl sm:text-4xl font-black text-ink tracking-tight mb-2">
-        ToolUndo<span className="text-accent animate-pulse">.</span>
-      </h1>
-
-      {/* Funky Cycling Text */}
-      <div className="h-8 mb-6 flex items-center justify-center">
-        <p className="text-sm sm:text-base font-semibold text-ink-muted transition-all duration-300 transform">
-          {funkyPhrases[phraseIndex]}
-        </p>
-      </div>
-
-      {/* Progress Bar Container */}
-      <div className="w-full max-w-xs bg-warm-200/80 rounded-full h-2 overflow-hidden p-0.5 border border-border">
-        <div 
-          className="h-full bg-linear-to-r from-accent to-amber-500 rounded-full transition-all duration-75 ease-out shadow-xs"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      <span className="text-xs font-mono font-semibold text-accent mt-3">
-        {progress}%
-      </span>
-    </div>
-  );
-};
+// Server-render every request (shows up as Dynamic/SSR during `next build`)
+export const dynamic = "force-dynamic";
 
 /* ── Tiny section divider ── */
 const Divider = () => (
@@ -129,7 +26,7 @@ const SectionLabel = ({
 }: {
   label: string;
   heading: string;
-  sub?: React.ReactNode;
+  sub?: ReactNode;
 }) => (
   <div data-aos="fade-down" data-aos-once="true" className="w-full text-left mb-10 max-w-7xl mx-auto">
     <span className="text-xs font-semibold uppercase tracking-widest text-accent block mb-2">
@@ -145,35 +42,6 @@ const SectionLabel = ({
     )}
   </div>
 );
-
-/* ── Concise Toolbox cards ── */
-const TOOLS: ToolItem[] = [
-  {
-    id: "image-to-webp",
-    title: "Image → WebP",
-    desc: "Compress and convert images to WebP instantly in your browser.",
-  },
-  {
-    id: "qr-generator",
-    title: "QR Generator",
-    desc: "Create customized, high-resolution scannable QR codes in seconds.",
-  },
-  {
-    id: "gradient-mesh",
-    title: "CSS Mesh Gradient",
-    desc: "Design beautiful multi-point mesh gradients and copy pure CSS.",
-  },
-  {
-    id: "jpg-to-pdf",
-    title: "JPG → PDF",
-    desc: "Convert images into share-ready PDF files instantly in your browser.",
-  },
-  {
-    id: "youtube-mp3",
-    title: "YouTube → MP3",
-    desc: "Extract and download audio from any YouTube video as an MP3 file.",
-  },
-];
 
 /* ── Feature showcase data ── */
 const FEATURES_ROWS = [
@@ -236,127 +104,39 @@ const FEATURES_ROWS = [
 
 /* ── Key features data ── */
 const KEY_FEATURES = [
-  { 
-    title: "100% Client-Side", 
-    tagline: "Browser Only, Scene Illa!", 
+  {
+    title: "100% Client-Side",
+    tagline: "Browser Only, Scene Illa!",
     desc: "Everything executes right inside your browser. Zero server uploads, complete privacy guaranteed.",
     svg: (
       <svg className="w-5 h-5 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
-    )
+    ),
   },
-  { 
-    title: "Lightning Fast", 
-    tagline: "Full Speed Machane!", 
+  {
+    title: "Lightning Fast",
+    tagline: "Full Speed Machane!",
     desc: "Zero network latency or queue wait times. Computations finish the instant you click.",
     svg: (
       <svg className="w-5 h-5 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
-    )
+    ),
   },
-  { 
-    title: "Zero Data Sharing", 
-    tagline: "Your Data Stays Safe!", 
+  {
+    title: "Zero Data Sharing",
+    tagline: "Your Data Stays Safe!",
     desc: "Your files never leave your system. No tracking, no external database logging, ever.",
     svg: (
       <svg className="w-5 h-5 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
       </svg>
-    )
+    ),
   },
 ];
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState("tools");
-  const [activeTool, setActiveTool] = useState<string | null>(null);
-  const [isSuggestOpen, setIsSuggestOpen] = useState(false);
-
-  const toolsRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const aboutRef = useRef<HTMLDivElement>(null);
-
-  // Initialize AOS
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      mirror: false,
-      anchorPlacement: "top-bottom",
-    });
-  }, []);
-
-  // 5-second initial loading timer
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const handleNav = (s: string) => {
-    setActiveSection(s);
-    if (s === "home") { window.scrollTo({ top: 0, behavior: "smooth" }); setActiveTool(null); }
-    else if (s === "tools") scrollTo(toolsRef);
-    else if (s === "features") scrollTo(featuresRef);
-    else if (s === "about") scrollTo(aboutRef);
-  };
-
-  const renderToolSvg = (id: string) => {
-    switch (id) {
-      case "image-to-webp":
-        return (
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
-            <polyline points="21 15 16 10 5 21" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        );
-      case "qr-generator":
-        return (
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round"/>
-            <rect x="14" y="3" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round"/>
-            <rect x="3" y="14" width="7" height="7" rx="1" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M14 14h3v3h-3zM17 17h4v4h-4zM14 21h3v-1" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        );
-      case "gradient-mesh":
-        return (
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M2 12h20" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        );
-      case "youtube-mp3":
-        return (
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" />
-          </svg>
-        );
-      case "jpg-to-pdf":
-        return (
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 2v6h6M9 15h6" />
-          </svg>
-        );
-      default:
-        return (
-          <svg className="w-6 h-6 transition-transform duration-500 group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-        );
-    }
-  };
-
   const renderFeatureMock = (id: string) => {
     switch (id) {
       case "image-to-webp":
@@ -367,7 +147,7 @@ export default function Home() {
               <span className="text-accent font-bold">→ 82% Saved</span>
               <span className="bg-accent/10 text-accent px-2.5 py-1 rounded-md border border-accent/20">WebP • 850 KB</span>
             </div>
-            
+
             <div className="my-auto relative h-36 w-full rounded-xl bg-warm-white border border-border/80 flex items-center justify-center overflow-hidden shadow-inner">
               <svg className="w-full h-full" viewBox="0 0 300 150" fill="none">
                 <rect x="10" y="10" width="280" height="130" rx="8" fill="#f8fafc" stroke="#cbd5e1" strokeDasharray="4 4" />
@@ -485,18 +265,15 @@ export default function Home() {
     }
   };
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
   return (
     <div className="flex flex-col min-h-screen animate-fade-in w-full overflow-x-hidden">
-      <Header onNavClick={handleNav} activeSection={activeSection} />
-      <Hero onExploreClick={() => scrollTo(toolsRef)} />
+      <LoadingSplash />
+      <Header />
+      <Hero />
 
       <main className="grow w-full">
         {/* ════════ TOOLBOX ════════ */}
-        <section ref={toolsRef} className="relative overflow-hidden w-full py-section px-6 md:px-12">
+        <section id="tools" className="relative overflow-hidden w-full py-section px-6 md:px-12">
           {/* Animated Background Decorative Tools SVGs on strict left and right sides */}
           <div className="absolute inset-0 pointer-events-none opacity-10 overflow-hidden flex justify-between px-6 sm:px-12">
             {/* Left Side SVGs */}
@@ -528,106 +305,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="max-w-7xl mx-auto relative z-10">
-            {activeTool ? (
-              <div className="w-full text-left" data-aos="fade-up" data-aos-once="true">
-                <button
-                  onClick={() => setActiveTool(null)}
-                  className="flex items-center gap-2 text-base text-ink-muted hover:text-accent font-semibold mb-6 transition-colors cursor-pointer"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor">
-                    <path d="M0 0h24v24H0V0z" fill="none"/>
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                  </svg>
-                  Back to Tools
-                </button>
-                <div className="animate-scale-in">
-                  {activeTool === "image-to-webp" && <ImageToWebp />}
-                  {activeTool === "qr-generator" && <QrGenerator />}
-                  {activeTool === "gradient-mesh" && <GradientMesh />}
-                  {activeTool === "youtube-mp3" && <YoutubeMp3 />}
-                  {activeTool === "jpg-to-pdf" && <JpgToPdf />}
-                </div>
-              </div>
-            ) : (
-              <div className="w-full text-left">
-                <SectionLabel
-                  label="Toolbox"
-                  heading="Explore Tools"
-                  sub="Scene illa, pure speed! Everything runs privately in your browser."
-                />
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-                  {TOOLS.map((t, index) => {
-                    const isYoutube = t.id === "youtube-mp3";
-                    return (
-                      <div
-                        key={t.id}
-                        data-aos="fade-up"
-                        data-aos-once="true"
-                        data-aos-delay={(index + 1) * 100}
-                        onClick={() => { setActiveTool(t.id); scrollTo(toolsRef); }}
-                        className={`group relative bg-warm-white/95 backdrop-blur-sm border border-border/80 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-accent/40 flex flex-col justify-between min-h-57.5 text-left ${
-                          isYoutube ? "sm:col-span-2 lg:col-span-3" : ""
-                        }`}
-                      >
-                        <div>
-                          <div className="w-12 h-12 rounded-xl bg-accent-bg/80 border border-accent/20 flex items-center justify-center text-accent transition-all duration-300 group-hover:bg-accent group-hover:text-warm-white group-hover:shadow-md group-hover:shadow-accent/20">
-                            {renderToolSvg(t.id)}
-                          </div>
-                          <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
-                            {t.title}
-                          </h3>
-                          <p className="mt-2 text-base text-ink-muted leading-relaxed">
-                            {t.desc}
-                          </p>
-                        </div>
-
-                        <div className="mt-5 flex items-center text-sm font-semibold text-accent opacity-90 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
-                          <span>Open tool →</span>
-                        </div>
-
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-transparent via-accent/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-b-2xl" />
-                      </div>
-                    );
-                  })}
-
-                  {/* Suggest card */}
-                  <div
-                    data-aos="fade-up"
-                    data-aos-once="true"
-                    data-aos-delay={400}
-                    onClick={() => setIsSuggestOpen(true)}
-                    className="group relative bg-warm-50/70 backdrop-blur-sm border-2 border-dashed border-warm-300 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg hover:border-accent flex flex-col justify-between text-left min-h-57.5"
-                  >
-                    <div>
-                      <div className="w-12 h-12 rounded-xl border-2 border-dashed border-ink-faint/40 flex items-center justify-center text-ink-faint group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all shadow-xs">
-                        <svg className="w-6 h-6 transition-transform duration-500 group-hover:rotate-90" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                      </div>
-                      <h3 className="mt-4 text-xl font-extrabold text-ink tracking-tight group-hover:text-accent transition-colors">
-                        Suggest a Tool
-                      </h3>
-                      <p className="mt-2 text-base text-ink-muted leading-relaxed">
-                        Have an idea for a converter or utility?
-                      </p>
-                    </div>
-
-                    <div className="mt-5 flex items-center text-sm font-semibold text-ink-muted group-hover:text-accent transition-colors">
-                      <span>Submit idea →</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <Toolbox />
         </section>
 
         <Divider />
 
         {/* ════════ FEATURE SHOWCASE ════════ */}
-        <section ref={featuresRef} className="scroll-mt-24 w-full py-section text-left px-6 md:px-12">
+        <section id="features" className="scroll-mt-24 w-full py-section text-left px-6 md:px-12">
           <div className="max-w-7xl mx-auto">
             <SectionLabel
               label="Highlights"
@@ -750,7 +434,7 @@ export default function Home() {
         <Divider />
 
         {/* ════════ ABOUT ════════ */}
-        <section ref={aboutRef} className="scroll-mt-24 w-full py-section text-center px-6 md:px-12" data-aos="fade-up" data-aos-once="true">
+        <section id="about" className="scroll-mt-24 w-full py-section text-center px-6 md:px-12" data-aos="fade-up" data-aos-once="true">
           <div className="max-w-7xl mx-auto flex flex-col items-center">
             <h2 className="text-ink font-bold text-3xl sm:text-4xl pb-4 tracking-tight"> About ToolUndo </h2>
             
@@ -787,17 +471,9 @@ export default function Home() {
 
         { /* FeedBack Section Added Component */}
         <FeedbackSection />
-
-
       </main> 
 
       <Footer />
-     {isSuggestOpen && (
-        <SuggestTool 
-          isOpen={isSuggestOpen} 
-          onClose={() => setIsSuggestOpen(false)} 
-        />
-      )}
     </div>
   );
 }
