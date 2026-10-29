@@ -10,7 +10,7 @@ export default function YoutubeMp3() {
 
   const handleSubmit = async () => {
     if (!url.trim()) {
-      setError("Please paste a YouTube URL first!");
+      setError("Please paste a YouTube URL first.");
       return;
     }
 
@@ -20,7 +20,7 @@ export default function YoutubeMp3() {
       );
 
     if (!isValidYoutube) {
-      setError("Hmm, that doesn't look like a YouTube link. Try again?");
+      setError("Please enter a valid YouTube video or shorts URL.");
       return;
     }
 
@@ -37,10 +37,9 @@ export default function YoutubeMp3() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Something went wrong!");
+        throw new Error(data.error || "Failed to process audio extraction.");
       }
 
-      // Extract filename from Content-Disposition header
       const disposition = res.headers.get("Content-Disposition");
       let filename = "youtube-audio.m4a";
       if (disposition) {
@@ -50,7 +49,6 @@ export default function YoutubeMp3() {
 
       setVideoTitle(filename);
 
-      // Trigger download
       const blob = await res.blob();
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -64,7 +62,7 @@ export default function YoutubeMp3() {
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong. Try a different video?"
+          : "Something went wrong. Please verify the URL and try again."
       );
     } finally {
       setIsLoading(false);
@@ -78,108 +76,83 @@ export default function YoutubeMp3() {
   };
 
   return (
-    <div className="bg-surface swiss-border rounded-lg p-6 md:p-8 flex flex-col gap-6 w-full max-w-3xl mx-auto shadow-sm">
-      <div className="flex flex-col gap-2">
-        <h2 className="font-headline-sm text-xl pb-5 text-on-surface flex items-center gap-sm">
-          YouTube → MP3 Converter
+    <div className="w-full max-w-3xl mx-auto rounded-2xl border border-zinc-200/80 bg-white p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+      {/* Header */}
+      <div className="flex flex-col gap-1 border-b border-zinc-100 pb-5">
+        <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+          YouTube to MP3
         </h2>
-        <p className="font-body-sm text-body-sm text-secondary">
-          Paste any YouTube video link below to extract and download the audio as
-          an MP3 file. Fast, simple, and straight from your browser.
+        <p className="text-xs text-zinc-500">
+          Extract and download audio tracks directly from any YouTube link.
         </p>
       </div>
 
-      {/* Input Area */}
+      {/* Input & Form Area */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor="yt-url"
-            className="font-body-sm text-on-surface font-semibold"
-          >
-            Paste your YouTube video link here 🔗
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="yt-url" className="text-xs font-medium text-zinc-700">
+            Video Link
           </label>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <input
               id="yt-url"
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && !isLoading && handleSubmit()}
-              placeholder="https://youtube.com/watch?v=... or https://youtu.be/..."
-              className="flex-1 swiss-border rounded p-3 text-body-sm font-sans swiss-focus bg-surface-container-lowest"
+              placeholder="https://www.youtube.com/watch?v=..."
               disabled={isLoading}
+              className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50/50 px-3.5 py-2.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:bg-white focus:outline-none transition-colors disabled:opacity-50"
             />
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <button
             onClick={handleSubmit}
             disabled={isLoading || !url.trim()}
-            className="bg-[#FFFDF8] border hover:bg-[#64d36d] hover:text-[#166534] border-outline text-[#111827] py-3 px-5 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-none bg-zinc-900 hover:bg-zinc-800 disabled:opacity-40 text-white py-2.5 px-5 rounded-lg text-xs font-medium transition-colors"
           >
             {isLoading ? (
-              <span className="flex items-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                Downloading...
+              <span className="flex items-center justify-center gap-2">
+                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                Processing Audio...
               </span>
             ) : (
-              "Get MP3"
+              "Extract Audio"
             )}
           </button>
           <button
             onClick={handleReset}
-            disabled={isLoading}
-            className="bg-[#FFFDF8] border hover:bg-[#fda970] hover:text-[#f13404] border-outline text-[#111827] py-3 px-5 rounded font-label-caps text-label-caps uppercase tracking-wider font-semibold transition-all duration-200 disabled:opacity-50"
+            disabled={isLoading || (!url && !error && !videoTitle)}
+            className="border border-zinc-200 hover:bg-zinc-50 disabled:opacity-30 text-zinc-600 py-2.5 px-4 rounded-lg text-xs font-medium transition-colors"
           >
             Clear
           </button>
         </div>
       </div>
 
-      {/* Error */}
+      {/* Error Message */}
       {error && (
-        <div className="border border-red-200 bg-red-50 rounded-lg p-4 flex items-center gap-3 text-red-700 text-sm">
-          <span className="material-symbols-outlined text-lg">
-            error
-          </span>
+        <div className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 font-medium">
           {error}
         </div>
       )}
 
-      {/* Success */}
+      {/* Success Output State */}
       {videoTitle && !isLoading && !error && (
-        <div className="border border-outline-variant rounded-lg p-5 bg-surface-container-low flex flex-col sm:flex-row justify-between items-center gap-4 animate-scale-up">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-green-500 shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <h4 className="font-body-md text-on-surface font-bold">
-                Download complete! 🎉
-              </h4>
-            </div>
-            <p className="font-body-sm text-body-sm text-secondary">
-              Saved as:{" "}
-              <span className="font-bold text-on-surface">{videoTitle}</span>
-            </p>
+        <div className="border border-zinc-200/80 rounded-xl p-4 bg-zinc-50/70 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col gap-0.5 text-xs min-w-0 flex-1">
+            <span className="font-medium text-zinc-900">Download complete</span>
+            <span className="text-zinc-500 font-mono truncate" title={videoTitle}>
+              {videoTitle}
+            </span>
           </div>
           <button
             onClick={handleReset}
-            className="bg-primary-container text-white py-2.5 px-6 rounded font-label-caps text-label-caps uppercase tracking-wider font-bold hover:bg-primary transition-all duration-200 flex items-center gap-xs active:scale-95 shadow-sm"
+            className="w-full sm:w-auto border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-800 py-2 px-4 rounded-lg text-xs font-medium transition-colors shadow-2xs"
           >
-            <span className="material-symbols-outlined text-[18px]">
-              download_done
-            </span>
             Convert Another
           </button>
         </div>
